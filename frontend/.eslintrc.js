@@ -6,6 +6,7 @@ module.exports = {
     'alloy/react',
     'alloy/typescript',
     'plugin:import/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
     'expo',
     'prettier',
   ],
