@@ -3,7 +3,7 @@ package com.lucky.arbaguette.common.service;
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
-import com.lucky.arbaguette.common.exception.BadRequestException;
+import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +43,7 @@ public class UserService {
 
         // 아이디 중복 확인
         if (bossRepository.existsByEmail(joinRequest.getEmail()) || crewRepository.existsByEmail(joinRequest.getEmail())) {
-            throw new BadRequestException("아이디가 중복되었습니다.");
+            throw new DuplicateException("아이디가 중복되었습니다.");
         }
 
         // userKey 발급 요청
@@ -64,13 +66,21 @@ public class UserService {
         // 계좌 생성 요청
         Map<String, Object> accountRequestBody = new HashMap<>();
         Map<String, String> headerMap = new HashMap<>();
+
+        Date today = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        String formattedDate = formatter.format(today);
+
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmmss");
+        String formattedTime = timeFormatter.format(today);
+
         headerMap.put("apiName", "createDemandDepositAccount");
-        headerMap.put("transmissionDate", "20240909"); // 실제 날짜와 시간을 넣어야 함
-        headerMap.put("transmissionTime", "154000");
+        headerMap.put("transmissionDate", formattedDate); // 실제 날짜와 시간을 넣어야 함
+        headerMap.put("transmissionTime", formattedTime);
         headerMap.put("institutionCode", "00100");
         headerMap.put("fintechAppNo", "001");
         headerMap.put("apiServiceCode", "createDemandDepositAccount");
-        headerMap.put("institutionTransactionUniqueNo", "20240909154000000000"); // 유일한 값 필요
+        headerMap.put("institutionTransactionUniqueNo", formattedDate + formattedTime + "000000"); // 유일한 값 필요
         headerMap.put("apiKey", financialApiKey);
         headerMap.put("userKey", userKey);
 
