@@ -3,6 +3,7 @@ package com.lucky.arbaguette.crew.domain;
 import com.lucky.arbaguette.company.domain.Company;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +33,15 @@ public class Crew {
     private String userKey;
 
     private int profileImage;
+
+    @Builder
+    public Crew(String name, String email, String password, String tel, String account, String userKey, int profileImage) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.tel = tel;
+        this.account = account;
+        this.userKey = userKey;
+        this.profileImage = profileImage;
+    }
 }

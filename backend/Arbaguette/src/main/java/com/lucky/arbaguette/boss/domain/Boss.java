@@ -30,14 +30,17 @@ public class Boss {
 
     private String userKey;
 
+    private int profileImage;
+
     @Builder
-    private Boss(String email, String password, String name, String tel, String account, String userKey) {
+    private Boss(String email, String password, String name, String tel, String account, String userKey, int profileImage) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.tel = tel;
         this.account = account;
         this.userKey = userKey;
+        this.profileImage = profileImage;
     }
 
 }
