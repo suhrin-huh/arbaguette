@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-
-import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,7 +20,7 @@ public class CompanyController {
 
     @PostMapping(value="/ocr", consumes = "multipart/form-data")
     public ApiResponse<OcrResponse> ocrImage(@RequestPart("image") MultipartFile file) throws IOException {
-        return ApiResponse.success(OK, companyService.ocrImage(file));
+        return ApiResponse.success(companyService.ocrImage(file));
     }
 
 }

@@ -23,6 +23,6 @@ public class UserController {
     @PostMapping("")
     public ApiResponse<Void> joinProcess(@RequestBody UserJoinRequest joinRequest) {
         userService.joinProcess(joinRequest);
-        return ApiResponse.success(HttpStatus.OK);
+        return ApiResponse.success();
     }
 }
