@@ -4,5 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record CommonUserInfo(String email,
+                             String password,
                              String role) {
 }
