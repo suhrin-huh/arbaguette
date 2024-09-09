@@ -2,14 +2,18 @@ package com.lucky.arbaguette.contractworkingday.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lucky.arbaguette.contract.domain.Contract;
-import jakarta.persistence.*;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -19,11 +23,6 @@ public class ContractWorkingDay {
     @EmbeddedId
     private ContractWorkingDayId id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @MapsId("weekday")
-    private int weekday;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "contract_id")
@@ -31,9 +30,9 @@ public class ContractWorkingDay {
     private Contract contract;
 
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime startDate;
+    private LocalTime startTime;
 
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime endDate;
+    private LocalTime endTime;
 
 }
