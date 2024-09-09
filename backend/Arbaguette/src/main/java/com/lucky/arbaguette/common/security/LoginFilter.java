@@ -3,6 +3,7 @@ package com.lucky.arbaguette.common.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.LoginRequest;
+import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,13 +42,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
             loginRequest = objectMapper.readValue(messageBody, LoginRequest.class);
         } catch (IOException e) {
-            //TODO: 예외처리 공통화
-            throw new RuntimeException(e);
+            throw new BadRequestException("유효하지 않는 요청입니다. 다시 확인 해주세요.");
         }
 
         String email = loginRequest.email();
         String password = loginRequest.password();
-        log.info("email: {}, password: {}", email, password);
+
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
 
         return authenticationManager.authenticate(authToken);
