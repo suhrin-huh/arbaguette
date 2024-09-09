@@ -3,7 +3,7 @@ package com.lucky.arbaguette.common.service;
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
-import com.lucky.arbaguette.common.exception.PasswordMismatchException;
+import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class UserService {
 
         // 아이디 중복 확인
         if (bossRepository.existsByEmail(joinRequest.getEmail()) || crewRepository.existsByEmail(joinRequest.getEmail())) {
-            throw new PasswordMismatchException("아이디가 중복되었습니다.");
+            throw new BadRequestException("아이디가 중복되었습니다.");
         }
 
         // userKey 발급 요청
