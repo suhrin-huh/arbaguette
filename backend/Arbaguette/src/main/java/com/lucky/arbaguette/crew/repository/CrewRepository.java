@@ -9,5 +9,5 @@ public interface CrewRepository extends JpaRepository<Crew, Integer> {
     public boolean existsByEmail(String email);
 
     Optional<Crew> findByEmail(String email);
-
+    
 }

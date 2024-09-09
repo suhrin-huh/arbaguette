@@ -27,6 +27,7 @@ public class ContractWorkingDayId implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         ContractWorkingDayId that = (ContractWorkingDayId) o;
         return contractId == that.contractId && weekday == that.weekday;
     }
@@ -35,4 +36,5 @@ public class ContractWorkingDayId implements Serializable {
     public int hashCode() {
         return Objects.hash(contractId, weekday);
     }
+
 }
