@@ -2,7 +2,7 @@ import 'react-native-reanimated';
 
 import Styled from '@emotion/native';
 import { ThemeProvider } from '@emotion/react';
-import { Stack } from 'expo-router';
+import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
@@ -17,9 +17,12 @@ export {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const Layout = Styled.View({ flex: 1, backgroundColor: '#000' });
+const RootLayout = Styled.View(({ theme }) => ({
+  flex: 1,
+  alignSelf: 'stretch',
+}));
 
-export default function RootLayout() {
+export default function Root() {
   const [loaded, error] = usePretendardFonts();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
@@ -39,11 +42,9 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider theme={Theme}>
-      <Stack screenOptions={{ headerShown: false }} initialRouteName="public">
-        <Stack.Screen name="(public)" />
-        <Stack.Screen name="boss" />
-        <Stack.Screen name="crew" />
-      </Stack>
+      <RootLayout>
+        <Slot />
+      </RootLayout>
     </ThemeProvider>
   );
 }
