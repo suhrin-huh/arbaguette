@@ -19,11 +19,6 @@ public class ContractWorkingDay {
     @EmbeddedId
     private ContractWorkingDayId id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @MapsId("weekday")
-    private int weekday;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "contract_id")
@@ -31,9 +26,9 @@ public class ContractWorkingDay {
     private Contract contract;
 
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime startDate;
+    private LocalTime startTime;
 
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime endDate;
+    private LocalTime endTime;
 
 }
