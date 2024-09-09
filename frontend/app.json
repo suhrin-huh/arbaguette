@@ -38,6 +38,12 @@
         {
           "launchMode": "most-recent"
         }
+      ],
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": true
+        }
       ]
     ],
     "experiments": {
