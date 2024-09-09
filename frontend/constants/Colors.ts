@@ -4,6 +4,7 @@ export default {
   PRIMARY: '#8071FC',
   SECONDARY: '#FFA321',
   BACKGROUND: '#F2F3F6',
+  DANGER: '#F30707',
   GRAY: {
     0: '#E9ECEF',
     1: '#DEE2E6',

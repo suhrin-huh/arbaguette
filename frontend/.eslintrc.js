@@ -12,6 +12,7 @@ module.exports = {
   ],
   plugins: ['simple-import-sort', 'prettier'],
   rules: {
+    '@typescript-eslint/no-empty-interface': 'off',
     'react/no-unstable-nested-components': 'off',
     'prettier/prettier': 'error',
     'simple-import-sort/imports': 'error',
