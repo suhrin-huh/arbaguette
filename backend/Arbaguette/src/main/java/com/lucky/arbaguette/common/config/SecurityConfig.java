@@ -35,26 +35,24 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager)
+    public SecurityFilterChain filterChain(HttpSecurity http)
             throws Exception {
         return http
-                .authenticationManager(authenticationManager)
                 .cors(cors -> cors.configurationSource(apiConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login", "/join").permitAll()
+                        .requestMatchers("/", "/login", "/join", "/api/user").permitAll()
                         .anyRequest().authenticated())
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                         UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
                 .build();
     }
 
@@ -73,4 +71,5 @@ public class SecurityConfig {
 
         return source;
     }
+
 }
