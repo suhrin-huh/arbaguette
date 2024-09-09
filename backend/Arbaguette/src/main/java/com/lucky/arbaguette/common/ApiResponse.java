@@ -23,12 +23,12 @@ public class ApiResponse<T> {
         this.message = message;
     }
 
-    public static <T> ApiResponse<T> success(HttpStatus status, T data) {
-        return new ApiResponse<>(status.value(), "SUCCESS", data);
+    public static <T> ApiResponse<T> success(T data) {
+        return new ApiResponse<>(HttpStatus.OK.value(), "SUCCESS", data);
     }
 
-    public static <T> ApiResponse<T> success(HttpStatus status) {
-        return new ApiResponse<>(status.value(), "SUCCESS");
+    public static <T> ApiResponse<T> success() {
+        return new ApiResponse<>(HttpStatus.OK.value(), "SUCCESS");
     }
 
     public static <T> ApiResponse<T> error(HttpStatus status) {
