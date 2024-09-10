@@ -29,6 +29,10 @@ public class CustomUserDetails implements UserDetails {
         return commonUserInfo.email();
     }
 
+    public String getRole() {
+        return commonUserInfo.role();
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
