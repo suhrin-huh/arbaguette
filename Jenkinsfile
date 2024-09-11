@@ -10,6 +10,7 @@ pipeline {
                         sh 'chmod +x ./gradlew'
                         sh './gradlew clean build -x test'
                         sh "docker build -t backend ."
+                        sh "docker run -d -p 8080:8080 backend"
                     }
                 }
             }
