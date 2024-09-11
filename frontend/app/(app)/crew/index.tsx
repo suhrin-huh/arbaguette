@@ -1,10 +1,11 @@
-import { Text, View } from 'react-native';
+import Screen from '@/components/common/Screen';
+import TimeCard from '@/components/crew/TimeCard';
 
 const CrewMainScreen = () => {
   return (
-    <View>
-      <Text>알바생 Main 스크린</Text>
-    </View>
+    <Screen>
+      <TimeCard />
+    </Screen>
   );
 };
 
