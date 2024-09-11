@@ -1,9 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        
-    }
 
     stages {
         stage('Build Backend') {
@@ -17,7 +14,6 @@ pipeline {
                 }
             }
         }
-        
-        
     }
+    
 }
