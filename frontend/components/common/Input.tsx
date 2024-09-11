@@ -17,13 +17,12 @@ interface InputContainerWithDeleteButtonProps {
 
 interface InputContainerWithoutDeleteButtonProps {
   enableDeleteButton?: false;
-  handleDeleteText?: never;
 }
 
 export type InputContainerProps = InputContainerBaseProps &
   (InputContainerWithDeleteButtonProps | InputContainerWithoutDeleteButtonProps);
 
-const InputContainer = Styled.TextInput<Omit<InputContainerProps, 'enableDeleteButton'>>(
+const InputContainer = Styled.TextInput<Omit<InputContainerProps, 'enableDeleteButton' | 'handleDeleteText'>>(
   ({ theme, isFocused, isValid }) => ({
     borderBottomWidth: 2,
     borderColor: isValid
@@ -41,7 +40,7 @@ const InputContainer = Styled.TextInput<Omit<InputContainerProps, 'enableDeleteB
   }),
 );
 
-const Input = ({ enableDeleteButton, handleDeleteText, ...props }: InputContainerProps) => {
+const Input = (props: InputContainerProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {
@@ -55,7 +54,7 @@ const Input = ({ enableDeleteButton, handleDeleteText, ...props }: InputContaine
   return (
     <View style={{ position: 'relative' }}>
       <InputContainer {...props} onFocus={handleFocus} onBlur={handleBlur} isFocused={isFocused} />
-      {enableDeleteButton && !!props.value?.length && <DeleteButton onPress={handleDeleteText} />}
+      {props.enableDeleteButton && !!props.value?.length && <DeleteButton onPress={props.handleDeleteText} />}
     </View>
   );
 };
