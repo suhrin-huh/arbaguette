@@ -9,7 +9,7 @@ pipeline {
                     dir('backend/Arbaguette') {
                         sh 'chmod +x ./gradlew'
                         sh './gradlew clean build -x test'
-                        sh "docker build ."
+                        sh "docker build -t backend ."
                     }
                 }
             }
