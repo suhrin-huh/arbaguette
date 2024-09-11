@@ -5,6 +5,7 @@ import com.google.protobuf.ByteString;
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.exception.InternetServerErrorException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
@@ -21,7 +22,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.BOSS;
 
 @RequiredArgsConstructor
 @Service
@@ -41,6 +41,7 @@ public class CompanyService {
                 .setImage(img)
                 .build();
         requests.add(request);
+
         String fullText = "";
         try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {
             BatchAnnotateImagesResponse response = vision.batchAnnotateImages(requests);
@@ -48,8 +49,7 @@ public class CompanyService {
 
             for (AnnotateImageResponse res : responses) {
                 if (res.hasError()) {
-                    System.out.format("Error: %s%n", res.getError().getMessage());
-                    return null;
+                    throw new InternetServerErrorException("파싱에 실패했습니다.");
                 }
 
                 for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
@@ -86,12 +86,12 @@ public class CompanyService {
     }
 
     public void companySave(CustomUserDetails customUserDetails, CompanyInfo companyInfo) {
-        if(!BOSS.name().equals(customUserDetails.getRole())) {
+        if(customUserDetails.isCrew()) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }
-        Boss boss = bossRepository.findByEmail(customUserDetails.getUsername()).orElseThrow(()-> new NotFoundException("사용자를 찾을 수 없습니다."));
-        Company company = companyInfo.toCompany(boss);
-        companyRepository.save(company);
+        Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
+                .orElseThrow(()-> new NotFoundException("사용자를 찾을 수 없습니다."));
+        companyRepository.save(companyInfo.toCompany(boss));
     }
 
 }
