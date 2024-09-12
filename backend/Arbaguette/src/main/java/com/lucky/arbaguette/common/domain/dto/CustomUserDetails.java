@@ -29,6 +29,18 @@ public class CustomUserDetails implements UserDetails {
         return commonUserInfo.email();
     }
 
+    public String getRole() {
+        return commonUserInfo.role();
+    }
+
+    public boolean isBoss() {
+        return "BOSS".equals(commonUserInfo.role());
+    }
+
+    public boolean isCrew() {
+        return "CREW".equals(commonUserInfo.role());
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
