@@ -3,7 +3,6 @@ package com.lucky.arbaguette.common.config;
 import com.lucky.arbaguette.common.jwt.JWTFilter;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.security.LoginFilter;
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collections;
 
 @RequiredArgsConstructor
 @Configuration

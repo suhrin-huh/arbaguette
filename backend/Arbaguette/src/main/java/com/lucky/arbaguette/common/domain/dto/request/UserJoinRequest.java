@@ -16,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class UserJoinRequest {
     private String email;
     private String password;
-    private String passwordConfirm;
     private String name;
     private String tel;
     @Enumerated(EnumType.STRING)
