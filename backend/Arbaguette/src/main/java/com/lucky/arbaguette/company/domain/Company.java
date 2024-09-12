@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import lombok.Builder;
 
 @Entity
 @Getter
@@ -27,5 +28,13 @@ public class Company {
     private String address;
 
     private String representative;
+
+    @Builder
+    public Company(Boss boss, String name, String address, String representative){
+        this.boss = boss;
+        this.name = name;
+        this.address = address;
+        this.representative = representative;
+    }
 
 }
