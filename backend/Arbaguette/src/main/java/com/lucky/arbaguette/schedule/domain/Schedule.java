@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -38,5 +39,12 @@ public class Schedule {
     private LocalDateTime inTime;
 
     private LocalDateTime outTime;
+
+    public int getDurationTime() {
+        if (this.startTime != null && this.endTime != null) {
+            return (int) Duration.between(this.startTime, this.endTime).toHours();
+        }
+        return 0;
+    }
 
 }

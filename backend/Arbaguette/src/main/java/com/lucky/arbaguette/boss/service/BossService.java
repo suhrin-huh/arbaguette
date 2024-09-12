@@ -1,6 +1,10 @@
 package com.lucky.arbaguette.boss.service;
 
+import com.lucky.arbaguette.boss.domain.Boss;
+import com.lucky.arbaguette.boss.repository.BossRepository;
+import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.NotFoundException;
+import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
@@ -14,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -30,21 +33,24 @@ public class BossService {
     private final CrewRepository crewRepository;
     private final ContractRepository contractRepository;
     private final ScheduleRepository scheduleRepository;
+    private final BossRepository bossRepository;
 
-    public CrewListResponse getCrewList(int companyId) {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new NotFoundException());
+    public CrewListResponse getCrews(CustomUserDetails customUserDetails, int companyId) {
+        Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("해당 사장님을 찾을 수 없습니다."));
+        Company company = companyRepository.findByCompanyIdAndBoss(companyId, boss)
+                .orElseThrow(() -> new UnAuthorizedException("알바생 조회 권한이 없습니다."));
+
         List<Crew> crewList = crewRepository.findByCompany(company);
         List<CrewInfo> crewInfoList = new ArrayList<>();
 
-        // --------crewList로 salary계산해서 CrewListResponse로 return
         for (Crew crew : crewList) {
             int hourlyRate = contractRepository.findByCrew(crew)
-                    .orElseThrow(() -> new NotFoundException())
+                    .orElseThrow(() -> new NotFoundException("알바생에 해당하는 근로계약서가 없습니다."))
                     .getSalary();
 
             int salary = hourlyRate * calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
-            crewInfoList.add(new CrewInfo(crew.getCrewId(), crew.getName(), crew.getProfileImage(), salary));
+            crewInfoList.add(CrewInfo.from(crew, salary));
         }
         return new CrewListResponse(crewInfoList);
 
@@ -53,10 +59,7 @@ public class BossService {
     public int calculateWorkHours(List<Schedule> schedules) {
         int totalHours = 0;
         for (Schedule schedule : schedules) {
-            if (schedule.getInTime() != null && schedule.getOutTime() != null) {
-                Duration duration = Duration.between(schedule.getInTime(), schedule.getOutTime());
-                totalHours += duration.toHours();
-            }
+            totalHours += schedule.getDurationTime();
         }
         return totalHours;
     }
