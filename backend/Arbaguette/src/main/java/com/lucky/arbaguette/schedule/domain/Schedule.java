@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -35,10 +35,8 @@ public class Schedule {
     @Enumerated(EnumType.STRING)
     private StatusType status;
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalDate inTime;
+    private LocalDateTime inTime;
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalDate outTime;
+    private LocalDateTime outTime;
 
 }
