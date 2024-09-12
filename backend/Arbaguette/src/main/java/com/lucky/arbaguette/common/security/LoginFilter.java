@@ -1,6 +1,6 @@
 package com.lucky.arbaguette.common.security;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucky.arbaguette.common.ApiResponse;
@@ -94,9 +94,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.setStatus(SC_UNAUTHORIZED);
+        response.setStatus(SC_NOT_FOUND);
         response.getWriter().write(new ObjectMapper().writeValueAsString(
-                ApiResponse.error(HttpStatus.UNAUTHORIZED, errorMessage)
+                ApiResponse.error(HttpStatus.NOT_FOUND, errorMessage)
         ));
 
     }

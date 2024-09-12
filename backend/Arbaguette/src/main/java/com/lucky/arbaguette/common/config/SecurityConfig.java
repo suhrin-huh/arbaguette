@@ -1,11 +1,16 @@
 package com.lucky.arbaguette.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.jwt.JWTFilter;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.security.LoginFilter;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,14 +18,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Collections;
 
 @RequiredArgsConstructor
 @Configuration
@@ -50,16 +55,50 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login", "/join", "/api/user", "/api/user/info").permitAll()
+                        //누구나 접근 가능
+                        .requestMatchers("/", "/login", "/join", "/api/user/**").permitAll()
+                        //BOSS 만 접근 가능
+                        .requestMatchers("/api/boss/**").hasAuthority("BOSS")
+                        //CREW 만 접근 가능
+                        .requestMatchers("/api/crew/**").hasAuthority("CREW")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                         UsernamePasswordAuthenticationFilter.class)
+                // 인증 예외 처리 (401)
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(unauthorizedEntryPoint())
+                                // 인가 예외 처리 (403)
+                                .accessDeniedHandler(accessDeniedHandler()))
                 .build();
 
-        //예외 처리 설정
-
         return configuration;
+    }
+
+    // AuthenticationEntryPoint 를 사용하여 인증되지 않은 사용자가 접근할 때 에러 처리
+    @Bean
+    public AuthenticationEntryPoint unauthorizedEntryPoint() {
+        return (request, response, authException) -> {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(new ObjectMapper().writeValueAsString(
+                    ApiResponse.error(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.")
+            ));
+        };
+    }
+
+    // 권한이 없는 사용자가 접근할 때 처리
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write(new ObjectMapper().writeValueAsString(
+                    ApiResponse.error(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.")
+            ));
+        };
     }
 
     private CorsConfigurationSource apiConfigurationSource() {
