@@ -21,7 +21,7 @@ public class CustomerUserDetailService implements UserDetailsService {
     private final CrewRepository crewRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         Optional<Boss> boss = bossRepository.findByEmail(email);
         Optional<Crew> crew = crewRepository.findByEmail(email);
 
@@ -35,6 +35,6 @@ public class CustomerUserDetailService implements UserDetailsService {
                                 .password(value.getPassword())
                                 .role("CREW")
                                 .build()))
-                        .orElse(null));
+                        .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다. 회원가입해주세요.")));
     }
 }

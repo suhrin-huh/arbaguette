@@ -1,11 +1,18 @@
 package com.lucky.arbaguette.common.service;
 
+import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.BOSS;
+import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.CREW;
+
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,14 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.BOSS;
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.CREW;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,8 @@ public class UserService {
     public void joinProcess(UserJoinRequest joinRequest) {
 
         // 아이디 중복 확인
-        if (bossRepository.existsByEmail(joinRequest.getEmail()) || crewRepository.existsByEmail(joinRequest.getEmail())) {
+        if (bossRepository.existsByEmail(joinRequest.getEmail()) || crewRepository.existsByEmail(
+                joinRequest.getEmail())) {
             throw new DuplicateException("아이디가 중복되었습니다.");
         }
 
