@@ -1,49 +1,55 @@
-import React from 'react'
-import styled from '@emotion/native'
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import styled from '@emotion/native';
 import Entypo from '@expo/vector-icons/Entypo';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import React from 'react';
+
 import Colors from '@/constants/Colors';
 
-
-type willStoreDto = { // 일단 임시로 가게 정보 타입 선언
+interface willStoreDto {
+  // 일단 임시로 가게 정보 타입 선언
   storeId: number;
   name: string;
   address: string;
 }
 
-type StoredCardProps = {
+interface StoredCardProps {
   storeData: any | string;
   onPress: (card: willStoreDto) => void;
   onPressNFC?: (card: willStoreDto) => void;
 }
 
 const StoreCard = ({ storeData, onPress, onPressNFC }: StoredCardProps) => {
-
+  const handlePressCard = () => {
+    onPress(storeData);
+  };
+  const handlePressNfc = () => {
+    onPressNFC && onPressNFC(storeData);
+  };
   if (storeData === 'ADD') {
     return (
-      <PressableArea onPress={onPress.bind(this, storeData)}>
+      <PressableArea onPress={handlePressCard}>
         <AddContainer>
           <AddText>가게 추가하기</AddText>
           <PlutButton name="circle-with-plus" size={28} color={Colors.PRIMARY} />
         </AddContainer>
       </PressableArea>
-    )
+    );
   }
 
   return (
-    <PressableArea onPress={onPress.bind(this, storeData)}>
+    <PressableArea onPress={handlePressCard}>
       <LeftContainer>
         <StoreName>{storeData.name}</StoreName>
         <StoreAddress>{storeData.address}</StoreAddress>
       </LeftContainer>
-      <IconContainer onPress={onPressNFC && onPressNFC.bind(this, storeData)}>
+      <IconContainer onPress={handlePressNfc}>
         <NfcIcon name="nfc" size={36} />
       </IconContainer>
     </PressableArea>
-  )
-}
+  );
+};
 
-export default StoreCard
+export default StoreCard;
 
 const PressableArea = styled.Pressable(({ theme }) => ({
   flexDirection: 'row',
@@ -74,7 +80,7 @@ const LeftContainer = styled.View(({ theme }) => ({
 const AddContainer = styled.View(({ theme }) => ({
   flex: 1,
   justifyContent: 'center', // 수직 방향으로 가운데 정렬
-  alignItems: 'center',      // 수평 방향으로 가운데 정렬
+  alignItems: 'center', // 수평 방향으로 가운데 정렬
   flexDirection: 'column',
   gap: 15,
 }));
@@ -83,7 +89,7 @@ const AddText = styled.Text(({ theme }) => ({
   color: theme.color.PRIMARY,
   textAlign: 'center',
   fontSize: 20,
-  fontWeight: 600
+  fontWeight: 600,
 }));
 
 const StoreName = styled.Text(({ theme }) => ({
@@ -101,12 +107,12 @@ const IconContainer = styled.Pressable(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   paddingRight: 10,
-}))
+}));
 const PlutButton = styled(Entypo)(({ theme }) => ({
-  color: theme.color.PRIMARY
-}))
+  color: theme.color.PRIMARY,
+}));
 
 const NfcIcon = styled(MaterialCommunityIcons)(({ theme }) => ({
   color: theme.color.GRAY?.[3],
-  size: 20
+  size: 20,
 }));
