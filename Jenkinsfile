@@ -9,8 +9,9 @@ pipeline {
                     dir('backend/Arbaguette') {
                         sh 'chmod +x ./gradlew'
                         sh './gradlew clean build -x test'
+                        sh 'docker stop backend'
                         sh "docker build -t backend ."
-                        sh "docker run -d -p 8080:8080 backend"
+                        sh "docker run -d -p 8080:8080 backend --name backend"
                     }
                 }
             }
