@@ -10,6 +10,6 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://j11c101.p.ssay.io:8080");
+                .allowedOrigins("http://localhost:3000", "http://j11c101.p.ssafy.io:8080");
     }
 }
