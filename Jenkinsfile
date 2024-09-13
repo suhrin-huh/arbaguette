@@ -1,7 +1,6 @@
 pipeline {
     agent any
 
-
     stages {
         stage('Build Backend') {
             steps {
@@ -10,20 +9,21 @@ pipeline {
                         sh 'chmod +x ./gradlew'
                         sh './gradlew clean build -x test'
 
-                        // Check if a container named 'backend' is running
-                        def backendExists = sh(script: "docker ps --filter 'name=backend' --format '{{.Names}}'", returnStdout: true).trim()
+                        // Check if any container is using port 8080
+                        def containerUsingPort = sh(script: "docker ps --filter 'publish=8080' --format '{{.ID}}'", returnStdout: true).trim()
 
-                        if (backendExists == "backend") {
-                            // Stop the existing backend container
-                            sh 'docker stop backend'
+                        if (containerUsingPort) {
+                            // Stop and remove the container using port 8080
+                            sh "docker stop ${containerUsingPort}"
+                            sh "docker rm ${containerUsingPort}"
                         }
-                        
+
+                        // Build and run the new backend container
                         sh "docker build -t backend ."
-                        sh "docker run -d -p 8080:8080 backend --name backend"
+                        sh "docker run --name backend -d -p 8080:8080 backend"
                     }
                 }
             }
         }
     }
-    
 }
