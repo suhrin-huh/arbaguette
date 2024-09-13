@@ -2,14 +2,18 @@ package com.lucky.arbaguette.contractworkingday.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lucky.arbaguette.contract.domain.Contract;
-import jakarta.persistence.*;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.time.LocalTime;
 
 @Entity
 @Getter
