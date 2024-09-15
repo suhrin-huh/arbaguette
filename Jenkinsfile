@@ -26,4 +26,21 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+        	script {
+                mattermostSend (color: 'good', 
+                message: "배포 성공",
+                )
+            }
+        }
+        failure {
+        	script {
+                mattermostSend (color: 'danger', 
+                message: "배포 실패"
+                )
+            }
+        }
+    }
 }
