@@ -6,10 +6,10 @@ import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.crew.domain.dto.response.CrewListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,8 +20,8 @@ public class BossController {
 
     private final BossService bossService;
 
-    @GetMapping("/crew") // 알바생 전체 목록 조회
-    public ApiResponse<CrewListResponse> getCrews(@AuthenticationPrincipal CustomUserDetails customUserDetails, @Param("companyId") int companyId) {
+    @GetMapping("/crews") // 알바생 전체 목록 조회
+    public ApiResponse<CrewListResponse> getCrews(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("companyId") int companyId) {
         return ApiResponse.success(bossService.getCrews(customUserDetails, companyId));
     }
 }

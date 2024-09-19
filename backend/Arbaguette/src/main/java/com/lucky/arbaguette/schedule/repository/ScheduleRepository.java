@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
-    @Query("SELECT s FROM Schedule s WHERE s.crew = :crewId AND s.startTime BETWEEN :startDate AND :endDate")
+    @Query("SELECT s FROM Schedule s WHERE s.crew.crewId = :crewId AND s.startTime BETWEEN :startDate AND :endDate")
     List<Schedule> findScheduleByCrewAndMonth(@Param("crewId") int crewId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
