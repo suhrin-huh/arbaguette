@@ -1,6 +1,6 @@
 import Styled from '@emotion/native';
 import type { PropsWithChildren } from 'react';
-import type { KeyboardAvoidingViewProps, StatusBarProps } from 'react-native';
+import type { KeyboardAvoidingViewProps, StatusBarProps, StyleProp, ViewStyle } from 'react-native';
 
 import Theme from '@/styles/Theme';
 
@@ -15,14 +15,14 @@ const ArbaguetteStatusBar = Styled.StatusBar(({ theme }) => ({ backgroundColor: 
 
 type ScreenProps = PropsWithChildren<
   Partial<{
-    viewOption: KeyboardAvoidingViewProps;
+    viewOption: KeyboardAvoidingViewProps & { style: StyleProp<ViewStyle> };
     statusbarOption: StatusBarProps;
   }>
 >;
 
 const Screen = ({ children, viewOption, statusbarOption }: ScreenProps) => {
   return (
-    <ScreenContainer {...viewOption}>
+    <ScreenContainer {...viewOption} style={{ gap: 10 }}>
       <ArbaguetteStatusBar animated={true} backgroundColor={Theme.color.PRIMARY} {...statusbarOption} />
       {children}
     </ScreenContainer>
