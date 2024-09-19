@@ -2,7 +2,7 @@ import Styled from '@emotion/native';
 import { Text } from 'react-native';
 
 import SchoolImage from '@/assets/images/school.png';
-import CardContainer from '@/components/common/Card';
+import CardContainer from '@/components/common/CardContainer';
 import ProgressBar from '@/components/crew/ProgressBar';
 
 const Image = Styled.Image({ width: 28, height: 22 });
