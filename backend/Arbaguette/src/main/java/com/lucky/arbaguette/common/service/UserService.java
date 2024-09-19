@@ -5,7 +5,9 @@ import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.CREW;
 
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
+import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
+import com.lucky.arbaguette.common.domain.dto.response.UserInfoResponse;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
@@ -109,5 +111,9 @@ public class UserService {
             Crew crew = joinRequest.toCrew(bCryptPasswordEncoder, account, userKey);
             crewRepository.save(crew);
         }
+    }
+
+    public UserInfoResponse info(CustomUserDetails customUserDetails) {
+        return new UserInfoResponse(customUserDetails.getUsername(), customUserDetails.getRole());
     }
 }

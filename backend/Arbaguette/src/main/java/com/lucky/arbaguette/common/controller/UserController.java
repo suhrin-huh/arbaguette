@@ -4,6 +4,7 @@ package com.lucky.arbaguette.common.controller;
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
+import com.lucky.arbaguette.common.domain.dto.response.UserInfoResponse;
 import com.lucky.arbaguette.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/info")
-    public ApiResponse<Void> info(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        log.info("userEmail: {}", customUserDetails.getUsername());
-        log.info("userRole: {}", customUserDetails.getRole());
-        return ApiResponse.success();
+    public ApiResponse<UserInfoResponse> info(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ApiResponse.success(userService.info(customUserDetails));
     }
 }
