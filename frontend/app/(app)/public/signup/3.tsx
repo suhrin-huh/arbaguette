@@ -1,5 +1,5 @@
 import Styled from '@emotion/native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
@@ -29,12 +29,11 @@ const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
 }));
 
 const GetPasswordScreen = () => {
-  const router = useRouter();
   const { role, name, email } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
-  const [password, setPassword] = useState<string>('');
-  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-  const [isValid, setIsValid] = useState<boolean | undefined>(undefined);
-  const [isConfirmed, setIsConfirmed] = useState<boolean | undefined>(undefined);
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [isValid, setIsValid] = useState<boolean>();
+  const [isConfirmed, setIsConfirmed] = useState<boolean>();
 
   const handlepasswordInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setPassword(e.nativeEvent.text);
@@ -95,7 +94,7 @@ const GetPasswordScreen = () => {
           />
         </InputWrapper>
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext} disabled={password.length === 0 && !(isValid && isConfirmed)}>
+      <Button type="primary" onPress={goToNext} disabled={!!password.length && !(isValid && isConfirmed)}>
         다음
       </Button>
     </Container>

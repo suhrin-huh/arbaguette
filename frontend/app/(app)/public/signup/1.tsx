@@ -1,5 +1,5 @@
 import Styled from '@emotion/native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
@@ -29,10 +29,9 @@ const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
 }));
 
 const GetNameScreen = () => {
-  const router = useRouter();
-  const { role } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
-  const [name, setName] = useState<string>('');
-  const [isValid, setIsValid] = useState<boolean | undefined>(undefined);
+  const { role } = useLocalSearchParams<{ role: 'BOSS' | 'CREW' }>();
+  const [name, setName] = useState('');
+  const [isValid, setIsValid] = useState<boolean>();
   const handleNameInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setName(e.nativeEvent.text);
     setIsValid(true);

@@ -30,8 +30,8 @@ const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
 
 const GetNumberScreen = () => {
   const { role, name, email, password } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
-  const [tel, setTel] = useState<string>('');
-  const [isValid, setIsValid] = useState<boolean | undefined>(undefined);
+  const [tel, setTel] = useState('');
+  const [isValid, setIsValid] = useState<boolean>();
   const handleTelInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setTel(e.nativeEvent.text);
     setIsValid(true);
@@ -58,7 +58,7 @@ const GetNumberScreen = () => {
           />
         </InputWrapper>
       </ContentWrapper>
-      <Button type="primary" disabled={tel?.length === 0}>
+      <Button type="primary" disabled={!isValid}>
         회원가입 완료
       </Button>
     </Container>

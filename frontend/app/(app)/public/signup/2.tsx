@@ -31,8 +31,8 @@ const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
 const GetEmailScreen = () => {
   const router = useRouter();
   const { role, name } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
-  const [email, setEmail] = useState<string>('');
-  const [isValid, setIsValid] = useState<boolean | undefined>(undefined);
+  const [email, setEmail] = useState('');
+  const [isValid, setIsValid] = useState<boolean>();
   const handleEmailInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setEmail(e.nativeEvent.text);
     setIsValid(true);
@@ -65,7 +65,7 @@ const GetEmailScreen = () => {
           />
         </InputWrapper>
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext} disabled={email.length === 0}>
+      <Button type="primary" onPress={goToNext} disabled={!!email.length}>
         다음
       </Button>
     </Container>
