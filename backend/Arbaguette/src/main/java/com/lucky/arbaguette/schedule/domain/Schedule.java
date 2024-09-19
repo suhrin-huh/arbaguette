@@ -1,6 +1,5 @@
 package com.lucky.arbaguette.schedule.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lucky.arbaguette.crew.domain.Crew;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +10,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -27,11 +25,11 @@ public class Schedule {
     @JoinColumn(name = "crew_id")
     private Crew crew;
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime startTime;
+    //    @JsonFormat(pattern = "YYYY:HH:mm")
+    private LocalDateTime startTime;
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime endTime;
+    //    @JsonFormat(pattern = "HH:mm")
+    private LocalDateTime endTime;
 
     @Enumerated(EnumType.STRING)
     private StatusType status;
