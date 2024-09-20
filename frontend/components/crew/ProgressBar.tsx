@@ -1,6 +1,7 @@
 import Styled from '@emotion/native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { DimensionValue, LayoutChangeEvent } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import ProgressBarThumb from '@/components/crew/ProgressBarThumb';
 
@@ -10,13 +11,13 @@ const Background = Styled.View(({ theme }) => ({
   borderRadius: 50,
 }));
 
-const Progress = Styled.View<{ width: DimensionValue }>(({ theme, width }) => ({
+const Progress = Styled(Animated.View)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'flex-end',
   backgroundColor: theme.color.PRIMARY,
   flex: 1,
-  width: width,
+  width: 0,
   height: 33,
   borderRadius: 50,
   paddingHorizontal: 5,
@@ -31,19 +32,26 @@ const DEFAULT_PROGRESS_WIDTH = 36;
 
 const ProgressBar = ({ current, total }: ProgressBarProps) => {
   const [parentWidth, setParentWidth] = useState(0);
+  const childWidth = useSharedValue(0);
+
+  const progressPercent = (current / total) * 100;
+  const progressWidth = (progressPercent / 100) * parentWidth;
+  const finalWidth = progressWidth < DEFAULT_PROGRESS_WIDTH ? DEFAULT_PROGRESS_WIDTH : progressWidth;
+
+  const animatedStyle = useAnimatedStyle(() => ({ width: childWidth.value }));
+
+  useEffect(() => {
+    childWidth.value = withTiming(finalWidth, { duration: 500 });
+  }, [childWidth, finalWidth]);
 
   const handleLayout = (event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout;
     setParentWidth(width);
   };
 
-  const progressPercent = (current / total) * 100;
-  const progressWidth = (progressPercent / 100) * parentWidth;
-  const finalWidth = progressWidth < DEFAULT_PROGRESS_WIDTH ? DEFAULT_PROGRESS_WIDTH : progressWidth;
-
   return (
     <Background onLayout={handleLayout}>
-      <Progress width={finalWidth}>
+      <Progress style={animatedStyle}>
         <ProgressBarThumb />
       </Progress>
     </Background>
