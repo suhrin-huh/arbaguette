@@ -6,7 +6,7 @@ import type { ProfileProps } from '@/components/common/Profile';
 import Profile from '@/components/common/Profile';
 import Status from '@/components/crew/Card/AttendanceStatusCard/ProfileCard/Status';
 
-interface ProfileCardProps extends ProfileProps, PhoneProps {
+export interface ProfileCardProps extends ProfileProps, PhoneProps {
   time: string;
 }
 
