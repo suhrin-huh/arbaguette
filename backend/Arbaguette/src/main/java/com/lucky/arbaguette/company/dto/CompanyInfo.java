@@ -13,4 +13,7 @@ public record CompanyInfo(String name, String address, String representative) {
                 .representative(this.representative)
                 .build();
     }
+    public static CompanyInfo from(Company company){
+        return new CompanyInfo(company.getName(), company.getAddress(), company.getRepresentative());
+    }
 }
