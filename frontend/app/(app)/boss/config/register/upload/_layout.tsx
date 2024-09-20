@@ -1,12 +1,11 @@
 import { Stack } from 'expo-router';
 
-const RegisterStoreLayout = () => {
+const UploadLayout = () => {
   return (
     <Stack screenOptions={{ headerShown: false }} initialRouteName="upload">
-      <Stack.Screen name="upload" />
-      <Stack.Screen name="preview" />
+      <Stack.Screen name="index" />
     </Stack>
   );
 };
 
-export default RegisterStoreLayout;
+export default UploadLayout;
