@@ -1,8 +1,11 @@
 package com.lucky.arbaguette.boss.service;
 
 import com.lucky.arbaguette.boss.domain.Boss;
+import com.lucky.arbaguette.boss.dto.CrewSaveRequest;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.exception.BadRequestException;
+import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.company.domain.Company;
@@ -70,5 +73,13 @@ public class BossService {
 
     public LocalDateTime getEndOfMonth() {
         return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).with(LocalTime.MAX); // 월의 마지막 날 23:59:59
+    }
+
+    public void saveCrew(CustomUserDetails customUserDetails, CrewSaveRequest crewSaveRequest){
+        Crew crew = crewRepository.findByTel(crewSaveRequest.tel()).orElseThrow(()-> new BadRequestException("알바생을 찾을 수 없습니다."));
+        if(crew.alreadyHired()) throw new DuplicateException("이미 등록된 알바생입니다.");
+        Company company = companyRepository.findById(crewSaveRequest.companyId()).orElseThrow(()->new NotFoundException("사업장을 찾을 수 없습니다."));
+        crew.hiredCompany(company);
+        crewRepository.save(crew);
     }
 }
