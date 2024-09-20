@@ -13,4 +13,6 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
     Optional<Company> findByCompanyIdAndBoss(int companyId, Boss boss);
 
     List<Company> findAllByBoss_Email(String email);
+
+    Optional<Company> findByCompanyIdAndBoss_Email(int companyId, String email);
 }

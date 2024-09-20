@@ -14,5 +14,8 @@ public interface CrewRepository extends JpaRepository<Crew, Integer> {
 
     List<Crew> findByCompany(Company company);
 
+    Optional<Crew> findByTel(String tel);
+
     Optional<Crew> findByCompany_CompanyIdAndEmail(int companyId, String email);
+    
 }

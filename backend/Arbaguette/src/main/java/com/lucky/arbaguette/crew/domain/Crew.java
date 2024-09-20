@@ -52,4 +52,12 @@ public class Crew {
         this.profileImage = profileImage;
     }
 
+    public boolean alreadyHired(){
+        return this.company != null;
+    }
+
+    public void hiredCompany(Company company) {
+        this.company = company;
+    }
+
 }
