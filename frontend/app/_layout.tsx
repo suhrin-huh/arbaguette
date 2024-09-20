@@ -2,9 +2,11 @@ import 'react-native-reanimated';
 
 import Styled from '@emotion/native';
 import { ThemeProvider } from '@emotion/react';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import usePretendardFonts from '@/hooks/usePretendardFonts';
 import Theme from '@/styles/Theme';
@@ -43,7 +45,11 @@ export default function Root() {
   return (
     <ThemeProvider theme={Theme}>
       <RootLayout>
-        <Slot />
+        <GestureHandlerRootView>
+          <BottomSheetModalProvider>
+            <Slot />
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
       </RootLayout>
     </ThemeProvider>
   );
