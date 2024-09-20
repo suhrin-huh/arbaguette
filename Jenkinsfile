@@ -20,7 +20,12 @@ pipeline {
 
                         // Build and run the new backend container
                         sh "docker build -t backend ."
-                        sh "docker run --name backend -d -p 8080:8080 backend"
+                        sh """
+                            docker run --name backend -d -p 8080:8080 \
+                            -v /home/ubuntu/api_key/cloudvision-434807-1bea29b95286.json:/app/config/cloudvision.json \
+                            -e GOOGLE_APPLICATION_CREDENTIALS=/app/config/cloudvision.json \
+                            backend
+                        """
                     }
                 }
             }
