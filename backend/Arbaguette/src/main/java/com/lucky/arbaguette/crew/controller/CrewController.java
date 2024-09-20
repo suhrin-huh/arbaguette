@@ -24,4 +24,9 @@ public class CrewController {
 
     }
 
+    @GetMapping("/expected")
+    public ApiResponse<Integer> getExpectedSalary(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ApiResponse.success(crewService.getExpectedSalary(customUserDetails));
+    }
+
 }

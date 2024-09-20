@@ -39,6 +39,19 @@ public class CrewService {
 
     }
 
+    public int getExpectedSalary(CustomUserDetails customUserDetails) {
+        Crew crew = crewRepository.findByEmail(customUserDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
+
+        int hourlyRate = contractRepository.findByCrew(crew)
+                .orElseThrow(() -> new NotFoundException("알바생에 해당하는 근로계약서가 없습니다."))
+                .getSalary();
+
+        int salary = hourlyRate * calculateWorkHours(scheduleRepository.findAllScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+
+        return salary;
+    }
+
     public int calculateWorkHours(List<Schedule> schedules) {
         int totalHours = 0;
         for (Schedule schedule : schedules) {
