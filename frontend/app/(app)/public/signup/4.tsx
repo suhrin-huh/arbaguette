@@ -1,10 +1,11 @@
 import Styled from '@emotion/native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
+import instance from '@/configs/axios';
 
 const Container = Styled.View(({ theme }) => ({
   flex: 1,
@@ -42,6 +43,30 @@ const GetNumberScreen = () => {
     console.log('clear');
   };
 
+  const handleSignUp = async (): Promise<void> => {
+    try {
+      const profileImage = Math.floor(Math.random() * 6) + 1;
+      console.log(profileImage);
+      const response = await instance.post(
+        '/api/user',
+        {
+          email,
+          password,
+          name,
+          tel,
+          role,
+          profileImage,
+        },
+        { headers: { 'Content-Type': 'application/json' } },
+      );
+      if (response.data.code === 200) {
+        router.push('/(app)/public/login');
+      }
+    } catch (error) {
+      console.log('error : ', error);
+    }
+  };
+
   return (
     <Container>
       <ContentWrapper>
@@ -58,7 +83,7 @@ const GetNumberScreen = () => {
           />
         </InputWrapper>
       </ContentWrapper>
-      <Button type="primary" disabled={!isValid}>
+      <Button type="primary" disabled={!isValid} onPress={handleSignUp}>
         회원가입 완료
       </Button>
     </Container>
