@@ -8,8 +8,8 @@ import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.InternetServerErrorException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
+import com.lucky.arbaguette.company.dto.CompaniesResponse;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
-import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.dto.CompanyInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -92,6 +92,17 @@ public class CompanyService {
         Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
                 .orElseThrow(()-> new NotFoundException("사용자를 찾을 수 없습니다."));
         companyRepository.save(companyInfo.toCompany(boss));
+    }
+
+    public CompaniesResponse getCompanies(CustomUserDetails customUserDetails){
+        if(customUserDetails.isCrew()) {
+            throw new UnAuthorizedException("접근 권한이 없습니다.");
+        }
+        return CompaniesResponse.of(
+                companyRepository.findAllByBoss_Email(customUserDetails.getUsername()).stream()
+                        .map(CompanyInfo::from)
+                        .toList()
+        );
     }
 
 }
