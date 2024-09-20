@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/bank")
 @RequiredArgsConstructor
@@ -27,5 +29,10 @@ public class BankController {
     public ApiResponse<Void> sendMoney(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody SendMoneyRequest request) {
         bankService.sendMoney(customUserDetails, request);
         return ApiResponse.success();
+    }
+
+    @GetMapping("/history")
+    public ApiResponse<Map<String, Object>> getHistory(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ApiResponse.success(bankService.getHistory(customUserDetails));
     }
 }
