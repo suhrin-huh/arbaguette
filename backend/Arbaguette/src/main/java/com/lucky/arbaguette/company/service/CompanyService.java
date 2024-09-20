@@ -8,7 +8,8 @@ import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.InternetServerErrorException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
-import com.lucky.arbaguette.company.dto.CompaniesResponse;
+import com.lucky.arbaguette.company.dto.CompanyListResponse;
+import com.lucky.arbaguette.company.dto.CompanyListResponse.CompanyList;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.company.dto.CompanyInfo;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ import java.util.List;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
+import static com.lucky.arbaguette.company.dto.CompanyListResponse.*;
 
 
 @RequiredArgsConstructor
@@ -94,13 +97,13 @@ public class CompanyService {
         companyRepository.save(companyInfo.toCompany(boss));
     }
 
-    public CompaniesResponse getCompanies(CustomUserDetails customUserDetails){
+    public CompanyListResponse getCompanies(CustomUserDetails customUserDetails){
         if(customUserDetails.isCrew()) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }
-        return CompaniesResponse.of(
+        return of(
                 companyRepository.findAllByBoss_Email(customUserDetails.getUsername()).stream()
-                        .map(CompanyInfo::from)
+                        .map(CompanyList::of)
                         .toList()
         );
     }
