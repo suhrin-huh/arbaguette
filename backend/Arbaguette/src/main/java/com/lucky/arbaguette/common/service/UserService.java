@@ -41,6 +41,12 @@ public class UserService {
     @Value("${finopenapi.key}")
     private String financialApiKey;
 
+    public void checkEmail(String email) {
+        if (bossRepository.existsByEmail(email) || crewRepository.existsByEmail(email)) {
+            throw new DuplicateException("아이디가 중복되었습니다.");
+        }
+    }
+
     public void joinProcess(UserJoinRequest joinRequest) {
 
         // 아이디 중복 확인
