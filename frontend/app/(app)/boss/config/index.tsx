@@ -3,11 +3,14 @@ import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import LottieView from 'lottie-react-native';
 import { useCallback, useMemo, useRef, useState } from 'react';
 
-import NfcAnimation from '@/assets/lottie/nfc_ready.json';
 import CustomBackdrop from '@/components/common/BottomSheetOption/CustomBackdrop';
 import CustomBackground from '@/components/common/BottomSheetOption/CustomBackgound';
 import StoreCard from '@/components/common/StoreCard';
 import Layout from '@/constants/Layout';
+import NfcReadyAnimation from '@/assets/lottie/nfc_ready.json';
+import NfcLoadingAnimation from '@/assets/lottie/nfc_loading.json';
+import NfcRegisteredAnimation from '@/assets/lottie/nfc_registered.json';
+import NfcRejectedAnimation from '@/assets/lottie/nfc_rejected.json';
 
 interface willStoreDto {
   // 일단 임시로 가게 정보 타입 선언
@@ -29,6 +32,7 @@ const ConfigScreen = () => {
   const animation = useRef<LottieView>(null);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ['40%', '40%'], []);
+  const [nfcStatus, setNfcStatus] = useState<'ready' | 'loading' | 'registered' | 'rejected'>('registered');
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -68,20 +72,40 @@ const ConfigScreen = () => {
         backgroundComponent={CustomBackground}
         backdropComponent={CustomBackdrop}>
         <BottomSheetViewArea>
-          <NfcReadyTextBox>
-            <NfcReadyText1>출근 관리용 NFC를</NfcReadyText1>
-            <NfcReadyText2>등록해주세요.</NfcReadyText2>
-          </NfcReadyTextBox>
-          <LottieView
-            autoPlay
-            ref={animation}
-            speed={1.5}
-            style={{
-              width: 280,
-              height: 280,
-            }}
-            source={NfcAnimation}
-          />
+          {(() => {
+            const renderLottieView = (source: any, loop: boolean, speed: number, text1: string, text2: string) => (
+              <>
+                <NfcReadyTextBox>
+                  <NfcReadyText1>{text1}</NfcReadyText1>
+                  <NfcReadyText2>{text2}</NfcReadyText2>
+                </NfcReadyTextBox>
+                <LottieView
+                  autoPlay
+                  loop={loop}
+                  ref={animation}
+                  speed={speed}
+                  style={{
+                    width: 280,
+                    height: 280,
+                  }}
+                  source={source}
+                />
+              </>
+            );
+
+            switch (nfcStatus) {
+              case 'ready':
+                return renderLottieView(NfcReadyAnimation, true, 1, '출근 관리용 NFC 카드를', '등록해주세요.');
+              case 'loading':
+                return renderLottieView(NfcLoadingAnimation, true, 1, 'NFC를 등록중입니다.', '잠시만 기다려주세요.');
+              case 'registered':
+                return renderLottieView(NfcRegisteredAnimation, false, 1.5, 'NFC 등록 완료', '사업장 등록 완료');
+              case 'rejected':
+                return renderLottieView(NfcRejectedAnimation, false, 1, 'NFC 등록 실패', '다시 시도해주세요.');
+              default:
+                return null;
+            }
+          })()}
         </BottomSheetViewArea>
       </BottomSheetModal>
     </InnerContainer>
