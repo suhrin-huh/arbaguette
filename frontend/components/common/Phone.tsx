@@ -2,7 +2,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import * as Linking from 'expo-linking';
 import { Pressable } from 'react-native';
 
-interface PhoneProps {
+export interface PhoneProps {
   phoneNumber: string;
 }
 
