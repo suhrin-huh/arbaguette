@@ -19,13 +19,13 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("")
+    @GetMapping
     public ApiResponse<Void> checkEmail(@RequestParam String email) {
         userService.checkEmail(email);
         return ApiResponse.success();
     }
 
-    @PostMapping("")
+    @PostMapping
     public ApiResponse<Void> joinProcess(@RequestBody UserJoinRequest joinRequest) {
         userService.joinProcess(joinRequest);
         return ApiResponse.success();

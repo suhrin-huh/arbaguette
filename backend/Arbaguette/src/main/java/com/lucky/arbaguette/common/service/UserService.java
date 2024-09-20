@@ -33,7 +33,7 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final BossRepository bossRepository;
     private final CrewRepository crewRepository;
-    private final WebClient webClient; // WebClient 주입
+    private final WebClient webClient; // WebClient 주입git
 
     @Value("${finopenapi.url}")
     private String financialApiUrl;
