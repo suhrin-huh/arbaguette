@@ -1,7 +1,6 @@
 import styled from '@emotion/native';
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
-import LottieView from 'lottie-react-native';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { router } from 'expo-router';
+import { useState } from 'react';
 
 import CustomBackdrop from '@/components/common/BottomSheetOption/CustomBackdrop';
 import CustomBackground from '@/components/common/BottomSheetOption/CustomBackgound';
@@ -44,7 +43,7 @@ const ConfigScreen = () => {
 
   const pressNfcButton = (card: willStoreDto) => {
     console.log('NFC 버튼 눌림 : ', card.storeId);
-    handlePresentModalPress();
+    router.push('/(app)/boss/config/modal');
   };
 
   const addStoreHandler = () => {
@@ -114,10 +113,10 @@ const ConfigScreen = () => {
 
 export default ConfigScreen;
 
-const InnerContainer = styled.ScrollView(({ theme }) => ({
+const InnerContainer = styled.ScrollView({
   flexGrow: 1,
   overflow: 'visible',
-}));
+});
 
 const ConfigTitle = styled.Text(({ theme }) => ({
   fontSize: 28,
@@ -126,26 +125,4 @@ const ConfigTitle = styled.Text(({ theme }) => ({
   textAlign: 'left',
   marginTop: 80 - theme.layout.PADDING.VERTICAL,
   marginBottom: 30,
-}));
-
-const BottomSheetViewArea = styled(BottomSheetView)(({ theme }) => ({
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-}));
-
-const NfcReadyTextBox = styled.View(({ theme }) => ({
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginTop: 30,
-}));
-const NfcReadyText1 = styled.Text(({ theme }) => ({
-  fontSize: 24,
-  color: 'white',
-  fontWeight: 600,
-}));
-const NfcReadyText2 = styled.Text(({ theme }) => ({
-  fontSize: 24,
-  color: 'white',
-  fontWeight: 600,
 }));
