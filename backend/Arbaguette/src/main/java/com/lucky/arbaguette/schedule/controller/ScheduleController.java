@@ -20,13 +20,13 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @PostMapping("/in")
+    @PostMapping("/crew/in")
     public ApiResponse<ScheduleSaveResponse> updateInWork(
             @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("companyId") int companyId) {
         return ApiResponse.success(scheduleService.updateInWork(customUserDetails, companyId, now()));
     }
 
-    @PostMapping("/out")
+    @PostMapping("/crew/out")
     public ApiResponse<ScheduleSaveResponse> updateOutWork(
             @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int companyId) {
         return ApiResponse.success(scheduleService.updateOutWork(customUserDetails, companyId, now()));
