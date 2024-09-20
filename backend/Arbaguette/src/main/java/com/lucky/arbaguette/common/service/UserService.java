@@ -1,8 +1,5 @@
 package com.lucky.arbaguette.common.service;
 
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.BOSS;
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.CREW;
-
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
@@ -11,10 +8,6 @@ import com.lucky.arbaguette.common.domain.dto.response.UserInfoResponse;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +16,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.BOSS;
+import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.CREW;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +53,6 @@ public class UserService {
         Map<String, String> userKeyBody = new HashMap<>();
         userKeyBody.put("userId", joinRequest.getEmail());
         userKeyBody.put("apiKey", financialApiKey);
-        System.out.println(joinRequest.getEmail());
 
         Map<String, Object> responseBody = webClient.post()
                 .uri(financialApiUrl + "/v1/member/")
