@@ -3,7 +3,7 @@ package com.lucky.arbaguette.company.controller;
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.company.dto.CompanyInfo;
-import com.lucky.arbaguette.company.dto.CompanyListResponse;
+import com.lucky.arbaguette.company.dto.CompaniesResponse;
 import com.lucky.arbaguette.company.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,8 +29,8 @@ public class CompanyController {
         return ApiResponse.success();
     }
 
-    @GetMapping()
-    public ApiResponse<CompanyListResponse> getCompanies(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    @GetMapping
+    public ApiResponse<CompaniesResponse> getCompanies(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ApiResponse.success(companyService.getCompanies(customUserDetails));
     }
 
