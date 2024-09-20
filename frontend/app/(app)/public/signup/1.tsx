@@ -35,7 +35,6 @@ const GetNameScreen = () => {
   const handleNameInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setName(e.nativeEvent.text);
     setIsValid(true);
-    console.log(name);
   };
 
   const ClearNameInput = (): void => {

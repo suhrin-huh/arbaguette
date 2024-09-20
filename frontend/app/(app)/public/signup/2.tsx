@@ -65,7 +65,7 @@ const GetEmailScreen = () => {
           />
         </InputWrapper>
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext} disabled={!!email.length}>
+      <Button type="primary" onPress={goToNext} disabled={!email.length}>
         다음
       </Button>
     </Container>
