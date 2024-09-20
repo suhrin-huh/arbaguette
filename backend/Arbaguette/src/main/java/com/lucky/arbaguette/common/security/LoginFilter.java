@@ -77,7 +77,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(
-                ApiResponse.success(new LoginResponse(token, null))));
+                ApiResponse.success(LoginResponse.from(token, null, customUserDetails))));
         response.getWriter().flush();
     }
 
