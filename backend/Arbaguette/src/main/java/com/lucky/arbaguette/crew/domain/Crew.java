@@ -17,7 +17,7 @@ public class Crew {
     private int crewId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comapny_id")
+    @JoinColumn(name = "company_id")
     private Company company;
 
     private String name;
@@ -43,6 +43,14 @@ public class Crew {
         this.account = account;
         this.userKey = userKey;
         this.profileImage = profileImage;
+    }
+
+    public boolean alreadyHired(){
+        return this.company != null;
+    }
+
+    public void hiredCompany(Company company) {
+        this.company = company;
     }
 
 }
