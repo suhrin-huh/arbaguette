@@ -9,10 +9,7 @@ import com.lucky.arbaguette.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -22,7 +19,13 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("")
+    @GetMapping
+    public ApiResponse<Void> checkEmail(@RequestParam String email) {
+        userService.checkEmail(email);
+        return ApiResponse.success();
+    }
+
+    @PostMapping
     public ApiResponse<Void> joinProcess(@RequestBody UserJoinRequest joinRequest) {
         userService.joinProcess(joinRequest);
         return ApiResponse.success();
@@ -32,4 +35,5 @@ public class UserController {
     public ApiResponse<UserInfoResponse> info(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ApiResponse.success(userService.info(customUserDetails));
     }
+
 }
