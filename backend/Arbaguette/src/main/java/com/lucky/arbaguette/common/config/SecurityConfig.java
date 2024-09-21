@@ -7,6 +7,8 @@ import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.security.LoginFilter;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.Arrays;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -102,7 +104,7 @@ public class SecurityConfig {
     private CorsConfigurationSource apiConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Collections.singletonList("http://j11c101.p.ssafy.io:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("http://j11c101.p.ssafy.io:8080", "http://localhost:8081"));
         configuration.setAllowedMethods(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
