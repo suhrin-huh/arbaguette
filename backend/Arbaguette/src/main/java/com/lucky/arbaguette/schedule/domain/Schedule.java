@@ -54,6 +54,10 @@ public class Schedule {
         return 0;
     }
 
+    public String getStatusMessage() {
+        return status.getMessage();
+    }
+
     @JsonIgnore
     public boolean isBeforeWork() {
         return this.status == null;
