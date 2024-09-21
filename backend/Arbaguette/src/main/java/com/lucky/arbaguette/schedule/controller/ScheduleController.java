@@ -20,15 +20,9 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @PostMapping("/crew/in")
-    public ApiResponse<ScheduleSaveResponse> updateInWork(
+    @PostMapping("/crew/commute")
+    public ApiResponse<ScheduleSaveResponse> updateCrewCommute(
             @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("companyId") int companyId) {
-        return ApiResponse.success(scheduleService.updateInWork(customUserDetails, companyId, now()));
-    }
-
-    @PostMapping("/crew/out")
-    public ApiResponse<ScheduleSaveResponse> updateOutWork(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int companyId) {
-        return ApiResponse.success(scheduleService.updateOutWork(customUserDetails, companyId, now()));
+        return ApiResponse.success(scheduleService.updateCrewCommute(customUserDetails, companyId, now()));
     }
 }

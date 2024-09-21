@@ -21,40 +21,24 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CrewRepository crewRepository;
 
-    public ScheduleSaveResponse updateInWork(CustomUserDetails customUserDetails, int companyId,
-                                             LocalDateTime nowTime) {
+    public ScheduleSaveResponse updateCrewCommute(CustomUserDetails customUserDetails, int companyId,
+                                                  LocalDateTime nowTime) {
         Crew crew = crewRepository.findByCompany_CompanyIdAndEmail(companyId, customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
 
         Schedule schedule = scheduleRepository.findByCrewAndTime(crew.getCrewId(), nowTime)
                 .orElseThrow(() -> new NotFoundException("출근 날짜가 아닙니다."));
 
-        if (!schedule.isBeforeWork()) {
-            throw new BadRequestException("이미 출근하였습니다.");
-        }
-
-        schedule.inWork(nowTime);
-
-        return ScheduleSaveResponse.from(schedule.getStatus().name(), nowTime);
-    }
-
-    public ScheduleSaveResponse updateOutWork(CustomUserDetails customUserDetails, int companyId,
-                                              LocalDateTime nowTime) {
-        Crew crew = crewRepository.findByCompany_CompanyIdAndEmail(companyId, customUserDetails.getUsername())
-                .orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
-
-        Schedule schedule = scheduleRepository.findByCrewAndTime(crew.getCrewId(), nowTime)
-                .orElseThrow(() -> new NotFoundException("출근 날짜가 아닙니다."));
-
-        if (schedule.isBeforeWork()) {
-            throw new BadRequestException("출근 후에 퇴근이 가능합니다.");
-        }
         if (schedule.isAlreadyOutWork()) {
             throw new BadRequestException("이미 퇴근처리 되었습니다.");
         }
 
-        schedule.outWork(nowTime);
+        if (schedule.isBeforeWork()) {
+            schedule.inWork(nowTime);
+            return ScheduleSaveResponse.from(schedule.getStatusMessage(), nowTime);
+        }
 
+        schedule.outWork(nowTime);
         return ScheduleSaveResponse.from("퇴근 완료", nowTime);
     }
 }
