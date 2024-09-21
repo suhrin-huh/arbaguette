@@ -1,11 +1,16 @@
+import UploadInitialScreen from '@/components/boss/upload/UploadInitialScreen';
 import { Stack } from 'expo-router';
 
 const UploadLayout = () => {
   return (
-    <Stack screenOptions={{ headerShown: false }} initialRouteName="index">
-      <Stack.Screen name="index" />
-      <Stack.Screen name="camera" />
-    </Stack>
+    <UploadInitialScreen>
+      <Stack screenOptions={{ headerShown: false }} initialRouteName="index">
+        <Stack.Screen name="index" />
+        <Stack.Screen name="camera" />
+        <Stack.Screen name="gallery" />
+        <Stack.Screen name="check" />
+      </Stack>
+    </UploadInitialScreen>
   );
 };
 
