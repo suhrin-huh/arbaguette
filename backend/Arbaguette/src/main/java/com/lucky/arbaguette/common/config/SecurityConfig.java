@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         //누구나 접근 가능
-                        .requestMatchers("/", "/login", "/join", "/api/user/**").permitAll()
+                        .requestMatchers("/", "/api/login", "/join", "/api/user/**").permitAll()
                         //dispatcher 를 통해 넘어오는 에러는 모두 접근 가능
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         //BOSS 만 접근 가능
@@ -114,4 +114,5 @@ public class SecurityConfig {
 
         return source;
     }
+
 }
