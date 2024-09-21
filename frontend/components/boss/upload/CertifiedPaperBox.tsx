@@ -1,7 +1,5 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 import styled from '@emotion/native'
-import Button from '../common/Button'
 
 type CertifiedPaperBoxProps = {
   children: React.ReactNode;
@@ -9,6 +7,7 @@ type CertifiedPaperBoxProps = {
 }
 
 const CertifiedPaperBox = ({ children, uri }: CertifiedPaperBoxProps) => {
+  console.log(uri)
   return (
     <IsPictureContainer>
       <TakedPictureContainer>
@@ -38,7 +37,6 @@ const TakedPictureContainer = styled.View(({ theme }) => ({
 const TakedPicture = styled.Image(({ theme }) => ({
   width: '100%',
   height: 500,
-  resizeMode: 'cover',
 }));
 
 const ButtonBox = styled.View(({ theme }) => ({
