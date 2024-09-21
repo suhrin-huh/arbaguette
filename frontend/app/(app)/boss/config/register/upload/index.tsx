@@ -4,28 +4,69 @@ import { router } from 'expo-router';
 import { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Alert, Text } from 'react-native';
+import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
+import { Image, Text } from 'react-native';
+import CertifiedPaperBox from '@/components/boss/CertifiedPaperBox';
+import CameraScreen from './camera';
 
 const UploadBusinessCertificateScreen = () => {
-  const [imageUploaded, setImageUploaded] = useState(false);
+  const [step, setStep] = useState<'initial' | 'take' | 'uploaded'>('initial');
+  const { certifiedPaper, setCertifiedPaper } = useCertifiedPaperStore();
+
+  const handleCameraPress = () => {
+    // router.push('./upload/camera');
+    setStep('take');
+  };
+
+  const handleGalleryPress = () => {
+  };
+
+  const handleResetPress = () => {
+    setCertifiedPaper('');
+    router.replace('/boss/config/register/upload');
+  };
+
+  const handleNextPress = () => {
+
+  };
+
+  useEffect(() => {
+    if (certifiedPaper) {
+      setStep('uploaded');
+    }
+  }, [certifiedPaper]);
 
   return (
     <Container>
       <Title>사업자 등록증을 업로드해주세요.</Title>
-      <InnerContainer>
-        <ButtonContainer>
-          <CameraButton>
-            <FontAwesome5 name="camera" size={60} color="white" />
-            <ButtonText>촬영해 업로드</ButtonText>
-          </CameraButton>
-          <CameraButton>
-            <MaterialIcons name="image" size={60} color="white" />
-            <ButtonText>갤러리에서 선택</ButtonText>
-          </CameraButton>
-        </ButtonContainer>
 
-        {imageUploaded && <Button>다음</Button>}
-      </InnerContainer>
+      {step === 'initial' &&
+        <InnerContainer>
+          <ButtonContainer>
+            <CameraButton onPress={handleCameraPress}>
+              <FontAwesome5 name="camera" size={60} color="white" />
+              <CameraButtonText>촬영해 업로드</CameraButtonText>
+            </CameraButton>
+            <CameraButton onPress={handleGalleryPress}>
+              <MaterialIcons name="image" size={60} color="white" />
+              <CameraButtonText>갤러리에서 선택</CameraButtonText>
+            </CameraButton>
+          </ButtonContainer>
+        </InnerContainer>}
+
+      {step === 'take' && <CameraScreen setStep={setStep} />}
+
+      {step === 'uploaded' && certifiedPaper &&
+        <CertifiedPaperBox uri={certifiedPaper}>
+          <HalfButtonContainer>
+            <HalfWidthButton type='outlined' onPress={handleResetPress}>초기화</HalfWidthButton>
+          </HalfButtonContainer>
+          <HalfButtonContainer>
+            <HalfWidthButton onPress={handleNextPress}>다음</HalfWidthButton >
+          </HalfButtonContainer>
+        </CertifiedPaperBox>
+      }
+
     </Container>
   );
 };
@@ -71,8 +112,17 @@ const CameraButton = styled.Pressable(({ theme }) => ({
   gap: 10,
 }));
 
-const ButtonText = styled.Text(({ theme }) => ({
+const CameraButtonText = styled.Text(({ theme }) => ({
   fontSize: 16,
   fontWeight: 'bold',
-  color: 'white',
+  color: theme.color.WHITE,
 }));
+
+const HalfButtonContainer = styled.View(({ theme }) => ({
+  flex: 1,
+}));
+
+const HalfWidthButton = styled(Button)({
+  flex: 1,
+  width: '100%',
+});
