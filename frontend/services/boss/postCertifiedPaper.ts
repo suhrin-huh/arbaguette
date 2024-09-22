@@ -1,7 +1,6 @@
 import instance from "@/configs/axios";
 
 const postCertifiedPaper = async (paper: FormData) => {
-  console.log('paper : ', paper);
   try {
     const response = await instance.post('/company/ocr', paper, {
       headers: {
@@ -9,11 +8,9 @@ const postCertifiedPaper = async (paper: FormData) => {
         'Content-Type': 'multipart/form-data'
       }
     });
-    console.log('response : ', response.data);
+    return response.data.data;
 
   } catch (error) {
-
-    console.error(error);
     throw error;
   }
 };
