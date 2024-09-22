@@ -1,19 +1,33 @@
+import pickImageToFormData from '@/util/boss/pickImageToFormData';
 import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
 import styled from '@emotion/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
+import { Alert } from 'react-native';
 
 const UploadBusinessCertificateScreen = () => {
-  const { clearCertifiedPaper } = useCertifiedPaperStore()
+  const { clearCertifiedPaper, setCertifiedPaper, setPaperUri } = useCertifiedPaperStore()
 
   const handleCameraPress = () => {
 
     router.push('./upload/camera');
   };
 
-  const handleGalleryPress = () => {
-    router.push('./upload/gallery');
+  const handleGalleryPress = async () => {
+    try {
+      const result = await pickImageToFormData();
+
+      if (result) {
+        const { formData, uri } = result;
+        setCertifiedPaper(formData);
+        setPaperUri(uri);
+        router.push('./upload/check');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '이미지 선택 중 오류가 발생했습니다.');
+    }
   };
 
   useEffect(() => {
