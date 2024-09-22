@@ -1,12 +1,13 @@
-import { View } from 'react-native'
-import React, { useRef } from 'react'
-import styled from '@emotion/native'
-import Button from '@/components/common/Button'
-import { CameraView, useCameraPermissions } from 'expo-camera'
-import { FontAwesome5 } from '@expo/vector-icons'
-import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore'
-import { router } from 'expo-router'
-import takePictureToFormData from '@/util/boss/takePictureToFormData'
+import styled from '@emotion/native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import { router } from 'expo-router';
+import React, { useRef } from 'react';
+import { View } from 'react-native';
+
+import Button from '@/components/common/Button';
+import takePictureToFormData from '@/util/boss/takePictureToFormData';
+import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
 
 const CameraScreen = () => {
   const [permission, requestPermission] = useCameraPermissions();
@@ -32,7 +33,7 @@ const CameraScreen = () => {
     return (
       <PermissionContainer>
         <PermissionText>카메라 사용 권한이 필요합니다</PermissionText>
-        <Button type='primary' onPress={requestPermission}>
+        <Button type="primary" onPress={requestPermission}>
           권한 요청
         </Button>
       </PermissionContainer>
@@ -46,19 +47,18 @@ const CameraScreen = () => {
       </CameraViewContainer>
       <ButtonBox>
         <HalfButtonContainer>
-          <Button type='primary' onPress={takePicture}>
+          <Button type="primary" onPress={takePicture}>
             <FontAwesome5 name="camera" size={16} color="white" />
           </Button>
         </HalfButtonContainer>
       </ButtonBox>
     </CameraScreenContainer>
-  )
-}
+  );
+};
 
-export default CameraScreen
+export default CameraScreen;
 
 const PermissionContainer = styled.View({
-
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',

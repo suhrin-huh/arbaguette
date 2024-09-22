@@ -1,13 +1,14 @@
-import pickImageToFormData from '@/util/boss/pickImageToFormData';
-import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
 import styled from '@emotion/native';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
 
+import pickImageToFormData from '@/util/boss/pickImageToFormData';
+import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
+
 const UploadBusinessCertificateScreen = () => {
-  const { clearCertifiedPaper, setCertifiedPaper, setPaperUri } = useCertifiedPaperStore()
+  const { clearCertifiedPaper, setCertifiedPaper, setPaperUri } = useCertifiedPaperStore();
 
   const handleCameraPress = () => {
     router.push('/boss/config/register/upload/camera');
@@ -31,10 +32,9 @@ const UploadBusinessCertificateScreen = () => {
 
   useEffect(() => {
     clearCertifiedPaper();
-  }, [])
+  }, []);
 
   return (
-
     <InnerContainer>
       <ButtonContainer>
         <CameraButton onPress={handleCameraPress}>
@@ -80,4 +80,3 @@ const CameraButtonText = styled.Text(({ theme }) => ({
   fontWeight: 'bold',
   color: theme.color.WHITE,
 }));
-

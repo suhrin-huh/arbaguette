@@ -1,12 +1,13 @@
-import React from 'react'
-import CertifiedPaperBox from '@/components/boss/upload/CertifiedPaperBox'
-import styled from '@emotion/native'
-import Button from '@/components/common/Button'
-import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore'
-import { router } from 'expo-router'
-import postCertifiedPaper from '@/services/boss/postCertifiedPaper'
-import { Alert } from 'react-native'
-import { useCompanyInfoStore } from '@/zustand/boss/useCompanyInfoStore'
+import styled from '@emotion/native';
+import { router } from 'expo-router';
+import React from 'react';
+import { Alert } from 'react-native';
+
+import CertifiedPaperBox from '@/components/boss/upload/CertifiedPaperBox';
+import Button from '@/components/common/Button';
+import postCertifiedPaper from '@/services/boss/postCertifiedPaper';
+import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
+import { useCompanyInfoStore } from '@/zustand/boss/useCompanyInfoStore';
 
 const CheckScreen = () => {
   const { certifiedPaper, paperUri } = useCertifiedPaperStore();
@@ -15,7 +16,6 @@ const CheckScreen = () => {
   const handleResetPress = () => {
     router.push('./');
   };
-
 
   const handleNextPress = async () => {
     try {
@@ -27,23 +27,23 @@ const CheckScreen = () => {
     }
   };
 
-
   return (
     <CertifiedPaperBox uri={paperUri}>
       <HalfButtonContainer>
-        <HalfWidthButton type='outlined' onPress={handleResetPress}>다시 선택하기</HalfWidthButton>
+        <HalfWidthButton type="outlined" onPress={handleResetPress}>
+          다시 선택하기
+        </HalfWidthButton>
       </HalfButtonContainer>
       <HalfButtonContainer>
-        <HalfWidthButton onPress={handleNextPress}>업로드</HalfWidthButton >
+        <HalfWidthButton onPress={handleNextPress}>업로드</HalfWidthButton>
       </HalfButtonContainer>
     </CertifiedPaperBox>
-  )
-}
+  );
+};
 
-export default CheckScreen
+export default CheckScreen;
 
 const HalfButtonContainer = styled.View(({ theme }) => ({
-
   flex: 1,
 }));
 

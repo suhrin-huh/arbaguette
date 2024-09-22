@@ -1,16 +1,16 @@
-import React from 'react'
-import styled from '@emotion/native'
+import styled from '@emotion/native';
+import React from 'react';
 
-const UploadInitialScreen = ({ children, title }: { children: React.ReactNode, title: string }) => {
+const UploadInitialScreen = ({ children, title }: { children: React.ReactNode; title: string }) => {
   return (
     <Container>
       <Title>{title}</Title>
       {children}
     </Container>
-  )
-}
+  );
+};
 
-export default UploadInitialScreen
+export default UploadInitialScreen;
 
 const Container = styled.View(({ theme }) => ({
   flex: 1,

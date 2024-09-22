@@ -1,7 +1,7 @@
-import React from 'react'
-import styled from '@emotion/native'
+import styled from '@emotion/native';
+import React from 'react';
 
-type CertifiedPaperBoxProps = {
+interface CertifiedPaperBoxProps {
   children: React.ReactNode;
   uri: string;
 }
@@ -12,15 +12,12 @@ const CertifiedPaperBox = ({ children, uri }: CertifiedPaperBoxProps) => {
       <TakedPictureContainer>
         <TakedPicture source={{ uri }} />
       </TakedPictureContainer>
-      <ButtonBox>
-        {children}
-      </ButtonBox>
+      <ButtonBox>{children}</ButtonBox>
     </IsPictureContainer>
-  )
-}
+  );
+};
 
-export default CertifiedPaperBox
-
+export default CertifiedPaperBox;
 
 const IsPictureContainer = styled.View(({ theme }) => ({
   flex: 1,
@@ -45,4 +42,3 @@ const ButtonBox = styled.View(({ theme }) => ({
   width: '100%',
   gap: 10,
 }));
-

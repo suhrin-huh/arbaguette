@@ -1,42 +1,47 @@
-import React from 'react'
-import UploadInitialScreen from '@/components/boss/upload/UploadInitialScreen'
-import LabeledInput from '@/components/common/LabeledInput'
-import styled from '@emotion/native'
-import { useCompanyInfoStore } from '@/zustand/boss/useCompanyInfoStore'
-import Button from '@/components/common/Button'
-import { router } from 'expo-router'
+import styled from '@emotion/native';
+import { router } from 'expo-router';
+import React from 'react';
+
+import UploadInitialScreen from '@/components/boss/upload/UploadInitialScreen';
+import Button from '@/components/common/Button';
+import LabeledInput from '@/components/common/LabeledInput';
+import { useCompanyInfoStore } from '@/zustand/boss/useCompanyInfoStore';
 
 const PreviewScreen = () => {
-  const { companyName, ceoName, address } = useCompanyInfoStore()
+  const { companyName, ceoName, address } = useCompanyInfoStore();
 
   const handleBackPress = () => {
-    router.push('/boss/config/register/upload')
-  }
+    router.push('/boss/config/register/upload');
+  };
 
   const handleNextPress = () => {
-    router.push('./complete')
-  }
+    router.push('./complete');
+  };
 
   return (
-    <UploadInitialScreen title='사업자 등록 정보를 확인해주세요.'>
+    <UploadInitialScreen title="사업자 등록 정보를 확인해주세요.">
       <InputContainer>
-        <LabeledInput label='상호' value={companyName} />
-        <LabeledInput label='대표자명' value={ceoName} />
-        <LabeledInput label='주소' value={address} />
+        <LabeledInput label="상호" value={companyName} />
+        <LabeledInput label="대표자명" value={ceoName} />
+        <LabeledInput label="주소" value={address} />
       </InputContainer>
       <ButtonBox>
         <ButtonContainer>
-          <Button type='outlined' size='fill' onPress={handleBackPress}>다시 선택하기</Button>
+          <Button type="outlined" size="fill" onPress={handleBackPress}>
+            다시 선택하기
+          </Button>
         </ButtonContainer>
         <ButtonContainer>
-          <Button type='primary' size='fill' onPress={handleNextPress}>확인</Button>
+          <Button type="primary" size="fill" onPress={handleNextPress}>
+            확인
+          </Button>
         </ButtonContainer>
       </ButtonBox>
     </UploadInitialScreen>
-  )
-}
+  );
+};
 
-export default PreviewScreen
+export default PreviewScreen;
 
 const InputContainer = styled.View(({ theme }) => ({
   marginTop: 30,
@@ -57,4 +62,3 @@ const ButtonContainer = styled.View(({ theme }) => ({
   flex: 1,
   marginBottom: theme.layout.PADDING.VERTICAL,
 }));
-
