@@ -11,7 +11,7 @@ const CameraScreen = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
 
-  const { setCertifiedPaper } = useCertifiedPaperStore();
+  const { setCertifiedPaper, setPaperUri } = useCertifiedPaperStore();
 
   const takePicture = async () => {
     try {
@@ -22,9 +22,18 @@ const CameraScreen = () => {
           exif: true,
         });
         if (newPhoto) {
-          setCertifiedPaper(newPhoto.uri);
+          const formData = new FormData();
+          formData.append('image', {
+            uri: newPhoto.uri,
+            type: 'image/jpeg',
+            name: `photo_${Date.now()}.jpeg`
+          } as any);
+
+          setCertifiedPaper(formData);
+          setPaperUri(newPhoto.uri);
           router.push('./check');
         }
+
       }
     } catch (error) {
       console.error("Error taking picture: ", error);
