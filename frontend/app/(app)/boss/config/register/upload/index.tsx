@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { useEffect } from 'react';
 
 const UploadBusinessCertificateScreen = () => {
-  const { setCertifiedPaper } = useCertifiedPaperStore()
+  const { clearCertifiedPaper } = useCertifiedPaperStore()
 
   const handleCameraPress = () => {
 
@@ -17,7 +17,7 @@ const UploadBusinessCertificateScreen = () => {
   };
 
   useEffect(() => {
-    setCertifiedPaper('')
+    clearCertifiedPaper();
   }, [])
 
   return (

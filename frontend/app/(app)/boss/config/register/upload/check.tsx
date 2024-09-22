@@ -5,9 +5,10 @@ import styled from '@emotion/native'
 import Button from '@/components/common/Button'
 import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore'
 import { router } from 'expo-router'
+import postCertifiedPaper from '@/services/boss/postCertifiedPaper'
 
 const CheckScreen = () => {
-  const { certifiedPaper, setCertifiedPaper } = useCertifiedPaperStore()
+  const { certifiedPaper, paperUri } = useCertifiedPaperStore()
 
   const handleResetPress = () => {
     router.push('./');
@@ -15,12 +16,12 @@ const CheckScreen = () => {
 
 
   const handleNextPress = () => {
-    console.log('업로드')
+    postCertifiedPaper(certifiedPaper);
   };
 
 
   return (
-    <CertifiedPaperBox uri={certifiedPaper}>
+    <CertifiedPaperBox uri={paperUri}>
       <HalfButtonContainer>
         <HalfWidthButton type='outlined' onPress={handleResetPress}>다시 선택하기</HalfWidthButton>
       </HalfButtonContainer>
