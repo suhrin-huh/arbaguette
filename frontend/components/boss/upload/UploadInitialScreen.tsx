@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from '@emotion/native'
 
-const UploadInitialScreen = ({ children }: { children: React.ReactNode }) => {
+const UploadInitialScreen = ({ children, title }: { children: React.ReactNode, title: string }) => {
   return (
     <Container>
-      <Title>사업자 등록증을 업로드해주세요.</Title>
+      <Title>{title}</Title>
       {children}
     </Container>
   )
