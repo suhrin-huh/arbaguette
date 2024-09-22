@@ -5,17 +5,26 @@ import Button from '@/components/common/Button'
 import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore'
 import { router } from 'expo-router'
 import postCertifiedPaper from '@/services/boss/postCertifiedPaper'
+import { Alert } from 'react-native'
+import { useCompanyInfoStore } from '@/zustand/boss/useCompanyInfoStore'
 
 const CheckScreen = () => {
-  const { certifiedPaper, paperUri } = useCertifiedPaperStore()
+  const { certifiedPaper, paperUri } = useCertifiedPaperStore();
+  const { setCompanyInfo } = useCompanyInfoStore();
 
   const handleResetPress = () => {
     router.push('./');
   };
 
 
-  const handleNextPress = () => {
-    postCertifiedPaper(certifiedPaper);
+  const handleNextPress = async () => {
+    try {
+      const { name, address, representative } = await postCertifiedPaper(certifiedPaper);
+      setCompanyInfo({ companyName: name, address, ceoName: representative });
+      router.push('/boss/config/register/preview');
+    } catch (error) {
+      Alert.alert('업로드 실패', '업로드 실패하였습니다. 다시 시도해주세요.');
+    }
   };
 
 

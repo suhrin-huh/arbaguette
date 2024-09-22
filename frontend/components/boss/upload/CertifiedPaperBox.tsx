@@ -7,7 +7,6 @@ type CertifiedPaperBoxProps = {
 }
 
 const CertifiedPaperBox = ({ children, uri }: CertifiedPaperBoxProps) => {
-  console.log(uri)
   return (
     <IsPictureContainer>
       <TakedPictureContainer>
@@ -26,7 +25,7 @@ export default CertifiedPaperBox
 const IsPictureContainer = styled.View(({ theme }) => ({
   flex: 1,
   justifyContent: 'space-between',
-  gap: 20,
+  gap: 40,
 }));
 
 const TakedPictureContainer = styled.View(({ theme }) => ({
