@@ -5,9 +5,7 @@ import com.google.protobuf.ByteString;
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
-import com.lucky.arbaguette.common.exception.InternetServerErrorException;
-import com.lucky.arbaguette.common.exception.NotFoundException;
-import com.lucky.arbaguette.common.exception.UnAuthorizedException;
+import com.lucky.arbaguette.common.exception.*;
 import com.lucky.arbaguette.company.dto.CompanyListResponse;
 import com.lucky.arbaguette.company.dto.CompanyListResponse.CompanyList;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
@@ -18,11 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import static com.google.common.io.Files.getFileExtension;
 import static com.lucky.arbaguette.company.dto.CompanyListResponse.*;
 
 
@@ -33,7 +33,18 @@ public class CompanyService {
     private final BossRepository bossRepository;
     private final CompanyRepository companyRepository;
 
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg","png");
+
     public CompanyInfo ocrImage(MultipartFile file) throws IOException {
+        //파일이 비어있는 지 확인
+        if(file == null || file.isEmpty()) {
+            throw new BadRequestException("사진이 없습니다.");
+        }
+        //파일의 확장자를 확인
+        if(!ALLOWED_EXTENSIONS.contains(getFileExtension(file.getOriginalFilename()))) {
+            throw new ForbiddenException("올바른 형식이 아닙니다.");
+        }
+
         ByteString byteString = ByteString.copyFrom(file.getBytes());
 
         List<AnnotateImageRequest> requests = new ArrayList<>();
