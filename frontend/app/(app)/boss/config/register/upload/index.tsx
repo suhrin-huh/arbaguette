@@ -10,8 +10,7 @@ const UploadBusinessCertificateScreen = () => {
   const { clearCertifiedPaper, setCertifiedPaper, setPaperUri } = useCertifiedPaperStore()
 
   const handleCameraPress = () => {
-
-    router.push('./upload/camera');
+    router.push('/boss/config/register/upload/camera');
   };
 
   const handleGalleryPress = async () => {
@@ -22,7 +21,7 @@ const UploadBusinessCertificateScreen = () => {
         const { formData, uri } = result;
         setCertifiedPaper(formData);
         setPaperUri(uri);
-        router.push('./upload/check');
+        router.push('/boss/config/register/upload/check');
       }
     } catch (error) {
       console.error(error);

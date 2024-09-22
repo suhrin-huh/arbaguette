@@ -72,7 +72,7 @@ const PermissionText = styled.Text({
 const CameraScreenContainer = styled.View(({ theme }) => ({
   flex: 1,
   justifyContent: 'space-between',
-  gap: 20,
+  gap: 40,
 }));
 
 const CameraViewContainer = styled.View(({ theme }) => ({
