@@ -18,7 +18,7 @@ const PreviewScreen = () => {
   }
 
   return (
-    <UploadInitialScreen title='사업자 등록 정보를 수정해주세요.'>
+    <UploadInitialScreen title='사업자 등록 정보를 확인해주세요.'>
       <InputContainer>
         <LabeledInput label='상호' value={companyName} />
         <LabeledInput label='대표자명' value={ceoName} />
