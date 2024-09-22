@@ -1,5 +1,4 @@
-import { View, Text } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import CertifiedPaperBox from '@/components/boss/upload/CertifiedPaperBox'
 import styled from '@emotion/native'
 import Button from '@/components/common/Button'
