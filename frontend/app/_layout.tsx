@@ -3,6 +3,7 @@ import 'react-native-reanimated';
 import Styled from '@emotion/native';
 import { ThemeProvider } from '@emotion/react';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
@@ -24,6 +25,8 @@ const RootLayout = Styled.View(({ theme }) => ({
   alignSelf: 'stretch',
 }));
 
+const queryClient = new QueryClient();
+
 export default function Root() {
   const [loaded, error] = usePretendardFonts();
 
@@ -44,13 +47,15 @@ export default function Root() {
 
   return (
     <ThemeProvider theme={Theme}>
-      <RootLayout>
-        <GestureHandlerRootView>
-          <BottomSheetModalProvider>
-            <Slot />
-          </BottomSheetModalProvider>
-        </GestureHandlerRootView>
-      </RootLayout>
+      <QueryClientProvider client={queryClient}>
+        <RootLayout>
+          <GestureHandlerRootView>
+            <BottomSheetModalProvider>
+              <Slot />
+            </BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </RootLayout>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
