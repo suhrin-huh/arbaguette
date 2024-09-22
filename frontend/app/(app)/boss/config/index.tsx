@@ -33,7 +33,7 @@ const ConfigScreen = () => {
   };
 
   const addStoreHandler = () => {
-    console.log('사업장 추가');
+    router.push('/boss/config/register')
   };
 
   return (
