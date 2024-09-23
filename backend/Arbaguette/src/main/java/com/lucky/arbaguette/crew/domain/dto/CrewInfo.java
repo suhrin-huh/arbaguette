@@ -1,4 +1,4 @@
-package com.lucky.arbaguette.crew.domain.dto.response;
+package com.lucky.arbaguette.crew.domain.dto;
 
 import com.lucky.arbaguette.crew.domain.Crew;
 

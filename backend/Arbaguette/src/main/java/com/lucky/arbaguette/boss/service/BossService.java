@@ -13,10 +13,17 @@ import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
 import com.lucky.arbaguette.contract.domain.Contract;
+import com.lucky.arbaguette.contractworkingday.domain.ContractWorkingDay;
+import com.lucky.arbaguette.contractworkingday.domain.dto.WorkingDayInfo;
+import com.lucky.arbaguette.contractworkingday.repository.ContractWorkingDayRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
-import com.lucky.arbaguette.crew.domain.dto.response.CrewInfo;
+import com.lucky.arbaguette.crew.domain.dto.CrewInfo;
+import com.lucky.arbaguette.crew.domain.dto.response.CrewDetailResponse;
 import com.lucky.arbaguette.crew.domain.dto.response.CrewListResponse;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
+import com.lucky.arbaguette.receipt.domain.Receipt;
+import com.lucky.arbaguette.receipt.domain.dto.ReceiptInfo;
+import com.lucky.arbaguette.receipt.repository.ReceiptRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +47,14 @@ public class BossService {
 
     private final float INSU_PERCENT = 0.894f;
     private final float INCOME_PERCENT = 0.967f;
+
     private final CompanyRepository companyRepository;
     private final CrewRepository crewRepository;
     private final ContractRepository contractRepository;
     private final ScheduleRepository scheduleRepository;
     private final BossRepository bossRepository;
+    private final ContractWorkingDayRepository contractWorkingDayRepository;
+    private final ReceiptRepository receiptRepository;
 
     public CrewListResponse getCrews(CustomUserDetails customUserDetails, int companyId) {
         Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
@@ -74,6 +84,43 @@ public class BossService {
         }
 
         return new CrewListResponse(crewInfoList);
+
+    }
+
+    public CrewDetailResponse getCrewDetails(CustomUserDetails customUserDetails, int crewId) {
+        Crew crew = crewRepository.findById(crewId)
+                .orElseThrow(() -> new NotFoundException("해당하는 알바생이 존재하지 않습니다."));
+
+        Contract contract = contractRepository.findByCrew(crew)
+                .orElse(null);
+
+        //계약 근무일 & 현재까지의 월급, 근무시간 & 급여명세서 계산 로직
+        List<WorkingDayInfo> workingDayInfos = new ArrayList<>();
+        List<ReceiptInfo> receiptInfos = new ArrayList<>();
+        int salary = 0;
+        int workHours = 0;
+
+        if (contract != null) {
+            //계약 근무일
+            List<ContractWorkingDay> contractWorkingDays = contractWorkingDayRepository.findAllByContract(contract);
+            for (ContractWorkingDay contractWorkingDay : contractWorkingDays) {
+                workingDayInfos.add(WorkingDayInfo.to(contractWorkingDay));
+            }
+
+            //현재까지 월급, 근무시간
+            int hourlyRate = contract.getSalary();
+            workHours = calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+            salary = hourlyRate * workHours;
+
+            //급여명세서
+            List<Receipt> receipts = receiptRepository.findAllByContract(contract);
+            for (Receipt receipt : receipts) {
+                receiptInfos.add(ReceiptInfo.to(receipt));
+            }
+
+        }
+
+        return CrewDetailResponse.from(crew, workingDayInfos, salary, workHours, receiptInfos);
 
     }
 
