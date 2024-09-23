@@ -28,12 +28,19 @@ const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
   fontWeight: 'bold',
 }));
 
+const ErrorText = Styled.Text(() => ({
+  color: 'red',
+  fontSize: 16,
+  marginTop: 10,
+}));
+
 const GetPasswordScreen = () => {
   const { role, name, email } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [isValid, setIsValid] = useState<boolean>();
-  const [isConfirmed, setIsConfirmed] = useState<boolean>();
+  const [isValid, setIsValid] = useState(true);
+  const [isConfirmed, setIsConfirmed] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handlepasswordInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setPassword(e.nativeEvent.text);
@@ -41,29 +48,32 @@ const GetPasswordScreen = () => {
   };
 
   const handlepasswordConfirmInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
-    const changed = e.nativeEvent.text;
-    setPasswordConfirm(changed);
-    if (changed === password) {
-      setIsConfirmed(true);
-    } else {
-      setIsConfirmed(false);
-    }
-    console.log(changed, isConfirmed);
+    setPasswordConfirm(e.nativeEvent.text);
   };
 
   const ClearPasswordInput = (): void => {
     setPassword('');
-    setIsValid(undefined);
-    console.log('clear');
+    setIsValid(true);
   };
 
   const ClearpasswordConfirmInput = (): void => {
     setPasswordConfirm('');
-    setIsConfirmed(undefined);
-    console.log('clear');
+    setIsConfirmed(true);
   };
 
   const goToNext = (): void => {
+    if (password === '') {
+      setIsValid(false);
+      setErrorMessage('비밀번호를 입력해주세요.');
+      return;
+    }
+
+    if (password !== passwordConfirm) {
+      setIsConfirmed(false);
+      setErrorMessage('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
     router.push({ pathname: '/(app)/public/signup/4', params: { role, name, email, password } });
   };
 
@@ -80,8 +90,10 @@ const GetPasswordScreen = () => {
             handleDeleteText={ClearPasswordInput}
             enableDeleteButton={true}
             isValid={isValid}
+            secureTextEntry={true}
           />
         </InputWrapper>
+        {!isValid && <ErrorText>{errorMessage}</ErrorText>}
         <InputWrapper>
           <LabeledInput
             label="비밀번호 확인"
@@ -91,10 +103,12 @@ const GetPasswordScreen = () => {
             handleDeleteText={ClearpasswordConfirmInput}
             enableDeleteButton={true}
             isValid={isConfirmed}
+            secureTextEntry={true}
           />
         </InputWrapper>
+        {!isConfirmed && <ErrorText>{errorMessage}</ErrorText>}
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext} disabled={!!password.length && !(isValid && isConfirmed)}>
+      <Button type="primary" onPress={goToNext}>
         다음
       </Button>
     </Container>

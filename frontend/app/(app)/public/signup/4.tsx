@@ -1,10 +1,11 @@
 import Styled from '@emotion/native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
+import instance from '@/configs/axios';
 
 const Container = Styled.View(({ theme }) => ({
   flex: 1,
@@ -28,18 +29,55 @@ const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
   fontWeight: 'bold',
 }));
 
+const ErrorText = Styled.Text(() => ({
+  color: 'red',
+  fontSize: 16,
+  marginTop: 10,
+}));
+
 const GetNumberScreen = () => {
   const { role, name, email, password } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
   const [tel, setTel] = useState('');
-  const [isValid, setIsValid] = useState<boolean>();
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const phoneRegex = /^010-\d{4}-\d{4}$/;
+
   const handleTelInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setTel(e.nativeEvent.text);
     setIsValid(true);
   };
   const ClearTelInput = (): void => {
     setTel('');
-    setIsValid(undefined);
-    console.log('clear');
+    setIsValid(true);
+  };
+
+  const handleSignUp = async (): Promise<void> => {
+    try {
+      if (!phoneRegex.test(tel)) {
+        setIsValid(false);
+        setErrorMessage('올바른 전화번호를 입력해주세요.');
+        return;
+      }
+      const profileImage = Math.floor(Math.random() * 6) + 1;
+      const response = await instance.post(
+        '/api/user',
+        {
+          email,
+          password,
+          name,
+          tel,
+          role,
+          profileImage,
+        },
+        { headers: { 'Content-Type': 'application/json' } },
+      );
+      if (response.data.code === 200) {
+        router.push('/(app)/public/login');
+      }
+    } catch (error) {
+      console.log('error : ', error);
+    }
   };
 
   return (
@@ -57,8 +95,9 @@ const GetNumberScreen = () => {
             isValid={isValid}
           />
         </InputWrapper>
+        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
       </ContentWrapper>
-      <Button type="primary" disabled={!isValid}>
+      <Button type="primary" disabled={!isValid} onPress={handleSignUp}>
         회원가입 완료
       </Button>
     </Container>
