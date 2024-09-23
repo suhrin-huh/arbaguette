@@ -7,6 +7,7 @@ pipeline {
                 script {
                     dir('backend/Arbaguette') {
                         sh 'chmod +x ./gradlew'
+                        
                         sh './gradlew clean build -x test'
 
                         // Check if any container is using port 8080
@@ -19,7 +20,15 @@ pipeline {
                         }
 
                         // Build and run the new backend container
-                        sh "docker build -t backend ."
+                        sh """
+docker build \
+  --build-arg AWS_ACCESS_KEY=${AWS_ACCESS_KEY} \
+  --build-arg AWS_SECRET_KEY=${AWS_SECRET_KEY} \
+  --build-arg DB_NAME=${DB_NAME} \
+  --build-arg DB_PASSWORD=${DB_PASSWORD} \
+  --build-arg SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
+  -t backend .
+"""
                         sh """
                             docker run --name backend -d -p 8080:8080 \
                             -v /home/ubuntu/api_key/cloudvision-434807-1bea29b95286.json:/app/config/cloudvision.json \
