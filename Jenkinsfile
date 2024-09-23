@@ -43,7 +43,7 @@ docker build \
                         sh """
                             docker run --name backend -d -p 8080:8080 \
 -v /home/ubuntu/api_key/cloudvision-434807-1bea29b95286.json:/app/config/cloudvision.json \
--e GOOGLE_APPLICATION_CREDENTIALS=/app/config/cloudvision.json \
+-e GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS} \
 -e AWS_ACCESS_KEY=${AWS_ACCESS_KEY} \
 -e AWS_SECRET_KEY=${AWS_SECRET_KEY} \
 -e DB_NAME=${DB_NAME} \
@@ -60,15 +60,21 @@ backend
     post {
         success {
         	script {
+                // 빌드를 실행한 사용자 정보 가져오기
+                def user = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause').get(0)?.getUserId() ?: 'Unknown User'
+
                 mattermostSend (color: 'good', 
-                message: "배포 성공",
+                message: "배포 성공. ${user}",
                 )
             }
         }
         failure {
         	script {
-                mattermostSend (color: 'danger', 
-                message: "배포 실패"
+                // 빌드를 실행한 사용자 정보 가져오기
+                def user = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause').get(0)?.getUserId() ?: 'Unknown User'
+
+                mattermostSend (color: 'good', 
+                message: "배포 성공. 범인 : ${user}",
                 )
             }
         }
