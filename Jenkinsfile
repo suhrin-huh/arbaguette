@@ -32,7 +32,7 @@ if (containerNamedBackend) {
 
                         // Build and run the new backend container
                         sh """
-docker build 
+docker build \
   --build-arg AWS_ACCESS_KEY=${AWS_ACCESS_KEY} \
   --build-arg AWS_SECRET_KEY=${AWS_SECRET_KEY} \
   --build-arg DB_NAME=${DB_NAME} \
