@@ -8,6 +8,7 @@ import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.dto.request.ScheduleSaveRequest;
+import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
@@ -42,5 +43,16 @@ public class ScheduleService {
 
         schedule.outWork(nowTime);
         return ScheduleSaveResponse.from("퇴근 완료", nowTime);
+    }
+
+    public ScheduleNextResponse getNextCommute(CustomUserDetails customUserDetails, LocalDateTime nowTime) {
+        //회사명, 그에 따른 근무 시간 리스트 반환
+        Crew crew = crewRepository.findByEmail(customUserDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
+
+        Schedule schedule = scheduleRepository.findNextByCrewAndTime(crew.getCrewId(), nowTime)
+                .orElseThrow(() -> new BadRequestException("출근할 수 있는 날짜가 없습니다."));
+
+        return ScheduleNextResponse.from(schedule, crew);
     }
 }
