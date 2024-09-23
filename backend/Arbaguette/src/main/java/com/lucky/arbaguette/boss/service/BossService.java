@@ -12,6 +12,7 @@ import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
+import com.lucky.arbaguette.contract.domain.Contract;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.domain.dto.response.CrewInfo;
 import com.lucky.arbaguette.crew.domain.dto.response.CrewListResponse;
@@ -27,6 +28,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
 
 @Service
 @RequiredArgsConstructor
@@ -49,12 +53,16 @@ public class BossService {
         List<CrewInfo> crewInfoList = new ArrayList<>();
 
         for (Crew crew : crewList) {
-            int hourlyRate = contractRepository.findByCrew(crew)
-                    .orElseThrow(() -> new NotFoundException("알바생에 해당하는 근로계약서가 없습니다."))
-                    .getSalary();
-
+            Contract contract = contractRepository.findByCrew(crew)
+                    .orElseThrow(() -> new NotFoundException("알바생에 해당하는 근로계약서가 없습니다."));
+            int hourlyRate = contract.getSalary();
             int salary = hourlyRate * calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
-            
+            if (INSU.equals(contract.getTax())) {
+                salary *= 0.967;
+            }
+            if (INCOME.equals(contract.getTax())) {
+                salary *= 0.896;
+            }
             crewInfoList.add(CrewInfo.from(crew, salary));
         }
         return new CrewListResponse(crewInfoList);
