@@ -47,13 +47,19 @@ public class UserService {
         }
     }
 
+    public void checkTel(String tel) {
+        if (bossRepository.existsByTel(tel) || crewRepository.existsByTel(tel)) {
+            throw new DuplicateException("전화번혹가 중복되었습니다.");
+        }
+    }
+
     public void joinProcess(UserJoinRequest joinRequest) {
 
         // 아이디 중복 확인
-        if (bossRepository.existsByEmail(joinRequest.getEmail()) || crewRepository.existsByEmail(
-                joinRequest.getEmail())) {
-            throw new DuplicateException("아이디가 중복되었습니다.");
-        }
+        checkEmail(joinRequest.getEmail());
+
+        // 전화번호 중복 확인
+        checkTel(joinRequest.getTel());
 
         // userKey 발급 요청
         Map<String, String> userKeyBody = new HashMap<>();
