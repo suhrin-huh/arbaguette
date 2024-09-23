@@ -28,22 +28,34 @@ const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
   fontWeight: 'bold',
 }));
 
+const ErrorText = Styled.Text(() => ({
+  color: 'red',
+  fontSize: 16,
+  marginTop: 10,
+}));
+
 const GetNameScreen = () => {
   const { role } = useLocalSearchParams<{ role: 'BOSS' | 'CREW' }>();
   const [name, setName] = useState('');
-  const [isValid, setIsValid] = useState<boolean>();
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const hanGulRegex = /^[가-힣]+$/;
+
   const handleNameInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setName(e.nativeEvent.text);
-    setIsValid(true);
   };
 
   const ClearNameInput = (): void => {
     setName('');
-    setIsValid(undefined);
-    console.log('clear');
+    setIsValid(true);
   };
 
   const goToNext = (): void => {
+    if (!hanGulRegex.test(name)) {
+      setIsValid(false);
+      setErrorMessage('이름은 한글만 입력 가능합니다');
+      return;
+    }
     router.push({ pathname: '/(app)/public/signup/2', params: { role: role, name: name } });
   };
 
@@ -62,8 +74,9 @@ const GetNameScreen = () => {
             isValid={isValid}
           />
         </InputWrapper>
+        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext} disabled={name.length === 0}>
+      <Button type="primary" onPress={goToNext}>
         다음
       </Button>
     </Container>
