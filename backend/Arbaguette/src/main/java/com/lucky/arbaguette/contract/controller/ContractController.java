@@ -6,10 +6,10 @@ import com.lucky.arbaguette.contract.domain.dto.ContractSaveRequest;
 import com.lucky.arbaguette.contract.service.ContractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,9 +18,9 @@ public class ContractController {
 
     private final ContractService contractService;
 
-    @PostMapping("/boss")
-    public ApiResponse<Void> saveContract(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ContractSaveRequest contractSaveRequest) {
-        contractService.saveContract(customUserDetails, contractSaveRequest);
+    @PostMapping(value = "/boss", consumes = "multipart/form-data")
+    public ApiResponse<Void> saveContract(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestPart("body") ContractSaveRequest contractSaveRequest, @RequestPart("image") MultipartFile file) throws IOException {
+        contractService.saveContract(customUserDetails, contractSaveRequest, file);
         return ApiResponse.success();
     }
 }
