@@ -2,6 +2,7 @@ package com.lucky.arbaguette.boss.service;
 
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.dto.CrewSaveRequest;
+import com.lucky.arbaguette.boss.dto.ReciptSendRequest;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
@@ -11,6 +12,7 @@ import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
+import com.lucky.arbaguette.contract.domain.Contract;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.domain.dto.response.CrewInfo;
 import com.lucky.arbaguette.crew.domain.dto.response.CrewListResponse;
@@ -26,12 +28,18 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class BossService {
 
+    private final float INSU_PERCENT = 0.894f;
+    private final float INCOME_PERCENT = 0.967f;
     private final CompanyRepository companyRepository;
     private final CrewRepository crewRepository;
     private final ContractRepository contractRepository;
@@ -48,13 +56,23 @@ public class BossService {
         List<CrewInfo> crewInfoList = new ArrayList<>();
 
         for (Crew crew : crewList) {
-            int hourlyRate = contractRepository.findByCrew(crew)
-                    .orElseThrow(() -> new NotFoundException("알바생에 해당하는 근로계약서가 없습니다."))
-                    .getSalary();
+            int salary = 0;
+            Optional<Contract> contract = contractRepository.findByCrew(crew);
+            if (contract.isPresent()) {
+                int hourlyRate = contract.get().getSalary();
+                salary = hourlyRate * calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+                if (INSU.equals(contract.get().getTax())) {
+                    salary *= INSU_PERCENT;
+                }
+                if (INCOME.equals(contract.get().getTax())) {
+                    salary *= INCOME_PERCENT;
+                }
+            }
 
-            int salary = hourlyRate * calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
             crewInfoList.add(CrewInfo.from(crew, salary));
+
         }
+
         return new CrewListResponse(crewInfoList);
 
     }
@@ -75,15 +93,20 @@ public class BossService {
         return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).with(LocalTime.MAX); // 월의 마지막 날 23:59:59
     }
 
-    public void saveCrew(CustomUserDetails customUserDetails, CrewSaveRequest crewSaveRequest){
+    public void saveCrew(CustomUserDetails customUserDetails, CrewSaveRequest crewSaveRequest) {
         Crew crew = crewRepository.findByTelAndName(crewSaveRequest.tel(), crewSaveRequest.name())
-                .orElseThrow(()-> new BadRequestException("알바생을 찾을 수 없습니다."));
-        if(crew.alreadyHired()) {
+                .orElseThrow(() -> new BadRequestException("알바생을 찾을 수 없습니다."));
+        if (crew.alreadyHired()) {
             throw new DuplicateException("이미 등록된 알바생입니다.");
         }
         Company company = companyRepository.findByCompanyIdAndBoss_Email(crewSaveRequest.companyId(), customUserDetails.getUsername())
-                .orElseThrow(()->new NotFoundException("사업장을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다."));
         crew.hiredCompany(company);
         crewRepository.save(crew);
     }
+
+    public void sendReceipt(CustomUserDetails customUserDetails, ReciptSendRequest reciptSendRequest) {
+
+    }
+
 }

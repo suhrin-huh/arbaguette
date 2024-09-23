@@ -1,13 +1,13 @@
 package com.lucky.arbaguette.boss.controller;
 
 import com.lucky.arbaguette.boss.dto.CrewSaveRequest;
+import com.lucky.arbaguette.boss.dto.ReciptSendRequest;
 import com.lucky.arbaguette.boss.service.BossService;
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.crew.domain.dto.response.CrewListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +27,12 @@ public class BossController {
     @PostMapping("/crew")
     public ApiResponse<Void> saveCrew(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody CrewSaveRequest crewSaveRequest) {
         bossService.saveCrew(customUserDetails, crewSaveRequest);
+        return ApiResponse.success();
+    }
+
+    @PostMapping("/receipt")
+    public ApiResponse<Void> sendReceipt(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ReciptSendRequest reciptSendRequest) {
+        bossService.sendReceipt(customUserDetails, reciptSendRequest);
         return ApiResponse.success();
     }
 
