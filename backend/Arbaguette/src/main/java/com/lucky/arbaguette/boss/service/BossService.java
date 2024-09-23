@@ -38,6 +38,8 @@ import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
 @Slf4j
 public class BossService {
 
+    private final float INSU_PERCENT = 0.894f;
+    private final float INCOME_PERCENT = 0.967f;
     private final CompanyRepository companyRepository;
     private final CrewRepository crewRepository;
     private final ContractRepository contractRepository;
@@ -60,10 +62,10 @@ public class BossService {
                 int hourlyRate = contract.get().getSalary();
                 salary = hourlyRate * calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
                 if (INSU.equals(contract.get().getTax())) {
-                    salary *= 0.967;
+                    salary *= INSU_PERCENT;
                 }
                 if (INCOME.equals(contract.get().getTax())) {
-                    salary *= 0.896;
+                    salary *= INCOME_PERCENT;
                 }
             }
 
