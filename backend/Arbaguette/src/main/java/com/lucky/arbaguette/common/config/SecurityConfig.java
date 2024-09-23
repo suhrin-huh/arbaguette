@@ -5,14 +5,14 @@ import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.jwt.JWTFilter;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.security.LoginFilter;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.List;
 
+import java.util.Arrays;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -22,7 +22,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -51,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)
             throws Exception {
-        DefaultSecurityFilterChain configuration = http
+        return http
                 .cors(cors -> cors.configurationSource(apiConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -59,23 +58,21 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         //누구나 접근 가능
-                        .requestMatchers("/", "/login", "/join", "/api/user/**").permitAll()
+                        .requestMatchers("/", "/api/login", "/join", "/api/user/**").permitAll()
+                        //dispatcher 를 통해 넘어오는 에러는 모두 접근 가능
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         //BOSS 만 접근 가능
                         .requestMatchers("/api/boss/**").hasAuthority("BOSS")
                         //CREW 만 접근 가능
-                        .requestMatchers("/api/crew/**").hasAuthority("CREW")
+                        .requestMatchers("/api/crew/**", "/api/schedule/crew/**").hasAuthority("CREW")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                         UsernamePasswordAuthenticationFilter.class)
-                // 인증 예외 처리 (401)
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(unauthorizedEntryPoint())
-                                // 인가 예외 처리 (403)
-                                .accessDeniedHandler(accessDeniedHandler()))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(unauthorizedEntryPoint()) // 인증 예외 처리 (401)
+                        .accessDeniedHandler(accessDeniedHandler()))        // 인가 예외 처리 (403)
                 .build();
-
-        return configuration;
     }
 
     // AuthenticationEntryPoint 를 사용하여 인증되지 않은 사용자가 접근할 때 에러 처리
@@ -107,7 +104,7 @@ public class SecurityConfig {
     private CorsConfigurationSource apiConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(Collections.singletonList("http://j11c101.p.ssafy.io:8080"));
+        configuration.setAllowedOrigins(Arrays.asList("http://j11c101.p.ssafy.io:8080", "http://localhost:8081"));
         configuration.setAllowedMethods(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -119,4 +116,5 @@ public class SecurityConfig {
 
         return source;
     }
+
 }

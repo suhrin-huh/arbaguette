@@ -1,30 +1,41 @@
 import Styled from '@emotion/native';
 import type { PropsWithChildren } from 'react';
-import type { KeyboardAvoidingViewProps, StatusBarProps } from 'react-native';
+import type { ScrollViewProps, StatusBarProps, StyleProp, ViewStyle } from 'react-native';
 
 import Theme from '@/styles/Theme';
 
 const ScreenContainer = Styled.KeyboardAvoidingView(({ theme }) => ({
-  paddingVertical: theme.layout.PADDING.VERTICAL,
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  backgroundColor: theme.color.BACKGROUND,
   flex: 1,
+}));
+
+const ScrollView = Styled.ScrollView(({ theme }) => ({
+  flex: 1,
+  backgroundColor: theme.color.BACKGROUND,
 }));
 
 const ArbaguetteStatusBar = Styled.StatusBar(({ theme }) => ({ backgroundColor: theme.color.PRIMARY }));
 
 type ScreenProps = PropsWithChildren<
   Partial<{
-    viewOption: KeyboardAvoidingViewProps;
+    viewOption: ScrollViewProps & { style: StyleProp<ViewStyle> };
     statusbarOption: StatusBarProps;
   }>
 >;
 
 const Screen = ({ children, viewOption, statusbarOption }: ScreenProps) => {
   return (
-    <ScreenContainer {...viewOption}>
+    <ScreenContainer>
       <ArbaguetteStatusBar animated={true} backgroundColor={Theme.color.PRIMARY} {...statusbarOption} />
-      {children}
+      <ScrollView
+        {...viewOption}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          rowGap: 10,
+          paddingVertical: Theme.layout.PADDING.VERTICAL,
+          paddingHorizontal: Theme.layout.PADDING.HORIZONTAL,
+        }}>
+        {children}
+      </ScrollView>
     </ScreenContainer>
   );
 };

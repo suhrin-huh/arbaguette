@@ -33,13 +33,19 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final BossRepository bossRepository;
     private final CrewRepository crewRepository;
-    private final WebClient webClient; // WebClient 주입
+    private final WebClient webClient; // WebClient 주입git
 
     @Value("${finopenapi.url}")
     private String financialApiUrl;
 
     @Value("${finopenapi.key}")
     private String financialApiKey;
+
+    public void checkEmail(String email) {
+        if (bossRepository.existsByEmail(email) || crewRepository.existsByEmail(email)) {
+            throw new DuplicateException("아이디가 중복되었습니다.");
+        }
+    }
 
     public void joinProcess(UserJoinRequest joinRequest) {
 
