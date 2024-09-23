@@ -4,6 +4,7 @@ import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.crew.domain.Crew;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -43,5 +44,17 @@ public class Contract {
     private String bossSign;
 
     private String crewSign;
+
+    @Builder
+    public Contract(Company company, Crew crew, LocalDate startDate, LocalDate endDate, int salary, int salaryDate, TaxType tax, String bossSign){
+        this.company = company;
+        this.crew = crew;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.salary = salary;
+        this.salaryDate = salaryDate;
+        this.tax = tax;
+        this.bossSign = bossSign;
+    }
 
 }
