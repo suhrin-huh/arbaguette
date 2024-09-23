@@ -1,7 +1,9 @@
 import Styled from '@emotion/native';
-import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
+import { jwtDecode } from 'jwt-decode';
+import { useEffect } from 'react';
 
-// import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import WelcomeBg from '@/assets/images/welcome-bg.png';
 import Button from '@/components/common/Button';
 
@@ -11,8 +13,8 @@ const Background = Styled.ImageBackground(({ theme }) => ({
   flex: 1,
   resizeMode: 'cover',
   justifyContent: 'flex-end',
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL, // Layout.ts의 값을 사용하여 padding 설정
-  paddingVertical: theme.layout.PADDING.VERTICAL, // Layout.ts의 값을 사용하여 padding 설정
+  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
+  paddingVertical: theme.layout.PADDING.VERTICAL,
 }));
 
 const ButtonContainer = Styled.View(() => ({
@@ -20,8 +22,6 @@ const ButtonContainer = Styled.View(() => ({
 }));
 
 const WelcomeScreen = () => {
-  const router = useRouter(); // useRouter 훅을 사용하여 네비게이션 객체 가져오기
-
   const handleLoginButton = () => {
     router.push('/public/login');
   };
@@ -29,6 +29,31 @@ const WelcomeScreen = () => {
   const handleSignUpButton = () => {
     router.push('/public/signup/memberType');
   };
+
+  interface Decode {
+    iat: number;
+    role: string;
+    string: string;
+  }
+
+  useEffect(() => {
+    (async () => {
+      const token = await AsyncStorage.getItem('accessToken');
+      if (!token) return;
+      try {
+        const decoded: Decode = jwtDecode<Decode>(token);
+        const role: string | undefined = decoded.role;
+        if (role === 'BOSS') {
+          router.push('/(app)/boss');
+        } else {
+          router.push('/(app)/crew');
+        }
+      } catch (error) {
+        console.error('Failed to decode token', error);
+        AsyncStorage.removeItem('accessToken');
+      }
+    })();
+  }, []);
 
   return (
     <Container>
