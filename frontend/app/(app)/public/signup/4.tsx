@@ -29,24 +29,37 @@ const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
   fontWeight: 'bold',
 }));
 
+const ErrorText = Styled.Text(() => ({
+  color: 'red',
+  fontSize: 16,
+  marginTop: 10,
+}));
+
 const GetNumberScreen = () => {
   const { role, name, email, password } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
   const [tel, setTel] = useState('');
-  const [isValid, setIsValid] = useState<boolean>();
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const phoneRegex = /^010-\d{4}-\d{4}$/;
+
   const handleTelInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setTel(e.nativeEvent.text);
     setIsValid(true);
   };
   const ClearTelInput = (): void => {
     setTel('');
-    setIsValid(undefined);
-    console.log('clear');
+    setIsValid(true);
   };
 
   const handleSignUp = async (): Promise<void> => {
     try {
+      if (!phoneRegex.test(tel)) {
+        setIsValid(false);
+        setErrorMessage('올바른 전화번호를 입력해주세요.');
+        return;
+      }
       const profileImage = Math.floor(Math.random() * 6) + 1;
-      console.log(profileImage);
       const response = await instance.post(
         '/api/user',
         {
@@ -82,6 +95,7 @@ const GetNumberScreen = () => {
             isValid={isValid}
           />
         </InputWrapper>
+        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
       </ContentWrapper>
       <Button type="primary" disabled={!isValid} onPress={handleSignUp}>
         회원가입 완료
