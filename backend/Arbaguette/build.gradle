@@ -53,9 +53,6 @@ dependencies {
 
     //spring cloud starter-aws
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
-    //dotenv
-    implementation 'io.github.cdimascio:dotenv-java:2.2.0'
     
 }
 
