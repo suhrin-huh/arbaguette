@@ -1,7 +1,8 @@
 package com.lucky.arbaguette.boss.controller;
 
-import com.lucky.arbaguette.boss.dto.CrewSaveRequest;
-import com.lucky.arbaguette.boss.dto.ReciptSendRequest;
+import com.lucky.arbaguette.boss.dto.request.CrewSaveRequest;
+import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
+import com.lucky.arbaguette.boss.dto.response.CrewSaveResponse;
 import com.lucky.arbaguette.boss.service.BossService;
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
@@ -21,9 +22,8 @@ public class BossController {
     private final BossService bossService;
 
     @PostMapping("/crew")
-    public ApiResponse<Void> saveCrew(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody CrewSaveRequest crewSaveRequest) {
-        bossService.saveCrew(customUserDetails, crewSaveRequest);
-        return ApiResponse.success();
+    public ApiResponse<CrewSaveResponse> saveCrew(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody CrewSaveRequest crewSaveRequest) {
+        return ApiResponse.success(bossService.saveCrew(customUserDetails, crewSaveRequest));
     }
 
     @GetMapping("/crews") // 알바생 전체 목록 조회
@@ -32,13 +32,13 @@ public class BossController {
     }
 
     @GetMapping("/crew")
-    public ApiResponse<CrewDetailResponse> getCrewDetails(@AuthenticationPrincipal CustomUserDetails cutstomUserDetails, @RequestParam int crewId) {
-        return ApiResponse.success(bossService.getCrewDetails(cutstomUserDetails, crewId));
+    public ApiResponse<CrewDetailResponse> getCrewDetails(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int crewId) {
+        return ApiResponse.success(bossService.getCrewDetails(customUserDetails, crewId));
     }
 
     @PostMapping("/receipt")
-    public ApiResponse<Void> sendReceipt(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ReciptSendRequest reciptSendRequest) {
-        bossService.sendReceipt(customUserDetails, reciptSendRequest);
+    public ApiResponse<Void> sendReceipt(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ReceiptSendRequest receiptSendRequest) {
+        bossService.sendReceipt(customUserDetails, receiptSendRequest);
         return ApiResponse.success();
     }
 
