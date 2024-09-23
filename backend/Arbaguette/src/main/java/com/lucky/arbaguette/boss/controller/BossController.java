@@ -30,9 +30,9 @@ public class BossController {
         return ApiResponse.success();
     }
 
-    @PostMapping("/recipt")
-    public ApiResponse<Void> sendRecipt(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ReciptSendRequest reciptSendRequest) {
-        bossService.sendRecipt(customUserDetails, reciptSendRequest);
+    @PostMapping("/receipt")
+    public ApiResponse<Void> sendReceipt(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ReciptSendRequest reciptSendRequest) {
+        bossService.sendReceipt(customUserDetails, reciptSendRequest);
         return ApiResponse.success();
     }
 

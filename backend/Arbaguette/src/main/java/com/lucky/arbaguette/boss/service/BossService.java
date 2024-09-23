@@ -97,7 +97,7 @@ public class BossService {
         crewRepository.save(crew);
     }
 
-    public void sendRecipt(CustomUserDetails customUserDetails, ReciptSendRequest reciptSendRequest) {
+    public void sendReceipt(CustomUserDetails customUserDetails, ReciptSendRequest reciptSendRequest) {
 
     }
 
