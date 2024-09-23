@@ -11,4 +11,6 @@ public interface BossRepository extends JpaRepository<Boss, Integer> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByTel(String tel);
+
 }
