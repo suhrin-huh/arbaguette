@@ -7,6 +7,7 @@ import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
+import com.lucky.arbaguette.schedule.dto.request.ScheduleSaveRequest;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
 import java.time.LocalDateTime;
@@ -22,9 +23,9 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CrewRepository crewRepository;
 
-    public ScheduleSaveResponse updateCrewCommute(CustomUserDetails customUserDetails, int companyId,
-                                                  LocalDateTime nowTime) {
-        Crew crew = crewRepository.findByCompany_CompanyIdAndEmail(companyId, customUserDetails.getUsername())
+    public ScheduleSaveResponse saveCrewCommute(CustomUserDetails customUserDetails, ScheduleSaveRequest request,
+                                                LocalDateTime nowTime) {
+        Crew crew = crewRepository.findByCompany_CompanyIdAndEmail(request.companyId(), customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
 
         Schedule schedule = scheduleRepository.findByCrewAndTime(crew.getCrewId(), nowTime)
