@@ -1,4 +1,4 @@
-package com.lucky.arbaguette.boss.dto;
+package com.lucky.arbaguette.boss.dto.request;
 
 public record ReciptSendRequest(int month,
                                 int originSalary,
