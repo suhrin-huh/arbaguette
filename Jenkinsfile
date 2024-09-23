@@ -21,7 +21,7 @@ sed -i 's/\${SSAFY_BANK_KEY}/${SSAFY_BANK_KEY}/' ./src/main/resources/applicatio
 
 
                         // Check if any container is named "backend"
-def containerNamedBackend = sh(script: "docker ps --filter 'name=backend' --format '{{.ID}}'", returnStdout: true).trim()
+def containerNamedBackend = sh(script: "docker ps -a --filter 'name=backend' --format '{{.ID}}'", returnStdout: true).trim()
 
 if (containerNamedBackend) {
     // Stop and remove the container named "backend"
@@ -74,8 +74,8 @@ backend
                 // Git 정보를 통해 푸시한 사용자 확인
                 def user = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
 
-                mattermostSend (color: 'good', 
-                message: "배포 성공. 범인 : ${user}",
+                mattermostSend (color: 'danger', 
+                message: "배포 실패. 범인 : ${user}",
                 )
             }
         }
