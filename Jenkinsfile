@@ -11,12 +11,13 @@ pipeline {
                         sh './gradlew clean build -x test'
 
                         sh """
-sed -i 's|\\${AWS_ACCESS_KEY}|${AWS_ACCESS_KEY}|' ./src/main/resources/application.properties
-sed -i 's|\\${AWS_SECRET_KEY}|${AWS_SECRET_KEY}|' ./src/main/resources/application.properties
-sed -i 's|\\${DB_NAME}|${DB_NAME}|' ./src/main/resources/application.properties
-sed -i 's|\\${DB_PASSWORD}|${DB_PASSWORD}|' ./src/main/resources/application.properties
-sed -i 's|\\${SSAFY_BANK_KEY}|${SSAFY_BANK_KEY}|' ./src/main/resources/application.properties
+sed -i 's|\\${AWS_ACCESS_KEY}|${AWS_ACCESS_KEY}|g' ./src/main/resources/application.properties
+sed -i 's|\\${AWS_SECRET_KEY}|${AWS_SECRET_KEY}|g' ./src/main/resources/application.properties
+sed -i 's|\\${DB_NAME}|${DB_NAME}|g' ./src/main/resources/application.properties
+sed -i 's|\\${DB_PASSWORD}|${DB_PASSWORD}|g' ./src/main/resources/application.properties
+sed -i 's|\\${SSAFY_BANK_KEY}|${SSAFY_BANK_KEY}|g' ./src/main/resources/application.properties
 """
+
 
 
                         // Check if any container is named "backend"
