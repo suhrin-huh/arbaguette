@@ -61,7 +61,7 @@ backend
         success {
         	script {
                 // 빌드를 실행한 사용자 정보 가져오기
-                def user = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause').get(0)?.getUserId() ?: 'Unknown User'
+                def user = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
 
                 mattermostSend (color: 'good', 
                 message: "배포 성공. ${user}",
@@ -71,7 +71,8 @@ backend
         failure {
         	script {
                 // 빌드를 실행한 사용자 정보 가져오기
-                def user = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause').get(0)?.getUserId() ?: 'Unknown User'
+                // Git 정보를 통해 푸시한 사용자 확인
+                def user = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
 
                 mattermostSend (color: 'good', 
                 message: "배포 성공. 범인 : ${user}",
