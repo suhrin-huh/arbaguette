@@ -10,14 +10,15 @@ pipeline {
                         
                         sh './gradlew clean build -x test'
 
-                        // Check if any container is using port 8080
-                        def containerUsingPort = sh(script: "docker ps --filter 'publish=8080' --format '{{.ID}}'", returnStdout: true).trim()
+                        // Check if any container is named "backend"
+def containerNamedBackend = sh(script: "docker ps --filter 'name=backend' --format '{{.ID}}'", returnStdout: true).trim()
 
-                        if (containerUsingPort) {
-                            // Stop and remove the container using port 8080
-                            sh "docker stop ${containerUsingPort}"
-                            sh "docker rm ${containerUsingPort}"
-                        }
+if (containerNamedBackend) {
+    // Stop and remove the container named "backend"
+    sh "docker stop ${containerNamedBackend}"
+    sh "docker rm ${containerNamedBackend}"
+}
+
 
                         // Build and run the new backend container
                         sh """
