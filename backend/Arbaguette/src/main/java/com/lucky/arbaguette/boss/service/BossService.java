@@ -54,6 +54,7 @@ public class BossService {
                     .getSalary();
 
             int salary = hourlyRate * calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+            
             crewInfoList.add(CrewInfo.from(crew, salary));
         }
         return new CrewListResponse(crewInfoList);
