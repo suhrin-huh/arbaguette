@@ -1,8 +1,9 @@
 package com.lucky.arbaguette.boss.service;
 
 import com.lucky.arbaguette.boss.domain.Boss;
-import com.lucky.arbaguette.boss.dto.CrewSaveRequest;
-import com.lucky.arbaguette.boss.dto.ReciptSendRequest;
+import com.lucky.arbaguette.boss.dto.request.CrewSaveRequest;
+import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
+import com.lucky.arbaguette.boss.dto.response.CrewSaveResponse;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
@@ -140,7 +141,7 @@ public class BossService {
         return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).with(LocalTime.MAX); // 월의 마지막 날 23:59:59
     }
 
-    public void saveCrew(CustomUserDetails customUserDetails, CrewSaveRequest crewSaveRequest) {
+    public CrewSaveResponse saveCrew(CustomUserDetails customUserDetails, CrewSaveRequest crewSaveRequest) {
         Crew crew = crewRepository.findByTelAndName(crewSaveRequest.tel(), crewSaveRequest.name())
                 .orElseThrow(() -> new BadRequestException("알바생을 찾을 수 없습니다."));
         if (crew.alreadyHired()) {
@@ -150,9 +151,10 @@ public class BossService {
                 .orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다."));
         crew.hiredCompany(company);
         crewRepository.save(crew);
+        return new CrewSaveResponse(crew.getCrewId());
     }
 
-    public void sendReceipt(CustomUserDetails customUserDetails, ReciptSendRequest reciptSendRequest) {
+    public void sendReceipt(CustomUserDetails customUserDetails, ReceiptSendRequest receiptSendRequest) {
 
     }
 
