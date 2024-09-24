@@ -57,4 +57,11 @@ public class Contract {
         this.bossSign = bossSign;
     }
 
+    public boolean alreadySigned(){
+        return this.crewSign != null;
+    }
+    public void signCrew(String url){
+        this.crewSign = url;
+    }
+
 }
