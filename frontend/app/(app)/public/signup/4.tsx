@@ -1,11 +1,12 @@
 import Styled from '@emotion/native';
+import type { AxiosError } from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
-import instance from '@/configs/axios';
+import arbaguette from '@/services/arbaguette';
 
 const Container = Styled.View(({ theme }) => ({
   flex: 1,
@@ -60,23 +61,28 @@ const GetNumberScreen = () => {
         return;
       }
       const profileImage = Math.floor(Math.random() * 6) + 1;
-      const response = await instance.post(
-        '/api/user',
-        {
-          email,
-          password,
-          name,
-          tel,
-          role,
-          profileImage,
-        },
-        { headers: { 'Content-Type': 'application/json' } },
-      );
+      const requestData = {
+        email,
+        password,
+        name,
+        tel,
+        role,
+        profileImage,
+      };
+      const response = await arbaguette.signup(requestData);
+
       if (response.data.code === 200) {
         router.push('/(app)/public/login');
       }
     } catch (error) {
-      console.log('error : ', error);
+      setIsValid(false);
+      const axiosError = error as AxiosError<ErrorResponse>;
+      const err = axiosError.response?.data;
+      if (err && err.code === 409) {
+        setErrorMessage('중복된 전화번호입니다.');
+      } else {
+        setErrorMessage('올바른 전화번호를 입력해주세요.');
+      }
     }
   };
 
