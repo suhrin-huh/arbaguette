@@ -4,8 +4,10 @@ import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.SendMoneyRequest;
+import com.lucky.arbaguette.common.domain.dto.request.SendSalaryRequest;
 import com.lucky.arbaguette.common.domain.dto.response.AccountResponse;
 import com.lucky.arbaguette.common.exception.NotFoundException;
+import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
@@ -90,6 +92,62 @@ public class BankService {
 
     }
 
+    public Map<String, Object> getHistory(CustomUserDetails customUserDetails) {
+        String email = customUserDetails.getUsername();
+        String userKey = "";
+        String account = "";
+        if (customUserDetails.isBoss()) {
+            Boss boss = bossRepository.findByEmail(email)
+                    .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
+            account = boss.getAccount();
+            userKey = boss.getUserKey();
+        }
+        if (customUserDetails.isCrew()) {
+            Crew crew = crewRepository.findByEmail(email)
+                    .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
+            account = crew.getAccount();
+            userKey = crew.getUserKey();
+        }
+
+        //"inquireTransactionHistoryList" 시작
+        Map<String, Object> accountRequestBody = new HashMap<>();
+        Map<String, String> headerMap = new HashMap<>();
+
+        Date today = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        String formattedDate = formatter.format(today);
+
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmmss");
+        String formattedTime = timeFormatter.format(today);
+
+        headerMap.put("apiName", "inquireTransactionHistoryList");
+        headerMap.put("transmissionDate", formattedDate);
+        headerMap.put("transmissionTime", formattedTime);
+        headerMap.put("institutionCode", "00100");
+        headerMap.put("fintechAppNo", "001");
+        headerMap.put("apiServiceCode", "inquireTransactionHistoryList");
+        headerMap.put("institutionTransactionUniqueNo", formattedDate + formattedTime + "000000"); // 유일한 값 필요
+        headerMap.put("apiKey", financialApiKey);
+        headerMap.put("userKey", userKey);
+
+        accountRequestBody.put("Header", headerMap);
+        accountRequestBody.put("accountNo", account);
+        accountRequestBody.put("startDate", "20240901");
+        accountRequestBody.put("endDate", "20241030");
+        accountRequestBody.put("transactionType", "A");
+        accountRequestBody.put("orderByType", "DESC");
+
+        Map<String, Map<String, Object>> accountResponseBody = webClient.post()
+                .uri(financialApiUrl + "/v1/edu/demandDeposit/inquireTransactionHistoryList")
+                .body(BodyInserters.fromValue(accountRequestBody))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+
+        return accountResponseBody.get("REC");
+
+    }
+
     public void sendMoney(CustomUserDetails customUserDetails, SendMoneyRequest request) {
         String email = customUserDetails.getUsername();
         String userKey = "";
@@ -144,24 +202,13 @@ public class BankService {
 
     }
 
-    public Map<String, Object> getHistory(CustomUserDetails customUserDetails) {
-        String email = customUserDetails.getUsername();
-        String userKey = "";
-        String account = "";
-        if (customUserDetails.isBoss()) {
-            Boss boss = bossRepository.findByEmail(email)
-                    .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
-            account = boss.getAccount();
-            userKey = boss.getUserKey();
-        }
-        if (customUserDetails.isCrew()) {
-            Crew crew = crewRepository.findByEmail(email)
-                    .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
-            account = crew.getAccount();
-            userKey = crew.getUserKey();
-        }
+    public void sendSalary(CustomUserDetails customUserDetails, SendSalaryRequest request) {
+        Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
+                .orElseThrow(() -> new UnAuthorizedException("해당 권한이 없습니다."));
+        String account = boss.getAccount();
+        String userKey = boss.getUserKey();
 
-        //"inquireTransactionHistoryList" 시작
+        //"updateDemandDepositAccountTransfer" 시작
         Map<String, Object> accountRequestBody = new HashMap<>();
         Map<String, String> headerMap = new HashMap<>();
 
@@ -172,31 +219,31 @@ public class BankService {
         SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmmss");
         String formattedTime = timeFormatter.format(today);
 
-        headerMap.put("apiName", "inquireTransactionHistoryList");
+        headerMap.put("apiName", "updateDemandDepositAccountTransfer");
         headerMap.put("transmissionDate", formattedDate);
         headerMap.put("transmissionTime", formattedTime);
         headerMap.put("institutionCode", "00100");
         headerMap.put("fintechAppNo", "001");
-        headerMap.put("apiServiceCode", "inquireTransactionHistoryList");
-        headerMap.put("institutionTransactionUniqueNo", formattedDate + formattedTime + "000000"); // 유일한 값 필요
+        headerMap.put("apiServiceCode", "updateDemandDepositAccountTransfer");
+        headerMap.put("institutionTransactionUniqueNo", formattedDate + formattedTime + "000000");
         headerMap.put("apiKey", financialApiKey);
         headerMap.put("userKey", userKey);
 
         accountRequestBody.put("Header", headerMap);
-        accountRequestBody.put("accountNo", account);
-        accountRequestBody.put("startDate", "20240901");
-        accountRequestBody.put("endDate", "20241030");
-        accountRequestBody.put("transactionType", "A");
-        accountRequestBody.put("orderByType", "DESC");
+        accountRequestBody.put("depositAccountNo", crewRepository.findById(request.crewId())
+                .orElseThrow(() -> new NotFoundException("해당하는 알바생의 계좌가 존재하지 않습니다."))
+                .getAccount());
+        accountRequestBody.put("depositTransactionSummary", "(수시입출금) : 입금(급여이체)");
+        accountRequestBody.put("transactionBalance", request.money());
+        accountRequestBody.put("withdrawalAccountNo", account);
+        accountRequestBody.put("withdrawalTransactionSummary", "(수시입출금) : 출금(급여이체)");
 
-        Map<String, Map<String, Object>> accountResponseBody = webClient.post()
-                .uri(financialApiUrl + "/v1/edu/demandDeposit/inquireTransactionHistoryList")
+        webClient.post()
+                .uri(financialApiUrl + "/v1/edu/demandDeposit/updateDemandDepositAccountTransfer")
                 .body(BodyInserters.fromValue(accountRequestBody))
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
-
-        return accountResponseBody.get("REC");
 
     }
 }
