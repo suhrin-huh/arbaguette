@@ -23,6 +23,7 @@ const CheckScreen = () => {
       setCompanyInfo({ companyName: name, address, ceoName: representative });
       router.push('/boss/config/register/preview');
     } catch (error) {
+      console.error(error);
       Alert.alert('업로드 실패', '업로드 실패하였습니다. 다시 시도해주세요.');
     }
   };
