@@ -99,6 +99,8 @@ public class BossService {
         List<WorkingDayInfo> workingDayInfos = new ArrayList<>();
         List<ReceiptInfo> receiptInfos = new ArrayList<>();
         int salary = 0;
+        int tax = 0;
+        int allowance = 0;
         int workHours = 0;
 
         if (contract != null) {
@@ -113,6 +115,19 @@ public class BossService {
             workHours = calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
             salary = hourlyRate * workHours;
 
+            //세금, 수당
+            if (workHours > 80) {
+                allowance = (int) (hourlyRate * 1.5 * (workHours - 80));
+            }
+
+            if (INSU.equals(contract.getTax())) {
+                salary *= INSU_PERCENT;
+            }
+            if (INCOME.equals(contract.getTax())) {
+                salary *= INCOME_PERCENT;
+            }
+
+
             //급여명세서
             List<Receipt> receipts = receiptRepository.findAllByContract(contract);
             for (Receipt receipt : receipts) {
@@ -121,7 +136,7 @@ public class BossService {
 
         }
 
-        return CrewDetailResponse.from(crew, workingDayInfos, salary, workHours, receiptInfos);
+        return CrewDetailResponse.from(crew, workingDayInfos, salary, tax, allowance, workHours, receiptInfos);
 
     }
 
