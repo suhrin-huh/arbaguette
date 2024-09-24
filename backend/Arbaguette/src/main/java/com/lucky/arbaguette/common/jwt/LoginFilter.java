@@ -1,6 +1,4 @@
-package com.lucky.arbaguette.common.security;
-
-import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+package com.lucky.arbaguette.common.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucky.arbaguette.common.ApiResponse;
@@ -8,16 +6,11 @@ import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.LoginRequest;
 import com.lucky.arbaguette.common.domain.dto.response.LoginResponse;
 import com.lucky.arbaguette.common.exception.BadRequestException;
-import com.lucky.arbaguette.common.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +21,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Iterator;
+
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {

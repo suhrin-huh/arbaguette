@@ -1,7 +1,10 @@
 package com.lucky.arbaguette.contract.service;
 
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
-import com.lucky.arbaguette.common.exception.*;
+import com.lucky.arbaguette.common.exception.BadRequestException;
+import com.lucky.arbaguette.common.exception.DuplicateException;
+import com.lucky.arbaguette.common.exception.NotFoundException;
+import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.common.util.S3Util;
 import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
@@ -32,9 +35,9 @@ public class ContractService {
 
     @Transactional
     public void saveContract(CustomUserDetails customUserDetails, ContractSaveRequest contractSaveRequest, MultipartFile file) throws IOException {
-        Company company = companyRepository.findByCompanyIdAndBoss_Email(contractSaveRequest.companyId(), customUserDetails.getUsername()).orElseThrow(() ->  new UnAuthorizedException("사업장을 찾을 수 없습니다."));
-        Crew crew = crewRepository.findById(contractSaveRequest.crewId()).orElseThrow(()-> new NotFoundException("알바생을 찾을 수 없습니다."));
-        if(file.isEmpty()){
+        Company company = companyRepository.findByCompanyIdAndBoss_Email(contractSaveRequest.companyId(), customUserDetails.getUsername()).orElseThrow(() -> new UnAuthorizedException("사업장을 찾을 수 없습니다."));
+        Crew crew = crewRepository.findById(contractSaveRequest.crewId()).orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
+        if (file.isEmpty()) {
             throw new BadRequestException("서명이 비었습니다.");
         }
         Contract contract = contractSaveRequest.toContract(company, crew, s3Util.upload(file));
@@ -47,8 +50,8 @@ public class ContractService {
         });
     }
 
-    private ContractWorkingDay createContractWorkingDay(Contract contract, WorkingDayInfo workingDayInfo){
-        if(contractWorkingDayRepository.existsByContractAndId_Weekday(contract, workingDayInfo.weekday())){
+    private ContractWorkingDay createContractWorkingDay(Contract contract, WorkingDayInfo workingDayInfo) {
+        if (contractWorkingDayRepository.existsByContractAndId_Weekday(contract, workingDayInfo.weekday())) {
             throw new DuplicateException("근무요일이 겹칩니다.");
         }
         return ContractWorkingDay.builder()
@@ -60,14 +63,18 @@ public class ContractService {
     }
 
     public void signCrewContract(CustomUserDetails customUserDetails, MultipartFile file) throws IOException {
-        Contract contract = contractRepository.findByCrew_Email(customUserDetails.getUsername()).orElseThrow(()-> new NotFoundException("근로계약서를 찾을 수 없습니다."));
-        if(contract.alreadySigned()){
+        Crew crew = crewRepository.findByEmail(customUserDetails.getUsername()).orElseThrow(() -> new UnAuthorizedException("알바생을 찾을 수 없습니다."));
+        Contract contract = contractRepository.findByCrew(crew).orElseThrow(() -> new NotFoundException("근로계약서를 찾을 수 없습니다."));
+        if (contract.alreadySigned()) {
             throw new DuplicateException("이미 서명했습니다.");
         }
-        if(file.isEmpty()){
+        if (file.isEmpty()) {
             throw new BadRequestException("서명이 비었습니다.");
         }
         contract.signCrew(s3Util.upload(file));
+        //알바생 상태 변경, UNSIGNED->SINGED
+        crew.signComplete();
+        crewRepository.save(crew);
         contractRepository.save(contract);
     }
 }
