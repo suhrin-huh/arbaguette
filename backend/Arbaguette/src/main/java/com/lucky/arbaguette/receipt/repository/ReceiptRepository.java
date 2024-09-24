@@ -10,4 +10,6 @@ public interface ReceiptRepository extends JpaRepository<Receipt, Integer> {
 
     List<Receipt> findAllByContract(Contract contract);
 
+    boolean existsByMonthAndContract(int month, Contract contract);
+
 }

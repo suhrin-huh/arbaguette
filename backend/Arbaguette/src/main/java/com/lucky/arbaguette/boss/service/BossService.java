@@ -155,7 +155,13 @@ public class BossService {
     }
 
     public void sendReceipt(CustomUserDetails customUserDetails, ReceiptSendRequest receiptSendRequest) {
+        Contract contract = contractRepository.findByCrew_CrewId(receiptSendRequest.crewId());
 
+        if (receiptRepository.existsByMonthAndContract(receiptSendRequest.month(), contract)) {
+            throw new DuplicateException("이미 발송된 급여명세서입니다.");
+        }
+
+        receiptRepository.save(receiptSendRequest.toReceipt(contract));
     }
 
 }

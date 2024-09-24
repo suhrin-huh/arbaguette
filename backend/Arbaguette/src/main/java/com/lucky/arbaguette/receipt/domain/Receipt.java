@@ -3,6 +3,7 @@ package com.lucky.arbaguette.receipt.domain;
 import com.lucky.arbaguette.contract.domain.Contract;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,5 +25,13 @@ public class Receipt {
     private int originSalary;
 
     private int totalTime;
+
+    @Builder
+    public Receipt(Contract contract, int month, int originSalary, int totalTime) {
+        this.contract = contract;
+        this.month = month;
+        this.originSalary = originSalary;
+        this.totalTime = totalTime;
+    }
 
 }
