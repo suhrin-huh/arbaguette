@@ -13,6 +13,9 @@ instance.interceptors.request.use(
     console.log('토큰 확인하기', token);
     if (token !== null) {
       config.headers['Authorization'] = `Bearer ${token}`;
+    } else {
+      console.log('토큰 없음');
+      config.headers['Authorization'] = `Bearer ${process.env.EXPO_PUBLIC_TEMP_ACCESSTOKEN}`;
     }
     return config;
   },

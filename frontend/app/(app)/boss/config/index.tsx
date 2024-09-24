@@ -22,7 +22,6 @@ const ConfigScreen = () => {
     { storeId: 6, name: '파리파게트 장덕점', address: '광주광역시 동일로 11-6' },
   ]);
 
-
   const pressStoreCard = (card: willStoreDto) => {
     console.log('카드의 ID : ', card);
   };
@@ -33,7 +32,7 @@ const ConfigScreen = () => {
   };
 
   const addStoreHandler = () => {
-    router.push('/boss/config/register')
+    router.push('/boss/config/register');
   };
 
   return (
