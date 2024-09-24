@@ -1,13 +1,19 @@
 package com.lucky.arbaguette.common.jwt;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.dto.CommonUserInfo;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,18 +33,32 @@ public class JWTFilter extends OncePerRequestFilter {
         //Authorization 헤더 검증
         if (authorization == null || !authorization.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-
-            //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
         String token = authorization.split(" ")[1];
 
         //토큰 소멸 시간 검증
-        if (jwtUtil.isExpired(token)) {
-            System.out.println("token is expired");
-            filterChain.doFilter(request, response);
+        try {
+            jwtUtil.isExpired(token);
+        } catch (ExpiredJwtException e) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(SC_UNAUTHORIZED);
+            response.getWriter().write(new ObjectMapper().writeValueAsString(
+                    ApiResponse.error(HttpStatus.UNAUTHORIZED, "access token expired")
+            ));
+            return;
+        }
 
+        //access 토큰 여부 검증
+        if ("access".equals(jwtUtil.getCategory(token))) {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(SC_UNAUTHORIZED);
+            response.getWriter().write(new ObjectMapper().writeValueAsString(
+                    ApiResponse.error(HttpStatus.UNAUTHORIZED, "invalid access token")
+            ));
             return;
         }
 

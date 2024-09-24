@@ -1,13 +1,24 @@
 package com.lucky.arbaguette.common.service;
 
+import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.BOSS;
+import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.CREW;
+
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
+import com.lucky.arbaguette.common.domain.dto.response.LoginTokenResponse;
 import com.lucky.arbaguette.common.domain.dto.response.UserInfoResponse;
+import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
+import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,14 +27,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.BOSS;
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.CREW;
 
 @Service
 @RequiredArgsConstructor
@@ -34,12 +37,19 @@ public class UserService {
     private final BossRepository bossRepository;
     private final CrewRepository crewRepository;
     private final WebClient webClient; // WebClient 주입git
+    private final JWTUtil jwtUtil;
 
     @Value("${finopenapi.url}")
     private String financialApiUrl;
 
     @Value("${finopenapi.key}")
     private String financialApiKey;
+
+    @Value("${token.access.expired.time}")
+    private long accessTokenExpiredTime;
+
+    @Value("${token.refresh.expired.time}")
+    private long refreshTokenExpiredTime;
 
     public void checkEmail(String email) {
         if (bossRepository.existsByEmail(email) || crewRepository.existsByEmail(email)) {
@@ -125,7 +135,38 @@ public class UserService {
         }
     }
 
+    public LoginTokenResponse reissue(String refreshToken) {
+        try {
+            jwtUtil.isExpired(refreshToken);
+        } catch (ExpiredJwtException e) {
+            throw new BadRequestException("refresh token expired");
+        }
+
+        if ("refresh".equals(jwtUtil.getCategory(refreshToken))) {
+            throw new BadRequestException("invalid refresh token");
+        }
+
+        String email = jwtUtil.getEmail(refreshToken);
+        String role = jwtUtil.getRole(refreshToken);
+
+        String access = jwtUtil.createJwt("access", email, role, accessTokenExpiredTime,
+                getCrewStatus(email, role));
+        String refresh = jwtUtil.createJwt("refresh", email, role, refreshTokenExpiredTime,
+                getCrewStatus(email, role));
+
+        return LoginTokenResponse.of(access, refresh);
+    }
+
     public UserInfoResponse info(CustomUserDetails customUserDetails) {
         return new UserInfoResponse(customUserDetails.getUsername(), customUserDetails.getRole());
+    }
+
+    private String getCrewStatus(String email, String role) {
+        if ("BOSS".equals(role)) {
+            return null;
+        }
+        return crewRepository.findByEmail(email)
+                .orElseThrow(null)
+                .getCrewStatus().name();
     }
 }

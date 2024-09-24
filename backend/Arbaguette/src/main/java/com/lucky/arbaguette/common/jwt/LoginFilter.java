@@ -1,17 +1,25 @@
 package com.lucky.arbaguette.common.jwt;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.LoginRequest;
 import com.lucky.arbaguette.common.domain.dto.response.LoginResponse;
 import com.lucky.arbaguette.common.exception.BadRequestException;
+import com.lucky.arbaguette.crew.repository.CrewRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,23 +30,24 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Iterator;
-
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final CrewRepository crewRepository;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    @Value("${token.access.expired.time}")
+    private long accessTokenExpiredTime;
+
+    @Value("${token.refresh.expired.time}")
+    private long refreshTokenExpiredTime;
+
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, CrewRepository crewRepository) {
         super.setAuthenticationManager(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.crewRepository = crewRepository;
         setFilterProcessesUrl("/api/login");
     }
 
@@ -76,13 +85,20 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(email, role, 60 * 60 * 10L * 1000);
+        String accessToken = jwtUtil.createJwt("access", email, role, accessTokenExpiredTime,
+                getCrewStatus(email, role));
+        String refreshToken = jwtUtil.createJwt("refresh", email, role, refreshTokenExpiredTime,
+                getCrewStatus(email, role));
 
-        //TODO: refresh 토큰 추가
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(
-                ApiResponse.success(LoginResponse.from(token, null, customUserDetails))));
+                ApiResponse.success(
+                        LoginResponse.from(
+                                accessToken,
+                                refreshToken,
+                                customUserDetails
+                        ))));
         response.getWriter().flush();
     }
 
@@ -104,5 +120,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 ApiResponse.error(HttpStatus.NOT_FOUND, errorMessage)
         ));
 
+    }
+
+    private String getCrewStatus(String email, String role) {
+        if ("BOSS".equals(role)) {
+            return null;
+        }
+        return crewRepository.findByEmail(email)
+                .orElseThrow(null)
+                .getCrewStatus().name();
     }
 }
