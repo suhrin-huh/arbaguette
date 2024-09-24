@@ -1,5 +1,4 @@
 import styled from '@emotion/native';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import React from 'react';
 import { StatusBar, TouchableOpacity } from 'react-native';
