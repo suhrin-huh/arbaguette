@@ -71,7 +71,16 @@ public class BossService {
             Optional<Contract> contract = contractRepository.findByCrew(crew);
             if (contract.isPresent()) {
                 int hourlyRate = contract.get().getSalary();
-                salary = hourlyRate * calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+
+                int workHours = calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+
+                int allowance = 0;
+                if (workHours > 80) {
+                    allowance = (int) (hourlyRate * 1.5 * (workHours - 80));
+                }
+
+                salary = hourlyRate * workHours + allowance;
+
                 if (INSU.equals(contract.get().getTax())) {
                     salary *= INSU_PERCENT;
                 }
@@ -110,21 +119,24 @@ public class BossService {
                 workingDayInfos.add(WorkingDayInfo.to(contractWorkingDay));
             }
 
-            //현재까지 월급, 근무시간
+            //현재까지 월급, 근무시간, 세금, 수당
             int hourlyRate = contract.getSalary();
             workHours = calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
             salary = hourlyRate * workHours;
 
-            //세금, 수당
             if (workHours > 80) {
                 allowance = (int) (hourlyRate * 1.5 * (workHours - 80));
             }
 
             if (INSU.equals(contract.getTax())) {
+                tax = (int) ((salary + allowance) * (1 - INSU_PERCENT));
                 salary *= INSU_PERCENT;
+                allowance *= INSU_PERCENT;
             }
             if (INCOME.equals(contract.getTax())) {
+                tax = (int) ((salary + allowance) * (1 - INCOME_PERCENT));
                 salary *= INCOME_PERCENT;
+                allowance *= INCOME_PERCENT;
             }
 
 
