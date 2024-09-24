@@ -3,6 +3,7 @@ package com.lucky.arbaguette.boss.controller;
 import com.lucky.arbaguette.boss.dto.request.CrewSaveRequest;
 import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
 import com.lucky.arbaguette.boss.dto.response.CrewSaveResponse;
+import com.lucky.arbaguette.boss.dto.response.ExpectedCostResponse;
 import com.lucky.arbaguette.boss.service.BossService;
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
@@ -26,8 +27,13 @@ public class BossController {
         return ApiResponse.success(bossService.saveCrew(customUserDetails, crewSaveRequest));
     }
 
-    @GetMapping("/crews") // 알바생 전체 목록 조회
-    public ApiResponse<CrewListResponse> getCrews(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam("companyId") int companyId) {
+    @GetMapping("/expected")
+    public ApiResponse<ExpectedCostResponse> getExpectedCost(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int companyId) {
+        return ApiResponse.success(bossService.getExpectedCost(customUserDetails, companyId));
+    }
+
+    @GetMapping("/crews")
+    public ApiResponse<CrewListResponse> getCrews(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int companyId) {
         return ApiResponse.success(bossService.getCrews(customUserDetails, companyId));
     }
 
