@@ -77,8 +77,10 @@ public class CrewService {
         Crew crew = crewRepository.findByEmail(customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("해당하는 알바생이 존재하지않습니다."));
 
-        Contract contract = contractRepository.findByCrew(crew).get();
-        Receipt receipt = receiptRepository.findByMonthAndContract(month, contract);
+        Contract contract = contractRepository.findByCrew(crew)
+                .orElseThrow(() -> new NotFoundException("해당하는 근로계약서가 존재하지않습니다."));
+        Receipt receipt = receiptRepository.findByMonthAndContract(month, contract)
+                .orElseThrow(() -> new NotFoundException("해당하는 급여명세서가 존재하지않습니다."));
 
         return ReceiptDetailsResponse.from(receipt, contract);
 
