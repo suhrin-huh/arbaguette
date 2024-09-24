@@ -5,6 +5,8 @@ import com.lucky.arbaguette.receipt.domain.Receipt;
 
 public record ReceiptSendRequest(int month,
                                  int originSalary,
+                                 int tax,
+                                 int allowance,
                                  int totalTime,
                                  int crewId) {
 
@@ -13,6 +15,8 @@ public record ReceiptSendRequest(int month,
                 .contract(contract)
                 .month(this.month)
                 .originSalary(this.originSalary)
+                .tax(this.tax)
+                .allowance(this.allowance)
                 .totalTime(this.totalTime)
                 .build();
     }
