@@ -8,11 +8,11 @@ import arbaguette from '@/services/arbaguette';
  * @param email
  */
 const useEmailCheck = (email: Email) => {
-  const { data, ...queryData } = useQuery({ queryKey: keys.email(email), queryFn: () => arbaguette.checkEmail(email) });
+  const { data } = useQuery({ queryKey: keys.email(email), queryFn: () => arbaguette.checkEmail(email) });
 
   const isUnique = !!data?.data.code;
 
-  return { isUnique, ...queryData };
+  return { isUnique };
 };
 
 /**
@@ -68,4 +68,4 @@ const useAccountBalance = () => {
   return { accountBalance, ...queryData };
 };
 
-export default useEmailCheck;
+export { useAccountBalance, useCrewMemberList, useEmailCheck, useMonthlyAccumulatedSalary, useMonthlyEstimatedSalary };
