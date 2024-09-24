@@ -24,6 +24,10 @@ public class Receipt {
 
     private int originSalary;
 
+    private int tax;
+
+    private int allowance;
+
     private int totalTime;
 
     @Builder
