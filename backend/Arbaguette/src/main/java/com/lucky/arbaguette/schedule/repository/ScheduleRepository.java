@@ -1,13 +1,13 @@
 package com.lucky.arbaguette.schedule.repository;
 
 import com.lucky.arbaguette.schedule.domain.Schedule;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
+import com.lucky.arbaguette.schedule.dto.ScheduleStatusCount;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
@@ -30,4 +30,16 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
             + "OR s.startTime >= :nowDate)")
     Optional<Schedule> findNextByCrewAndTime(@Param("crewId") int crewId,
                                              @Param("nowDate") LocalDateTime nowDate);
+
+    @Query("""
+            SELECT new com.lucky.arbaguette.schedule.dto.ScheduleStatusCount(
+                SUM(CASE WHEN s.status = 'NORMAL' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN s.status = 'ABSENT' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN s.status = 'LATE' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN s.status = 'EARLY' THEN 1 ELSE 0 END)
+            )
+            FROM Schedule s
+            """)
+    List<ScheduleStatusCount> countByStatus();
+
 }
