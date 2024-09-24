@@ -20,10 +20,16 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class CrewService {
+
+    private final float INSU_PERCENT = 0.894f;
+    private final float INCOME_PERCENT = 0.967f;
 
     private final CrewRepository crewRepository;
     private final ContractRepository contractRepository;
@@ -48,12 +54,27 @@ public class CrewService {
         Crew crew = crewRepository.findByEmail(customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
 
-        int hourlyRate = contractRepository.findByCrew(crew)
-                .orElseThrow(() -> new NotFoundException("알바생에 해당하는 근로계약서가 없습니다."))
-                .getSalary();
+        int salary = 0;
+        Contract contract = contractRepository.findByCrew(crew)
+                .orElse(null);
 
-        int salary = hourlyRate * calculateWorkHours(scheduleRepository.findAllScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+        if (contract != null) {
+            int hourlyRate = contract.getSalary();
+            int workHours = calculateWorkHours(scheduleRepository.findAllScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+            salary = hourlyRate * workHours;
 
+            if (workHours > 80) {
+                salary += (int) (hourlyRate * 1.5 * (workHours - 80));
+            }
+            if (INSU.equals(contract.getTax())) {
+                salary *= INSU_PERCENT;
+            }
+            if (INCOME.equals(contract.getTax())) {
+                salary *= INCOME_PERCENT;
+            }
+
+        }
+        
         return salary;
     }
 
