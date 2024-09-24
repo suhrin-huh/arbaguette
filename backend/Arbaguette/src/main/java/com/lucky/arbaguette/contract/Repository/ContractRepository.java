@@ -11,5 +11,7 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
     Optional<Contract> findByCrew(Crew crew);
 
     Optional<Contract> findByCrew_Email(String email);
+    
+    Contract findByCrew_CrewId(int crewId);
 
 }
