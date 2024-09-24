@@ -10,14 +10,18 @@ public record CrewDetailResponse(int id,
                                  String name,
                                  List<WorkingDayInfo> workingDays,
                                  int salary,
+                                 int tax,
+                                 int allowance,
                                  int workHours,
                                  List<ReceiptInfo> receipts) {
 
-    public static CrewDetailResponse from(Crew crew, List<WorkingDayInfo> workingDayInfos, int salary, int workHours, List<ReceiptInfo> receipts) {
+    public static CrewDetailResponse from(Crew crew, List<WorkingDayInfo> workingDayInfos, int salary, int tax, int allowance, int workHours, List<ReceiptInfo> receipts) {
         return new CrewDetailResponse(crew.getCrewId(),
                 crew.getName(),
                 workingDayInfos,
                 salary,
+                tax,
+                allowance,
                 workHours,
                 receipts);
     }
