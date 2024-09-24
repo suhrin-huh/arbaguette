@@ -6,5 +6,6 @@ export default {
   PADDING: {
     HORIZONTAL: 25,
     VERTICAL: 30,
+    HEADER: 5,
   },
 };
