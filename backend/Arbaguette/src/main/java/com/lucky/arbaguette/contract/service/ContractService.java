@@ -1,10 +1,7 @@
 package com.lucky.arbaguette.contract.service;
 
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
-import com.lucky.arbaguette.common.exception.BadRequestException;
-import com.lucky.arbaguette.common.exception.DuplicateException;
-import com.lucky.arbaguette.common.exception.ForbiddenException;
-import com.lucky.arbaguette.common.exception.NotFoundException;
+import com.lucky.arbaguette.common.exception.*;
 import com.lucky.arbaguette.common.util.S3Util;
 import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
@@ -35,8 +32,8 @@ public class ContractService {
 
     @Transactional
     public void saveContract(CustomUserDetails customUserDetails, ContractSaveRequest contractSaveRequest, MultipartFile file) throws IOException {
-        Company company = companyRepository.findByCompanyIdAndBoss_Email(contractSaveRequest.companyId(), customUserDetails.getUsername()).orElseThrow(() ->  new NotFoundException("사업장을 찾을 수 없습니다."));
-        Crew crew = crewRepository.findById(contractSaveRequest.crewId()).orElseThrow(()-> new ForbiddenException("알바생을 찾을 수 없습니다."));
+        Company company = companyRepository.findByCompanyIdAndBoss_Email(contractSaveRequest.companyId(), customUserDetails.getUsername()).orElseThrow(() ->  new UnAuthorizedException("사업장을 찾을 수 없습니다."));
+        Crew crew = crewRepository.findById(contractSaveRequest.crewId()).orElseThrow(()-> new NotFoundException("알바생을 찾을 수 없습니다."));
         if(file.isEmpty()){
             throw new BadRequestException("서명이 비었습니다.");
         }
@@ -60,5 +57,17 @@ public class ContractService {
                 .endTime(workingDayInfo.endTime())
                 .weekday(workingDayInfo.weekday())
                 .build();
+    }
+
+    public void signCrewContract(CustomUserDetails customUserDetails, MultipartFile file) throws IOException {
+        Contract contract = contractRepository.findByCrew_Email(customUserDetails.getUsername()).orElseThrow(()-> new NotFoundException("근로계약서를 찾을 수 없습니다."));
+        if(contract.alreadySigned()){
+            throw new DuplicateException("이미 서명했습니다.");
+        }
+        if(file.isEmpty()){
+            throw new BadRequestException("서명이 비었습니다.");
+        }
+        contract.signCrew(s3Util.upload(file));
+        contractRepository.save(contract);
     }
 }
