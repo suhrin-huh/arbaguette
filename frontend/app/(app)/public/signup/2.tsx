@@ -1,12 +1,11 @@
 import Styled from '@emotion/native';
-import type { AxiosError } from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
-import instance from '@/configs/axios';
+import { useEmailCheck } from '@/reactQuery/querys';
 
 const Container = Styled.View(({ theme }) => ({
   flex: 1,
@@ -39,53 +38,31 @@ const ErrorText = Styled.Text(() => ({
 const GetEmailScreen = () => {
   const { role, name } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
   const [email, setEmail] = useState('');
-  const [isValid, setIsValid] = useState<boolean>();
+  const [isValid, setIsValid] = useState(true);
+  const { isUnique } = useEmailCheck(email);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleEmailInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
-    setEmail(e.nativeEvent.text);
     setIsValid(true);
+    setErrorMessage(null);
+    setEmail(e.nativeEvent.text);
   };
 
   const ClearEmailInput = (): void => {
     setEmail('');
-    setIsValid(undefined);
-    setErrorMessage(null);
   };
 
-  interface Response {
-    code: number;
-  }
-
-  const goToNext = async (): Promise<void> => {
-    try {
-      if (!emailRegex.test(email) || email.length > 30) {
-        setIsValid(false);
-        setErrorMessage('올바른 이메일을 입력하세요.');
-        return;
-      }
-
-      const response = await instance.get<Response>(`/api/user?email=${email}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.data.code === 200) {
-        router.push({ pathname: '/(app)/public/signup/3', params: { role, name, email } });
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<Response>;
-
-      if (axiosError.response && axiosError.response.data.code === 409) {
-        setIsValid(false);
-        setErrorMessage('중복된 이메일입니다.');
-      } else {
-        setIsValid(false);
-        setErrorMessage('이메일을 다시 확인해주세요.');
-      }
+  const goToNext = (): void => {
+    if (!email.length && (!emailRegex.test(email) || email.length > 30)) {
+      setIsValid(false);
+      setErrorMessage('올바른 이메일을 입력하세요.');
+    } else if (!isUnique) {
+      setIsValid(false);
+      setErrorMessage('중복된 아이디입니다.');
+    } else {
+      setErrorMessage(null);
+      router.push({ pathname: '/(app)/public/signup/3', params: { role, name, email } });
     }
   };
 
