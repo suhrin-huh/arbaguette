@@ -3,8 +3,12 @@ package com.lucky.arbaguette.crew.service;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
+import com.lucky.arbaguette.contract.domain.Contract;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
+import com.lucky.arbaguette.receipt.domain.Receipt;
+import com.lucky.arbaguette.receipt.domain.dto.response.ReceiptDetailsResponse;
+import com.lucky.arbaguette.receipt.repository.ReceiptRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,7 @@ public class CrewService {
     private final CrewRepository crewRepository;
     private final ContractRepository contractRepository;
     private final ScheduleRepository scheduleRepository;
+    private final ReceiptRepository receiptRepository;
 
     public int getNusumSalary(CustomUserDetails customUserDetails) {
         Crew crew = crewRepository.findByEmail(customUserDetails.getUsername())
@@ -66,5 +71,16 @@ public class CrewService {
 
     public LocalDateTime getEndOfMonth() {
         return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).with(LocalTime.MAX); // 월의 마지막 날 23:59:59
+    }
+
+    public ReceiptDetailsResponse getReceipt(CustomUserDetails customUserDetails, int month) {
+        Crew crew = crewRepository.findByEmail(customUserDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("해당하는 알바생이 존재하지않습니다."));
+
+        Contract contract = contractRepository.findByCrew(crew).get();
+        Receipt receipt = receiptRepository.findByMonthAndContract(month, contract);
+
+        return ReceiptDetailsResponse.from(receipt, contract);
+
     }
 }

@@ -12,4 +12,6 @@ public interface ReceiptRepository extends JpaRepository<Receipt, Integer> {
 
     boolean existsByMonthAndContract(int month, Contract contract);
 
+    Receipt findByMonthAndContract(int month, Contract contract);
+
 }
