@@ -4,6 +4,7 @@ import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.dto.request.CrewSaveRequest;
 import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
 import com.lucky.arbaguette.boss.dto.response.CrewSaveResponse;
+import com.lucky.arbaguette.boss.dto.response.ExpectedCostResponse;
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
@@ -56,6 +57,52 @@ public class BossService {
     private final BossRepository bossRepository;
     private final ContractWorkingDayRepository contractWorkingDayRepository;
     private final ReceiptRepository receiptRepository;
+
+    public ExpectedCostResponse getExpectedCost(CustomUserDetails customUserDetails, int companyId) {
+        Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("해당 사장님을 찾을 수 없습니다."));
+        Company company = companyRepository.findByCompanyIdAndBoss(companyId, boss)
+                .orElseThrow(() -> new UnAuthorizedException("해당 조회 권한이 없습니다."));
+
+        List<Crew> crewList = crewRepository.findByCompany(company);
+        int originSalary = 0;
+        int tax = 0;
+        int allowance = 0;
+        for (Crew crew : crewList) {
+            Optional<Contract> contract = contractRepository.findByCrew(crew);
+            if (contract.isPresent()) {
+                int curAllowance = 0;
+                int curTax = 0;
+                int curOriginSalary = 0;
+
+                int hourlyRate = contract.get().getSalary();
+                int workHours = calculateWorkHours(scheduleRepository.findAllScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+                curOriginSalary = hourlyRate * workHours;
+
+                if (workHours > 80) {
+                    curAllowance = (int) (hourlyRate * 1.5 * (workHours - 80));
+                }
+
+                if (INSU.equals(contract.get().getTax())) {
+                    curTax = (int) ((curOriginSalary + curAllowance) * (1 - INSU_PERCENT));
+                    curOriginSalary *= INSU_PERCENT;
+                    curAllowance *= INSU_PERCENT;
+                }
+                if (INCOME.equals(contract.get().getTax())) {
+                    curTax = (int) ((curOriginSalary + curAllowance) * (1 - INCOME_PERCENT));
+                    curOriginSalary *= INCOME_PERCENT;
+                    curAllowance *= INCOME_PERCENT;
+                }
+
+                originSalary += curOriginSalary;
+                tax += curTax;
+                allowance += curAllowance;
+            }
+
+        }
+
+        return new ExpectedCostResponse(originSalary, tax, allowance);
+    }
 
     public CrewListResponse getCrews(CustomUserDetails customUserDetails, int companyId) {
         Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
@@ -190,5 +237,6 @@ public class BossService {
 
         receiptRepository.save(receiptSendRequest.toReceipt(contract));
     }
+
 
 }
