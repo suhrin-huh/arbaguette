@@ -23,4 +23,11 @@ public class ContractController {
         contractService.saveContract(customUserDetails, contractSaveRequest, file);
         return ApiResponse.success();
     }
+
+    @PostMapping(value = "/crew", consumes = "multipart/form-data")
+    public ApiResponse<Void> signCrewContract(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestPart("image") MultipartFile file) throws IOException {
+        contractService.signCrewContract(customUserDetails, file);
+        return ApiResponse.success();
+    }
+
 }
