@@ -5,7 +5,7 @@ import com.lucky.arbaguette.receipt.domain.Receipt;
 
 public record ReceiptDetailsResponse(int originSalary,
                                      int tax,
-                                     int waterSugar,
+                                     int allowance,
                                      int totalTime,
                                      String companyName,
                                      int salaryDate) {

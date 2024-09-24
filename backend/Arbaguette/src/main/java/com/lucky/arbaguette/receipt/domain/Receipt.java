@@ -31,10 +31,12 @@ public class Receipt {
     private int totalTime;
 
     @Builder
-    public Receipt(Contract contract, int month, int originSalary, int totalTime) {
+    public Receipt(Contract contract, int month, int originSalary, int tax, int allowance, int totalTime) {
         this.contract = contract;
         this.month = month;
         this.originSalary = originSalary;
+        this.tax = tax;
+        this.allowance = allowance;
         this.totalTime = totalTime;
     }
 
