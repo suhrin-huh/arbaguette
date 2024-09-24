@@ -5,9 +5,10 @@ import lombok.Getter;
 @Getter
 public enum StatusType {
 
-    YES("정상 출근"),
+    NORMAL("출근"),
     LATE("지각"),
-    NO("결근");
+    ABSENT("결근"),
+    EARLY("조퇴");
 
     private String message;
 

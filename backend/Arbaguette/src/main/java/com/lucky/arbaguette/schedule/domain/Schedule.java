@@ -1,7 +1,7 @@
 package com.lucky.arbaguette.schedule.domain;
 
 import static com.lucky.arbaguette.schedule.domain.StatusType.LATE;
-import static com.lucky.arbaguette.schedule.domain.StatusType.YES;
+import static com.lucky.arbaguette.schedule.domain.StatusType.NORMAL;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lucky.arbaguette.crew.domain.Crew;
@@ -70,7 +70,7 @@ public class Schedule {
 
     public void inWork(LocalDateTime nowTime) {
         this.inTime = nowTime;
-        this.status = YES;
+        this.status = NORMAL;
 
         if (nowTime.isAfter(this.startTime)) {
             this.status = LATE;
