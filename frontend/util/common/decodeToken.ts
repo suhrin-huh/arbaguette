@@ -3,7 +3,7 @@ import type { JwtPayload } from 'jwt-decode';
 import { jwtDecode } from 'jwt-decode';
 
 export interface Decode extends JwtPayload {
-  role: 'BOSS' | 'CREW';
+  role: Role;
   string: string;
 }
 

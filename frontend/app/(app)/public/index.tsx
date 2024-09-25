@@ -33,7 +33,7 @@ const WelcomeScreen = () => {
 
   useEffect(() => {
     if (!token) return;
-    const role = token?.role;
+    const role = token.role;
     if (role === 'BOSS') {
       router.push('/(app)/boss');
     } else if (role === 'CREW') {

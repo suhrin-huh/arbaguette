@@ -10,11 +10,8 @@ const instance = axios.create({
 instance.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem('accessToken');
-    if (token !== null) {
+    if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
-    } else {
-      console.log('토큰 없음');
-      config.headers['Authorization'] = `Bearer ${process.env.EXPO_PUBLIC_TEMP_ACCESSTOKEN}`;
     }
     return config;
   },

@@ -1,5 +1,6 @@
 import Styled from '@emotion/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -42,6 +43,26 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { mutate: login } = useMutation({
+    mutationFn: arbaguette.login,
+    onSuccess: async (response) => {
+      const { accessToken, role } = response.data.data;
+      await AsyncStorage.setItem('accessToken', accessToken);
+
+      router.dismissAll();
+      if (role === 'BOSS') {
+        router.replace('/(app)/boss');
+      } else if (role === 'CREW') {
+        router.replace('/(app)/crew');
+      }
+    },
+    onError: (error: AxiosError) => {
+      if (error.status === 404) {
+        setIsValid(false);
+        setErrorMessage('아이디와 비밀번호를 확인해주세요.');
+      }
+    },
+  });
 
   const handleEmailInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setEmail(e.nativeEvent.text);
@@ -59,33 +80,10 @@ const LoginScreen = () => {
     setPassword('');
   };
 
-  const handleLogin = async (): Promise<void> => {
-    try {
-      const response = await arbaguette.login({ email, password });
-
-      if (response.data.code === 200) {
-        const { accessToken, role } = response.data.data;
-
-        await AsyncStorage.setItem('accessToken', accessToken);
-
-        if (role === 'BOSS') {
-          router.push('/(app)/boss');
-        } else if (role === 'CREW') {
-          router.push('/(app)/crew');
-        }
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ErrorResponse>;
-
-      const err = axiosError.response?.data;
-      if (err && err.code === 404) {
-        setIsValid(false);
-        setErrorMessage('아이디와 비밀번호를 확인해주세요.');
-      } else {
-        console.error('An error occurred:', error);
-      }
-    }
+  const handleLogin = () => {
+    login({ email, password });
   };
+
   return (
     <Container>
       <ContentWrapper>
