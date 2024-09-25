@@ -5,6 +5,7 @@ import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.jwt.JWTFilter;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.jwt.LoginFilter;
+import com.lucky.arbaguette.common.jwt.LogoutFilter;
 import com.lucky.arbaguette.common.repository.TokenRedisRepository;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import jakarta.servlet.DispatcherType;
@@ -61,7 +62,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         //누구나 접근 가능
-                        .requestMatchers("/", "/api/login", "/join", "/api/user/**").permitAll()
+                        .requestMatchers("/", "/api/login", "/api/logout", "/join", "/api/user/**").permitAll()
                         //dispatcher 를 통해 넘어오는 에러는 모두 접근 가능
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         //BOSS 만 접근 가능
@@ -71,6 +72,8 @@ public class SecurityConfig {
                         .hasAuthority("CREW")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
+                .addFilterBefore(new LogoutFilter(jwtUtil, tokenRedisRepository),
+                        org.springframework.security.web.authentication.logout.LogoutFilter.class)
                 .addFilterAt(
                         new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, crewRepository,
                                 tokenRedisRepository),
