@@ -50,6 +50,7 @@ public class ScheduleController {
     public ApiResponse<Void> saveSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         scheduleService.saveSchedule(customUserDetails);
         return ApiResponse.success();
+    }
 
     @GetMapping
     public ApiResponse<MonthlyScheduleResponse> getMonthlySchedules(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int month, @RequestParam int companyId) {

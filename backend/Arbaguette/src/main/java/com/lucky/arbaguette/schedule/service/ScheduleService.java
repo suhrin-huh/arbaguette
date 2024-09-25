@@ -1,17 +1,17 @@
 package com.lucky.arbaguette.schedule.service;
 
-import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.boss.repository.BossRepository;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
+import com.lucky.arbaguette.company.domain.Company;
+import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
 import com.lucky.arbaguette.contract.domain.Contract;
 import com.lucky.arbaguette.contractworkingday.domain.ContractWorkingDay;
 import com.lucky.arbaguette.contractworkingday.repository.ContractWorkingDayRepository;
-import com.lucky.arbaguette.company.domain.Company;
-import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
@@ -28,10 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-
-import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
-import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -144,6 +140,7 @@ public class ScheduleService {
                     });
             currentDate = currentDate.plusDays(1);
         }
+    }
 
     public MonthlyScheduleResponse getMonthlySchedules(CustomUserDetails customUserDetails, int month, int companyId) {
         Company company = companyRepository.findById(companyId)
@@ -167,3 +164,4 @@ public class ScheduleService {
 
     }
 }
+
