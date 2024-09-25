@@ -1,4 +1,5 @@
 import Styled from '@emotion/native';
+import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -37,6 +38,21 @@ const ErrorText = Styled.Text(() => ({
 }));
 
 const GetNumberScreen = () => {
+  const { mutate: signup } = useMutation({
+    mutationFn: arbaguette.signup,
+    onSuccess: async (response) => {
+      router.dismissAll();
+      router.replace('/public/login');
+    },
+    onError: (error: AxiosError) => {
+      setIsValid(false);
+      if (error.status === 409) {
+        setErrorMessage('중복된 전화번호입니다.');
+      } else {
+        setErrorMessage('올바른 전화번호를 입력해주세요.');
+      }
+    },
+  });
   const { role, name, email, password } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
   const [tel, setTel] = useState('');
   const [isValid, setIsValid] = useState(true);
@@ -53,37 +69,22 @@ const GetNumberScreen = () => {
     setIsValid(true);
   };
 
-  const handleSignUp = async (): Promise<void> => {
-    try {
-      if (!phoneRegex.test(tel)) {
-        setIsValid(false);
-        setErrorMessage('올바른 전화번호를 입력해주세요.');
-        return;
-      }
-      const profileImage = Math.floor(Math.random() * 6) + 1;
-      const requestData = {
-        email,
-        password,
-        name,
-        tel,
-        role,
-        profileImage,
-      };
-      const response = await arbaguette.signup(requestData);
-
-      if (response.data.code === 200) {
-        router.push('/(app)/public/login');
-      }
-    } catch (error) {
+  const handleSignUp = () => {
+    if (!phoneRegex.test(tel)) {
       setIsValid(false);
-      const axiosError = error as AxiosError<ErrorResponse>;
-      const err = axiosError.response?.data;
-      if (err && err.code === 409) {
-        setErrorMessage('중복된 전화번호입니다.');
-      } else {
-        setErrorMessage('올바른 전화번호를 입력해주세요.');
-      }
+      setErrorMessage('올바른 전화번호를 입력해주세요.');
+      return;
     }
+    const profileImage = Math.floor(Math.random() * 6) + 1;
+    const requestData = {
+      email,
+      password,
+      name,
+      tel,
+      role,
+      profileImage,
+    };
+    signup(requestData);
   };
 
   return (
