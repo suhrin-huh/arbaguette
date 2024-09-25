@@ -5,8 +5,9 @@ import { Calendar, Timeline } from 'react-native-calendars';
 
 const CrewScheduleScreen = () => {
   const handleEventPress = (event: TimelineEventProps) => {
-    console.log(event);
-    router.navigate({ pathname: '/crew/schedule/modal', params: { event: JSON.stringify(event) } });
+    const serializedEvent = JSON.stringify(event);
+
+    router.navigate({ pathname: '/crew/schedule/apply', params: { event: serializedEvent } });
   };
 
   return (
