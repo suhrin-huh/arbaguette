@@ -40,7 +40,6 @@ import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
 import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
 import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
->>>>>>> backend/Arbaguette/src/main/java/com/lucky/arbaguette/schedule/service/ScheduleService.java
 
 @RequiredArgsConstructor
 @Service
