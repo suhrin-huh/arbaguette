@@ -35,7 +35,7 @@ const CrewCardArea = styled.View(({ theme }) => ({
   justifyContent: 'center',
   gap: 20,
   paddingVertical: 10,
-  paddingBottom: 120,
+  paddingBottom: 260,
 }));
 
 const mockData = [
@@ -43,31 +43,37 @@ const mockData = [
     id: 0,
     name: '손다인',
     salary: '12만원',
+    day: ['월', '수', '토'],
   },
   {
     id: 1,
     name: '김지원',
     salary: '20만원',
+    day: ['월', '수', '토'],
   },
   {
     id: 2,
     name: '박지훈',
     salary: '50만원',
+    day: ['화', '목', '토'],
   },
   {
     id: 3,
     name: '박지훈',
     salary: '50만원',
+    day: ['일'],
   },
   {
     id: 4,
     name: '박지훈',
     salary: '50만원',
+    day: ['일'],
   },
   {
     id: 5,
     name: '박지훈',
     salary: '50만원',
+    day: ['일'],
   },
 ];
 
@@ -80,7 +86,7 @@ const BossManagementScreen = () => {
         paddingBottom: 60,
       }}>
       <ContainerView>
-        <LeftHeaderbar title="가게 명" right="bell" />
+        <LeftHeaderbar title="파리바게트 장덕점" right="bell" />
         <MonthButtonArea>
           <MonthBar />
           <Button
@@ -93,13 +99,14 @@ const BossManagementScreen = () => {
 
         {/* 직원 카드 리스트 */}
         <CrewCardArea>
-          {mockData.map(({ id, name, salary }) => (
+          {mockData.map(({ id, name, salary, day }) => (
             <CrewCard
               type="crew"
               id={id}
               name={name}
               salary={salary}
               key={id}
+              day={day as Days[]} // 타입 캐스팅 추가
               pressHandler={() => console.log('아아아')}
             />
           ))}
