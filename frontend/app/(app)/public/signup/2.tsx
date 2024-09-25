@@ -51,10 +51,11 @@ const GetEmailScreen = () => {
 
   const ClearEmailInput = (): void => {
     setEmail('');
+    setErrorMessage(null);
   };
 
   const goToNext = (): void => {
-    if (!email.length && (!emailRegex.test(email) || email.length > 30)) {
+    if (!emailRegex.test(email) || email.length > 30) {
       setIsValid(false);
       setErrorMessage('올바른 이메일을 입력하세요.');
     } else if (!isUnique) {
@@ -83,7 +84,7 @@ const GetEmailScreen = () => {
         </InputWrapper>
         {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext}>
+      <Button type="primary" onPress={goToNext} disabled={!email.length}>
         다음
       </Button>
     </Container>
