@@ -1,18 +1,18 @@
 import styled from '@emotion/native';
-import Entypo from '@expo/vector-icons/Entypo';
 import React from 'react';
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable } from 'react-native';
 
+import DayCircle from '@/components/common/DayCircle';
 import Colors from '@/constants/Colors';
 
 import unknownPerson from '../../../assets/images/unknown_person.jpg';
-import Button from '../../common/Button';
 import CardContainer from '../../common/CardContainer';
 
-type CrewCardType = 'crew' | 'add';
+type CrewCardType = 'crew';
 
 interface CrewCardProps {
   id: number;
+  day: Days[];
   type: CrewCardType;
   name?: string;
   salary?: string;
@@ -33,60 +33,95 @@ const InnerContainer = styled.View(({ theme }) => ({
   alignItems: 'center',
   gap: 15,
   flexDirection: 'row',
+  flex: 1,
+  paddingHorizontal: 10,
 }));
 
 const ProfileContainer = styled.View(({ theme }) => ({
-  gap: 5,
+  gap: 12,
   alignItems: 'center',
+  flexDirection: 'row',
+}));
+
+const NameTitleContainer = styled.View(({ theme }) => ({
+  gap: 13,
+  alignItems: 'center',
+  paddingBottom: 2,
 }));
 
 const CrewNameTitle = styled.Text(({ theme }) => ({
-  fontSize: 14,
+  width: '100%',
+  fontSize: 20,
   fontWeight: 'bold',
+  alignItems: 'flex-start',
 }));
 
-const CrewSalaryTitle = styled.Text(({ theme }) => ({
-  fontSize: 24,
-  fontWeight: 'bold',
-  paddingLeft: 100,
-}));
-
-const SalaryDetailButton = styled(Button)(({ theme }) => ({
+const MiddleContainer = styled.View(({ theme }) => ({
+  paddingTop: 10,
   justifyContent: 'center',
   alignItems: 'center',
+  gap: 0,
+  flex: 1,
+}));
+
+const DayContainer = styled.View(({ theme }) => ({
   flexDirection: 'row',
-  gap: 20,
+  gap: 5,
+  justifyContent: 'flex-end',
+  width: '100%',
 }));
 
-const SalaryDetailText = styled.Text(({ theme }) => ({
-  fontSize: 18,
+const ContractRemainText = styled.Text(({ theme }) => ({
+  fontSize: 12,
   fontWeight: 'bold',
-  color: Colors.WHITE,
+  color: Colors.GRAY[3],
 }));
 
-const CrewCard = ({ id, name, salary, pressHandler, ...props }: CrewCardProps) => {
+const HowWorkContainer = styled.View(({ theme }) => ({
+  gap: 8,
+  alignItems: 'center',
+  flexDirection: 'row',
+  justifyContent: 'flex-end',
+  width: '100%',
+}));
+
+const HowWorkMonth = styled.Text(({ theme }) => ({
+  fontSize: 24,
+  fontWeight: 'bold',
+  color: Colors.PRIMARY,
+}));
+
+const HowWorkTitle = styled.Text(({ theme }) => ({
+  fontSize: 16,
+  fontWeight: 'bold',
+  color: Colors.GRAY[3],
+}));
+
+const CrewCard = ({ id, name, salary, day, pressHandler, ...props }: CrewCardProps) => {
   return (
     <Pressable onPress={pressHandler}>
       <StyledCardContainer>
-        {props.type === 'add' ? (
-          <InnerContainer>
-            <ProfileContainer>
-              <Entypo name="circle-with-plus" size={32} color={Colors.PRIMARY} />
-              <CrewNameTitle>직원 추가</CrewNameTitle>
-            </ProfileContainer>
-          </InnerContainer>
-        ) : (
-          <InnerContainer>
-            <ProfileContainer>
-              <Image source={unknownPerson} style={{ width: 45, height: 45, borderRadius: 50 }} />
+        <InnerContainer>
+          <ProfileContainer>
+            <Image source={unknownPerson} style={{ width: 55, height: 55, borderRadius: 50 }} />
+            <NameTitleContainer>
               <CrewNameTitle>{name}</CrewNameTitle>
-            </ProfileContainer>
-            <CrewSalaryTitle>{salary}</CrewSalaryTitle>
-            <SalaryDetailButton onPress={() => console.log(id)}>
-              <SalaryDetailText>상세</SalaryDetailText>
-            </SalaryDetailButton>
-          </InnerContainer>
-        )}
+              <ContractRemainText>24년 12월까지</ContractRemainText>
+            </NameTitleContainer>
+          </ProfileContainer>
+          <MiddleContainer>
+            <DayContainer>
+              {day.map((day) => (
+                <DayCircle day={day} key={day} />
+              ))}
+            </DayContainer>
+            <HowWorkContainer>
+              <HowWorkTitle>근무</HowWorkTitle>
+              <HowWorkMonth>2</HowWorkMonth>
+              <HowWorkTitle>달째</HowWorkTitle>
+            </HowWorkContainer>
+          </MiddleContainer>
+        </InnerContainer>
       </StyledCardContainer>
     </Pressable>
   );
