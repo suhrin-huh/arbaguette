@@ -27,6 +27,7 @@ instance.interceptors.response.use(
   async (error) => {
     // if (error.response.status === 401 && error.response.data.message === '로그인이 필요합니다.') {
     // }
+    console.log('error', error);
     return Promise.reject(error);
   },
 );
