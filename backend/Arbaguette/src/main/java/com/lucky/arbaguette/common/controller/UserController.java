@@ -2,12 +2,12 @@ package com.lucky.arbaguette.common.controller;
 
 
 import com.lucky.arbaguette.common.ApiResponse;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
+import com.lucky.arbaguette.common.domain.dto.request.UserReissueRequest;
 import com.lucky.arbaguette.common.domain.dto.response.LoginTokenResponse;
 import com.lucky.arbaguette.common.domain.dto.response.UserInfoResponse;
 import com.lucky.arbaguette.common.service.UserService;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/reissue")
-    public ApiResponse<LoginTokenResponse> reissue(@RequestBody @NotEmpty String refreshToken) {
-        return ApiResponse.success(userService.reissue(refreshToken));
+    public ApiResponse<LoginTokenResponse> reissue(@RequestBody UserReissueRequest request) {
+        return ApiResponse.success(userService.reissue(request.refreshToken()));
     }
 }

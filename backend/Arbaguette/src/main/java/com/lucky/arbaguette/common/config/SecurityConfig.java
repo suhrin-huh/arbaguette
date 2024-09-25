@@ -5,6 +5,7 @@ import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.jwt.JWTFilter;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.jwt.LoginFilter;
+import com.lucky.arbaguette.common.repository.TokenRedisRepository;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final CrewRepository crewRepository;
+    private final TokenRedisRepository tokenRedisRepository;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -70,7 +72,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(
-                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, crewRepository),
+                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, crewRepository,
+                                tokenRedisRepository),
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(unauthorizedEntryPoint()) // 인증 예외 처리 (401)

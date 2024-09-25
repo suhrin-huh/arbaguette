@@ -1,17 +1,19 @@
 package com.lucky.arbaguette.common.service;
 
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.BOSS;
-import static com.lucky.arbaguette.common.domain.dto.enums.UserRole.CREW;
+import static com.lucky.arbaguette.common.domain.enums.UserRole.BOSS;
+import static com.lucky.arbaguette.common.domain.enums.UserRole.CREW;
 
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.TokenRedis;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
 import com.lucky.arbaguette.common.domain.dto.response.LoginTokenResponse;
 import com.lucky.arbaguette.common.domain.dto.response.UserInfoResponse;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
+import com.lucky.arbaguette.common.repository.TokenRedisRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -36,6 +38,7 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final BossRepository bossRepository;
     private final CrewRepository crewRepository;
+    private final TokenRedisRepository tokenRedisRepository;
     private final WebClient webClient; // WebClient 주입git
     private final JWTUtil jwtUtil;
 
@@ -142,17 +145,22 @@ public class UserService {
             throw new BadRequestException("refresh token expired");
         }
 
-        if ("refresh".equals(jwtUtil.getCategory(refreshToken))) {
+        if (!"refresh".equals(jwtUtil.getCategory(refreshToken))) {
             throw new BadRequestException("invalid refresh token");
         }
 
         String email = jwtUtil.getEmail(refreshToken);
         String role = jwtUtil.getRole(refreshToken);
 
-        String access = jwtUtil.createJwt("access", email, role, accessTokenExpiredTime,
-                getCrewStatus(email, role));
-        String refresh = jwtUtil.createJwt("refresh", email, role, refreshTokenExpiredTime,
-                getCrewStatus(email, role));
+        if (!tokenRedisRepository.existsBy(email)) {
+            throw new BadRequestException("invalid refresh token");
+        }
+
+        String access = jwtUtil.createJwt("access", email, role, getCrewStatus(email, role));
+        String refresh = jwtUtil.createJwt("refresh", email, role, getCrewStatus(email, role));
+
+        tokenRedisRepository.deleteBy(email);
+        saveRefreshEntity(email, refresh);
 
         return LoginTokenResponse.of(access, refresh);
     }
@@ -168,5 +176,14 @@ public class UserService {
         return crewRepository.findByEmail(email)
                 .orElseThrow(null)
                 .getCrewStatus().name();
+    }
+
+    private void saveRefreshEntity(String email, String refreshToken) {
+        tokenRedisRepository.save(
+                TokenRedis.builder()
+                        .email(email)
+                        .refreshToken(refreshToken)
+                        .build()
+        );
     }
 }

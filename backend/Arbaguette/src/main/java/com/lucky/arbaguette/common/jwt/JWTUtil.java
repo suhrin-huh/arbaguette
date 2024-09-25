@@ -12,6 +12,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class JWTUtil {
 
+    @Value("${token.access.expired.time}")
+    private long accessTokenExpiredTime;
+
+    @Value("${token.refresh.expired.time}")
+    private long refreshTokenExpiredTime;
+
     private SecretKey secretKey;
 
     public JWTUtil(@Value("${spring.jwt.secret}") String secret) {
@@ -39,14 +45,15 @@ public class JWTUtil {
                 .before(new Date());
     }
 
-    public String createJwt(String category, String email, String role, Long expiredMs, String crewStatus) {
+    public String createJwt(String category, String email, String role, String crewStatus) {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("email", email)
                 .claim("role", role)
                 .claim("crewStatus", crewStatus)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .expiration(new Date(System.currentTimeMillis()
+                        + ("access".equals(category) ? accessTokenExpiredTime : refreshTokenExpiredTime)))
                 .signWith(secretKey)
                 .compact();
     }

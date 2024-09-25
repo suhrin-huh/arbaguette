@@ -4,8 +4,8 @@ import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucky.arbaguette.common.ApiResponse;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.CommonUserInfo;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -44,15 +44,15 @@ public class JWTFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.setStatus(SC_UNAUTHORIZED);
+            response.setStatus(HttpStatus.I_AM_A_TEAPOT.value());
             response.getWriter().write(new ObjectMapper().writeValueAsString(
-                    ApiResponse.error(HttpStatus.UNAUTHORIZED, "access token expired")
+                    ApiResponse.error(HttpStatus.I_AM_A_TEAPOT, "access token expired")
             ));
             return;
         }
 
         //access 토큰 여부 검증
-        if ("access".equals(jwtUtil.getCategory(token))) {
+        if (!"access".equals(jwtUtil.getCategory(token))) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.setStatus(SC_UNAUTHORIZED);

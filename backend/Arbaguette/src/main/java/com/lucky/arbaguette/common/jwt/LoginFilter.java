@@ -4,10 +4,12 @@ import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucky.arbaguette.common.ApiResponse;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.TokenRedis;
 import com.lucky.arbaguette.common.domain.dto.request.LoginRequest;
 import com.lucky.arbaguette.common.domain.dto.response.LoginResponse;
 import com.lucky.arbaguette.common.exception.BadRequestException;
+import com.lucky.arbaguette.common.repository.TokenRedisRepository;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,18 +37,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final CrewRepository crewRepository;
+    private final TokenRedisRepository tokenRedisRepository;
 
-    @Value("${token.access.expired.time}")
-    private long accessTokenExpiredTime;
 
-    @Value("${token.refresh.expired.time}")
-    private long refreshTokenExpiredTime;
-
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, CrewRepository crewRepository) {
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, CrewRepository crewRepository,
+                       TokenRedisRepository tokenRepository) {
         super.setAuthenticationManager(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.crewRepository = crewRepository;
+        this.tokenRedisRepository = tokenRepository;
         setFilterProcessesUrl("/api/login");
     }
 
@@ -85,11 +84,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String accessToken = jwtUtil.createJwt("access", email, role, accessTokenExpiredTime,
-                getCrewStatus(email, role));
-        String refreshToken = jwtUtil.createJwt("refresh", email, role, refreshTokenExpiredTime,
-                getCrewStatus(email, role));
+        //토큰 생성
+        String accessToken = jwtUtil.createJwt("access", email, role, getCrewStatus(email, role));
+        String refreshToken = jwtUtil.createJwt("refresh", email, role, getCrewStatus(email, role));
 
+        //Refresh 토큰 저장
+        saveRefreshEntity(email, refreshToken);
+
+        //응답 설정
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(
@@ -129,5 +131,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         return crewRepository.findByEmail(email)
                 .orElseThrow(null)
                 .getCrewStatus().name();
+    }
+
+    private void saveRefreshEntity(String email, String refreshToken) {
+        tokenRedisRepository.save(
+                TokenRedis.builder()
+                        .email(email)
+                        .refreshToken(refreshToken)
+                        .build()
+        );
     }
 }
