@@ -1,4 +1,4 @@
-package com.lucky.arbaguette.common.domain.dto.enums;
+package com.lucky.arbaguette.common.domain.enums;
 
 public enum CrewStatus {
     UNREGISTERED,

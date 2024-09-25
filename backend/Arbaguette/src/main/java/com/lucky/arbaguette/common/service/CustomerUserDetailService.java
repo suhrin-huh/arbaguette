@@ -2,8 +2,8 @@ package com.lucky.arbaguette.common.service;
 
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.CommonUserInfo;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import java.util.Optional;

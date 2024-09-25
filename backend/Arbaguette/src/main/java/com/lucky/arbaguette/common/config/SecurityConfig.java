@@ -5,8 +5,12 @@ import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.jwt.JWTFilter;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.jwt.LoginFilter;
+import com.lucky.arbaguette.common.repository.TokenRedisRepository;
+import com.lucky.arbaguette.crew.repository.CrewRepository;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +30,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -36,6 +37,8 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final CrewRepository crewRepository;
+    private final TokenRedisRepository tokenRedisRepository;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -64,10 +67,13 @@ public class SecurityConfig {
                         //BOSS 만 접근 가능
                         .requestMatchers("/api/boss/**", "/api/contract/boss").hasAuthority("BOSS")
                         //CREW 만 접근 가능
-                        .requestMatchers("/api/crew/**", "/api/schedule/crew/**", "/api/contract/crew").hasAuthority("CREW")
+                        .requestMatchers("/api/crew/**", "/api/schedule/crew/**", "/api/contract/crew")
+                        .hasAuthority("CREW")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+                .addFilterAt(
+                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, crewRepository,
+                                tokenRedisRepository),
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(unauthorizedEntryPoint()) // 인증 예외 처리 (401)

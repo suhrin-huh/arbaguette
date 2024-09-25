@@ -1,29 +1,37 @@
 package com.lucky.arbaguette.company.service;
 
-import com.google.cloud.vision.v1.*;
+import static com.google.common.io.Files.getFileExtension;
+import static com.lucky.arbaguette.company.dto.CompanyListResponse.of;
+
+import com.google.cloud.vision.v1.AnnotateImageRequest;
+import com.google.cloud.vision.v1.AnnotateImageResponse;
+import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
+import com.google.cloud.vision.v1.EntityAnnotation;
+import com.google.cloud.vision.v1.Feature;
+import com.google.cloud.vision.v1.Image;
+import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.protobuf.ByteString;
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.repository.BossRepository;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
-import com.lucky.arbaguette.common.exception.*;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.common.exception.BadRequestException;
+import com.lucky.arbaguette.common.exception.ForbiddenException;
+import com.lucky.arbaguette.common.exception.InternetServerErrorException;
+import com.lucky.arbaguette.common.exception.NotFoundException;
+import com.lucky.arbaguette.common.exception.UnAuthorizedException;
+import com.lucky.arbaguette.company.dto.CompanyInfo;
 import com.lucky.arbaguette.company.dto.CompanyListResponse;
 import com.lucky.arbaguette.company.dto.CompanyListResponse.CompanyList;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
-import com.lucky.arbaguette.company.dto.CompanyInfo;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-
-import static com.google.common.io.Files.getFileExtension;
-import static com.lucky.arbaguette.company.dto.CompanyListResponse.*;
+import java.util.regex.Pattern;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RequiredArgsConstructor
@@ -33,15 +41,15 @@ public class CompanyService {
     private final BossRepository bossRepository;
     private final CompanyRepository companyRepository;
 
-    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg","png");
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "png");
 
     public CompanyInfo ocrImage(MultipartFile file) throws IOException {
         //파일이 비어있는 지 확인
-        if(file == null || file.isEmpty()) {
+        if (file == null || file.isEmpty()) {
             throw new BadRequestException("사진이 없습니다.");
         }
         //파일의 확장자를 확인
-        if(!ALLOWED_EXTENSIONS.contains(getFileExtension(file.getOriginalFilename()))) {
+        if (!ALLOWED_EXTENSIONS.contains(getFileExtension(file.getOriginalFilename()))) {
             throw new ForbiddenException("올바른 형식이 아닙니다.");
         }
 
@@ -100,16 +108,16 @@ public class CompanyService {
     }
 
     public void companySave(CustomUserDetails customUserDetails, CompanyInfo companyInfo) {
-        if(customUserDetails.isCrew()) {
+        if (customUserDetails.isCrew()) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }
         Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
-                .orElseThrow(()-> new NotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
         companyRepository.save(companyInfo.toCompany(boss));
     }
 
-    public CompanyListResponse getCompanies(CustomUserDetails customUserDetails){
-        if(customUserDetails.isCrew()) {
+    public CompanyListResponse getCompanies(CustomUserDetails customUserDetails) {
+        if (customUserDetails.isCrew()) {
             throw new UnAuthorizedException("접근 권한이 없습니다.");
         }
         return of(

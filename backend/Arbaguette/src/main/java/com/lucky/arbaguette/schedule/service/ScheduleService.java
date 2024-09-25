@@ -1,7 +1,7 @@
 package com.lucky.arbaguette.schedule.service;
 
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.boss.repository.BossRepository;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;

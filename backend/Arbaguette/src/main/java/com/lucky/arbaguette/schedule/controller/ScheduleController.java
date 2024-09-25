@@ -1,7 +1,7 @@
 package com.lucky.arbaguette.schedule.controller;
 
 import com.lucky.arbaguette.common.ApiResponse;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.service.CustomerUserDetailService;
 import com.lucky.arbaguette.schedule.dto.request.ScheduleSaveRequest;
 import com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse;

@@ -1,6 +1,6 @@
 package com.lucky.arbaguette.common.domain.dto.response;
 
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 
 public record LoginResponse(String accessToken,
                             String refreshToken,
