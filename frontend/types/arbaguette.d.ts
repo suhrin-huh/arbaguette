@@ -14,6 +14,8 @@ type UserName = string;
 type Tel = string;
 type ProfileImage = number;
 
+type Days = '월' | '화' | '수' | '목' | '금' | '토' | '일';
+
 interface LoginForm {
   email: Email;
   password: Password;
