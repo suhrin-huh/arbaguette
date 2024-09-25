@@ -7,7 +7,7 @@ import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-nativ
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
-import instance from '@/configs/axios';
+import arbaguette from '@/services/arbaguette';
 
 const Container = Styled.View(({ theme }) => ({
   flex: 1,
@@ -59,32 +59,9 @@ const LoginScreen = () => {
     setPassword('');
   };
 
-  interface ResponseData {
-    accessToken: string;
-    role: string;
-  }
-
-  interface Response {
-    code: number;
-    data: ResponseData;
-  }
-
-  interface ErrorResponse {
-    code: number;
-    message: string;
-  }
-
   const handleLogin = async (): Promise<void> => {
     try {
-      // Post request to login endpoint
-      const response = await instance.post<Response>(
-        '/api/login',
-        {
-          email,
-          password,
-        },
-        { headers: { 'Content-Type': 'application/json' } },
-      );
+      const response = await arbaguette.login({ email, password });
 
       if (response.data.code === 200) {
         const { accessToken, role } = response.data.data;
