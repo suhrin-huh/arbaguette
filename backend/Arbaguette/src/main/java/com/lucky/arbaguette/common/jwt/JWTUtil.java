@@ -39,18 +39,24 @@ public class JWTUtil {
                 .get("category", String.class);
     }
 
+    public int getCrewId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload()
+                .get("crewId", Integer.class);
+    }
+
     public Boolean isExpired(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration()
                 .before(new Date());
     }
 
-    public String createJwt(String category, String email, String role, String crewStatus) {
+    public String createJwt(String category, String email, String role, String crewStatus, int crewId) {
         return Jwts.builder()
                 .claim("category", category)
                 .claim("email", email)
                 .claim("role", role)
                 .claim("crewStatus", crewStatus)
+                .claim("crewId", crewId)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis()
                         + ("access".equals(category) ? accessTokenExpiredTime : refreshTokenExpiredTime)))

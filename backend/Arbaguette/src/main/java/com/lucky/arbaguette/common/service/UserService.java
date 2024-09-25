@@ -168,8 +168,10 @@ public class UserService {
             throw new BadRequestException("invalid refresh token");
         }
 
-        String access = jwtUtil.createJwt("access", email, role, getCrewStatus(email, role));
-        String refresh = jwtUtil.createJwt("refresh", email, role, getCrewStatus(email, role));
+        String access = jwtUtil.createJwt("access", email, role, getCrewStatus(email, role),
+                getCrewId(email, role));
+        String refresh = jwtUtil.createJwt("refresh", email, role, getCrewStatus(email, role),
+                getCrewId(email, role));
 
         tokenRedisRepository.deleteBy(email);
         saveRefreshEntity(email, refresh);
@@ -188,6 +190,15 @@ public class UserService {
         return crewRepository.findByEmail(email)
                 .orElseThrow(null)
                 .getCrewStatus().name();
+    }
+
+    private int getCrewId(String email, String role) {
+        if ("BOSS".equals(role)) {
+            return -1;
+        }
+        return crewRepository.findByEmail(email)
+                .orElseThrow(null)
+                .getCrewId();
     }
 
     private void saveRefreshEntity(String email, String refreshToken) {
