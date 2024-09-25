@@ -55,9 +55,21 @@ public class UserService {
     private long refreshTokenExpiredTime;
 
     public void checkEmail(String email) {
-        if (bossRepository.existsByEmail(email) || crewRepository.existsByEmail(email)) {
-            throw new DuplicateException("아이디가 중복되었습니다.");
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("userId", email);
+        requestBody.put("apiKey", financialApiKey);
+        try {
+            webClient.post()
+                    .uri(financialApiUrl + "/v1/member/search")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(BodyInserters.fromValue(requestBody))
+                    .retrieve()
+                    .bodyToMono(Map.class)
+                    .block();
+        } catch (Exception e) {
+            return;
         }
+        throw new DuplicateException("이메일이 중복되었습니다");
     }
 
     public void checkTel(String tel) {
