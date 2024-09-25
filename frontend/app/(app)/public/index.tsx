@@ -1,11 +1,10 @@
 import Styled from '@emotion/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
-import { jwtDecode } from 'jwt-decode';
 import { useEffect } from 'react';
 
 import WelcomeBg from '@/assets/images/welcome-bg.png';
 import Button from '@/components/common/Button';
+import useToken from '@/hooks/useToken';
 
 const Container = Styled.View(() => ({ flex: 1 }));
 
@@ -22,6 +21,8 @@ const ButtonContainer = Styled.View(() => ({
 }));
 
 const WelcomeScreen = () => {
+  const token = useToken();
+
   const handleLoginButton = () => {
     router.push('/public/login');
   };
@@ -30,30 +31,15 @@ const WelcomeScreen = () => {
     router.push('/public/signup/memberType');
   };
 
-  interface Decode {
-    iat: number;
-    role: string;
-    string: string;
-  }
-
   useEffect(() => {
-    (async () => {
-      const token = await AsyncStorage.getItem('accessToken');
-      if (!token) return;
-      try {
-        const decoded: Decode = jwtDecode<Decode>(token);
-        const role: string | undefined = decoded.role;
-        if (role === 'BOSS') {
-          router.push('/(app)/boss');
-        } else {
-          router.push('/(app)/crew');
-        }
-      } catch (error) {
-        console.error('Failed to decode token', error);
-        AsyncStorage.removeItem('accessToken');
-      }
-    })();
-  }, []);
+    if (!token) return;
+    const role = token?.role;
+    if (role === 'BOSS') {
+      router.push('/(app)/boss');
+    } else if (role === 'CREW') {
+      router.push('/(app)/crew');
+    }
+  }, [token]);
 
   return (
     <Container>

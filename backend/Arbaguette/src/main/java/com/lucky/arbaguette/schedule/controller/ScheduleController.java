@@ -2,7 +2,9 @@ package com.lucky.arbaguette.schedule.controller;
 
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.service.CustomerUserDetailService;
 import com.lucky.arbaguette.schedule.dto.request.ScheduleSaveRequest;
+import com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleCommutesResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
@@ -21,6 +23,7 @@ import static java.time.LocalDateTime.now;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final CustomerUserDetailService customerUserDetailService;
 
     @PostMapping("/crew/commute")
     public ApiResponse<ScheduleSaveResponse> saveCrewCommute(
@@ -47,6 +50,10 @@ public class ScheduleController {
     public ApiResponse<Void> saveSchedule(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         scheduleService.saveSchedule(customUserDetails);
         return ApiResponse.success();
+
+    @GetMapping
+    public ApiResponse<MonthlyScheduleResponse> getMonthlySchedules(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int month, @RequestParam int companyId) {
+        return ApiResponse.success(scheduleService.getMonthlySchedules(customUserDetails, month, companyId));
     }
 
 }

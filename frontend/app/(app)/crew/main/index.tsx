@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 
+import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
 import Screen from '@/components/common/Screen';
 import NfcCard from '@/components/crew/Card/NfcCard';
-import PrevSalaryChartCard from '@/components/crew/Card/PrevSalaryChartCard/PrevSalaryChartCard';
 import TimeCard from '@/components/crew/Card/TimeCard';
 
 const CrewMainScreen = () => {
@@ -14,7 +14,7 @@ const CrewMainScreen = () => {
     <Screen viewOption={{ style: { gap: 10 } }}>
       <TimeCard />
       <NfcCard onPress={handlePressNfcCard} />
-      <PrevSalaryChartCard />
+      <SalaryChartCard title="저번달 받은 임금" />
     </Screen>
   );
 };

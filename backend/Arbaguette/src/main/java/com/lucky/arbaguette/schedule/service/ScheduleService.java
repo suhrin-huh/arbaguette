@@ -1,5 +1,6 @@
 package com.lucky.arbaguette.schedule.service;
 
+import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
@@ -9,11 +10,14 @@ import com.lucky.arbaguette.contract.Repository.ContractRepository;
 import com.lucky.arbaguette.contract.domain.Contract;
 import com.lucky.arbaguette.contractworkingday.domain.ContractWorkingDay;
 import com.lucky.arbaguette.contractworkingday.repository.ContractWorkingDayRepository;
+import com.lucky.arbaguette.company.domain.Company;
+import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.dto.ScheduleStatusCount;
 import com.lucky.arbaguette.schedule.dto.request.ScheduleSaveRequest;
+import com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleCommutesResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
@@ -28,6 +32,15 @@ import java.util.List;
 
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
+import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
+import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
+import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
+>>>>>>> backend/Arbaguette/src/main/java/com/lucky/arbaguette/schedule/service/ScheduleService.java
 
 @RequiredArgsConstructor
 @Service
@@ -38,6 +51,8 @@ public class ScheduleService {
     private final CrewRepository crewRepository;
     private final ContractRepository contractRepository;
     private final ContractWorkingDayRepository contractWorkingDayRepository;
+    private final CompanyRepository companyRepository;
+    private final BossRepository bossRepository;
 
     public ScheduleSaveResponse saveCrewCommute(CustomUserDetails customUserDetails, ScheduleSaveRequest request,
                                                 LocalDateTime nowTime) {
@@ -130,5 +145,26 @@ public class ScheduleService {
                     });
             currentDate = currentDate.plusDays(1);
         }
+
+    public MonthlyScheduleResponse getMonthlySchedules(CustomUserDetails customUserDetails, int month, int companyId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new NotFoundException("해당하는 회사를 찾을 수 없습니다."));
+
+        List<MonthlySchedule> monthlyScheduleList = new ArrayList<>();
+        for (int date = 1; date <= 31; date++) {
+            List<DailySchedule> dailySchedules = new ArrayList<>();
+
+            for (Crew crew : crewRepository.findByCompany(company)) {
+                Optional<Schedule> schedule = scheduleRepository.findByCrewAndMonthAndDay(crew, month, date);
+                if (schedule.isPresent()) {
+                    dailySchedules.add(DailySchedule.from(crew, schedule.get()));
+                }
+            }
+
+            monthlyScheduleList.add(MonthlySchedule.from(date, dailySchedules));
+        }
+
+        return new MonthlyScheduleResponse(monthlyScheduleList);
+
     }
 }

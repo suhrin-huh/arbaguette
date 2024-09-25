@@ -98,6 +98,11 @@ interface CommuteCheckResponseData {
   time: Time;
 }
 
+interface ErrorResponse {
+  code: number;
+  message: string;
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type EmailCheckResponse = ArbaguetteResponse<void>;

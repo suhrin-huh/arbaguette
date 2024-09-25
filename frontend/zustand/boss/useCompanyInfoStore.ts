@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 interface CompanyInfoStore {
   companyName: string;
@@ -10,5 +10,6 @@ export const useCompanyInfoStore = create<CompanyInfoStore>((set) => ({
   companyName: '',
   ceoName: '',
   address: '',
-  setCompanyInfo: (val) => set((state) => ({ companyName: val.companyName, ceoName: val.ceoName, address: val.address }))
-}))
+  setCompanyInfo: (val) =>
+    set((state) => ({ companyName: val.companyName, ceoName: val.ceoName, address: val.address })),
+}));

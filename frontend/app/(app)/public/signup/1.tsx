@@ -48,12 +48,13 @@ const GetNameScreen = () => {
   const ClearNameInput = (): void => {
     setName('');
     setIsValid(true);
+    setErrorMessage(null);
   };
 
   const goToNext = (): void => {
-    if (!hanGulRegex.test(name)) {
+    if (!name.length || !hanGulRegex.test(name)) {
       setIsValid(false);
-      setErrorMessage('이름은 한글만 입력 가능합니다');
+      setErrorMessage('이름을 다시 입력해주세요.');
       return;
     }
     router.push({ pathname: '/(app)/public/signup/2', params: { role: role, name: name } });
