@@ -10,7 +10,7 @@ const CrewMainLayout = () => {
       initialRouteName="main"
       screenOptions={{
         headerStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: Theme.color.WHITE,
           elevation: 0,
         },
         headerTitleAlign: 'center',

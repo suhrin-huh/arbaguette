@@ -10,6 +10,7 @@ const ManagementLayout = () => {
         headerShown: false,
         contentStyle: {
           paddingHorizontal: Theme.layout.PADDING.HORIZONTAL,
+          backgroundColor: Theme.color.WHITE,
         },
       }}>
       <Stack.Screen name="index" />
