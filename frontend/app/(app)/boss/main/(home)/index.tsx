@@ -6,6 +6,7 @@ import DateStatusCard from '@/components/common/DateStatusCard';
 import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import TitleDropdown from '@/components/common/Header/TitleDropdown';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
+import ContainerView from '@/components/common/ScreenContainer';
 
 const profileCardsData = [
   // 목업 데이터
@@ -31,7 +32,7 @@ const profileCardsData = [
 
 const MainScreen = () => {
   return (
-    <Container>
+    <ContainerView>
       <CenterHeaderbar
         left="store"
         title={
@@ -53,14 +54,8 @@ const MainScreen = () => {
       <DateStatusCard />
       <AttendanceStatusCard profileCardsData={profileCardsData as ProfileCardProps[]} />
       <SalaryChartCard title="이번달 예상 지출" />
-    </Container>
+    </ContainerView>
   );
 };
 
 export default MainScreen;
-
-const Container = styled.View(({ theme }) => ({
-  flexGrow: 1,
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  gap: 15,
-}));
