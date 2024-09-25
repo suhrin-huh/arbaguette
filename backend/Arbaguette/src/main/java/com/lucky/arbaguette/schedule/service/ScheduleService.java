@@ -29,6 +29,8 @@ import java.util.Optional;
 
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
+import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
+import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
 
 @RequiredArgsConstructor
 @Service
@@ -104,18 +106,18 @@ public class ScheduleService {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new NotFoundException("해당하는 회사를 찾을 수 없습니다."));
 
-        List<MonthlyScheduleResponse.MonthlySchedule> monthlyScheduleList = new ArrayList<>();
+        List<MonthlySchedule> monthlyScheduleList = new ArrayList<>();
         for (int date = 1; date <= 31; date++) {
-            List<MonthlyScheduleResponse.DailySchedule> dailySchedules = new ArrayList<>();
+            List<DailySchedule> dailySchedules = new ArrayList<>();
 
             for (Crew crew : crewRepository.findByCompany(company)) {
                 Optional<Schedule> schedule = scheduleRepository.findByCrewAndMonthAndDay(crew, month, date);
                 if (schedule.isPresent()) {
-                    dailySchedules.add(MonthlyScheduleResponse.DailySchedule.of(crew, schedule.get()));
+                    dailySchedules.add(DailySchedule.from(crew, schedule.get()));
                 }
             }
 
-            monthlyScheduleList.add(MonthlyScheduleResponse.MonthlySchedule.of(date, dailySchedules));
+            monthlyScheduleList.add(MonthlySchedule.from(date, dailySchedules));
         }
 
         return new MonthlyScheduleResponse(monthlyScheduleList);

@@ -13,8 +13,8 @@ public record MonthlyScheduleResponse(List<MonthlySchedule> monthlyScheduleList)
                                   List<DailySchedule> dailySchedules
     ) {
 
-        public static MonthlySchedule of(int date,
-                                         List<DailySchedule> dailySchedules) {
+        public static MonthlySchedule from(int date,
+                                           List<DailySchedule> dailySchedules) {
             return new MonthlySchedule(
                     date,
                     dailySchedules);
@@ -27,7 +27,7 @@ public record MonthlyScheduleResponse(List<MonthlySchedule> monthlyScheduleList)
                                 LocalTime startTime,
                                 LocalTime endTime) {
 
-        public static DailySchedule of(Crew crew, Schedule schedule) {
+        public static DailySchedule from(Crew crew, Schedule schedule) {
             return new DailySchedule(
                     crew.getCrewId(),
                     crew.getName(),
