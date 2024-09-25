@@ -2,6 +2,7 @@ import { router, Tabs } from 'expo-router';
 
 import BellButton from '@/components/crew/BellButton';
 import CalendarButton from '@/components/crew/CalendarButton';
+import Theme from '@/styles/Theme';
 
 const CrewMainLayout = () => {
   return (
@@ -13,6 +14,8 @@ const CrewMainLayout = () => {
           elevation: 0,
         },
         headerTitleAlign: 'center',
+        headerLeftContainerStyle: { paddingHorizontal: Theme.layout.PADDING.HORIZONTAL },
+        headerRightContainerStyle: { paddingHorizontal: Theme.layout.PADDING.HORIZONTAL },
       }}>
       <Tabs.Screen name="main" options={{ title: '홈' }} />
       <Tabs.Screen name="schedule" options={{ title: '스케줄' }} />

@@ -7,7 +7,7 @@ const AppLayout = () => {
     <Stack screenOptions={{ headerShown: false }} initialRouteName="public">
       <Stack.Screen name="public" />
       <Stack.Screen name="boss" />
-      <Stack.Screen name="crew" options={{ contentStyle: { paddingHorizontal: Theme.layout.PADDING.HORIZONTAL } }} />
+      <Stack.Screen name="crew" />
     </Stack>
   );
 };
