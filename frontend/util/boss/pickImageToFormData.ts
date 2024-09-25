@@ -2,9 +2,9 @@ import * as ImagePicker from 'expo-image-picker';
 
 const createFileObject = (uri: string, fileName: string, type: string) => {
   return {
-    uri,            // 로컬 파일 경로
-    type,           // MIME 타입 (예: image/jpeg)
-    name: fileName  // 파일 이름 (예: photo.jpg)
+    uri, // 로컬 파일 경로
+    type, // MIME 타입 (예: image/jpeg)
+    name: fileName, // 파일 이름 (예: photo.jpg)
   };
 };
 
@@ -29,9 +29,10 @@ const pickImageToFormData = async () => {
     const formData = new FormData();
     formData.append('image', file as any);
 
-    return { // formData와 uri를 반환
+    return {
+      // formData와 uri를 반환
       formData,
-      uri: asset.uri
+      uri: asset.uri,
     };
   }
 };

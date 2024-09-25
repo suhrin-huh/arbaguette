@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 interface CertifiedPaperStore {
   paperUri: string;
@@ -16,5 +16,4 @@ export const useCertifiedPaperStore = create<CertifiedPaperStore>((set) => ({
   setPaperUri: (uri) => set({ paperUri: uri }),
   clearCertifiedPaper: () => set({ certifiedPaper: new FormData() }),
   clearPaperUri: () => set({ paperUri: '' }),
-}))
-
+}));

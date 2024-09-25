@@ -1,23 +1,21 @@
 package com.lucky.arbaguette.schedule.controller;
 
-import static java.time.LocalDateTime.now;
-
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.common.service.CustomerUserDetailService;
 import com.lucky.arbaguette.schedule.dto.request.ScheduleSaveRequest;
+import com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleCommutesResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
 import com.lucky.arbaguette.schedule.service.ScheduleService;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+
+import static java.time.LocalDateTime.now;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final CustomerUserDetailService customerUserDetailService;
 
     @PostMapping("/crew/commute")
     public ApiResponse<ScheduleSaveResponse> saveCrewCommute(
@@ -45,6 +44,11 @@ public class ScheduleController {
         return ApiResponse.success(
                 scheduleService.getCommutes(customUserDetails, targetDate)
         );
+    }
+
+    @GetMapping
+    public ApiResponse<MonthlyScheduleResponse> getMonthlySchedules(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int month, @RequestParam int companyId) {
+        return ApiResponse.success(scheduleService.getMonthlySchedules(customUserDetails, month, companyId));
     }
 
 }

@@ -1,4 +1,4 @@
-import { CameraView } from "expo-camera";
+import type { CameraView } from 'expo-camera';
 
 const takePictureToFormData = async (cameraRef: React.RefObject<CameraView>) => {
   try {
@@ -13,19 +13,18 @@ const takePictureToFormData = async (cameraRef: React.RefObject<CameraView>) => 
         formData.append('image', {
           uri: newPhoto.uri,
           type: 'image/jpeg',
-          name: `photo_${Date.now()}.jpeg`
+          name: `photo_${Date.now()}.jpeg`,
         } as any);
 
         return {
           formData,
-          uri: newPhoto.uri
+          uri: newPhoto.uri,
         };
       }
     }
   } catch (error) {
-    console.error("Error taking picture: ", error);
+    console.error('Error taking picture: ', error);
   }
-}
-
+};
 
 export default takePictureToFormData;

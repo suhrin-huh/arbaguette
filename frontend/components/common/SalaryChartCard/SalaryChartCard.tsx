@@ -21,10 +21,16 @@ const data = [
 
 const COLOR_SCALE = [Theme.color.PRIMARY, Theme.color.SECONDARY, Theme.color.GRAY['1']];
 
-const PrevSalaryChartCard = () => {
+type SalaryChartCardTitle = '저번달 받은 임금' | '이번달 예상 지출' | 'none';
+
+interface SalaryChartCardProps {
+  title: SalaryChartCardTitle;
+}
+
+const SalaryChartCard = ({ title }: SalaryChartCardProps) => {
   return (
     <CardContainer style={{ alignItems: 'center', gap: 30 }}>
-      <Text>저번달 받은 임금</Text>
+      {title !== 'none' && <Text>{title}</Text>}
       <ChartContainer>
         <VictoryPie
           data={data}
@@ -50,4 +56,4 @@ const PrevSalaryChartCard = () => {
   );
 };
 
-export default PrevSalaryChartCard;
+export default SalaryChartCard;
