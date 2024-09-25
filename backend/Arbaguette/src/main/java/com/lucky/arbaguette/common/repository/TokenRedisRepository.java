@@ -28,7 +28,8 @@ public class TokenRedisRepository {
 
     public boolean existsBy(String email) {
         String key = TOKEN_PREFIX + email;
-        return redisTemplate.opsForList().range(key, 0, -1) != null;
+        Long size = redisTemplate.opsForList().size(key);
+        return size != null && size > 0;
     }
 
     public void deleteBy(String email) {

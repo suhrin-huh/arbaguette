@@ -51,28 +51,7 @@ public class LogoutFilter extends GenericFilterBean {
         String refresh = getRefreshToken(request);
         String category = jwtUtil.getCategory(refresh);
         String email = jwtUtil.getEmail(refresh);
-        
-        validRefreshToken(refresh, category, email, response);
 
-        //로그아웃 진행
-        //Refresh 토큰 DB 에서 제거
-        tokenRedisRepository.deleteBy(email);
-
-        response.setStatus(HttpServletResponse.SC_OK);
-    }
-
-    private String getRefreshToken(HttpServletRequest request) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            ServletInputStream inputStream = request.getInputStream();
-            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-            return objectMapper.readValue(messageBody, LogoutRequest.class).refreshToken();
-        } catch (IOException e) {
-            throw new BadRequestException("유효하지 않는 요청입니다. 다시 확인 해주세요.");
-        }
-    }
-
-    private void validRefreshToken(String refresh, String category, String email, HttpServletResponse response) {
         if (refresh == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
@@ -94,5 +73,22 @@ public class LogoutFilter extends GenericFilterBean {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
+        //로그아웃 진행
+        //Refresh 토큰 DB 에서 제거
+        tokenRedisRepository.deleteBy(email);
+
+        response.setStatus(HttpServletResponse.SC_OK);
     }
+
+    private String getRefreshToken(HttpServletRequest request) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            ServletInputStream inputStream = request.getInputStream();
+            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+            return objectMapper.readValue(messageBody, LogoutRequest.class).refreshToken();
+        } catch (IOException e) {
+            throw new BadRequestException("유효하지 않는 요청입니다. 다시 확인 해주세요.");
+        }
+    }
+
 }
