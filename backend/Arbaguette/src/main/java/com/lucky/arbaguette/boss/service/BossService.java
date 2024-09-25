@@ -1,11 +1,14 @@
 package com.lucky.arbaguette.boss.service;
 
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
+
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.dto.request.CrewSaveRequest;
 import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
 import com.lucky.arbaguette.boss.dto.response.CrewSaveResponse;
 import com.lucky.arbaguette.boss.repository.BossRepository;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
@@ -27,19 +30,15 @@ import com.lucky.arbaguette.receipt.domain.dto.ReceiptInfo;
 import com.lucky.arbaguette.receipt.repository.ReceiptRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
-import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -72,7 +71,9 @@ public class BossService {
             if (contract.isPresent()) {
                 int hourlyRate = contract.get().getSalary();
 
-                int workHours = calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+                int workHours = calculateWorkHours(
+                        scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(),
+                                getEndOfMonth()));
 
                 int allowance = 0;
                 if (workHours > 80) {
@@ -121,7 +122,9 @@ public class BossService {
 
             //현재까지 월급, 근무시간, 세금, 수당
             int hourlyRate = contract.getSalary();
-            workHours = calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+            workHours = calculateWorkHours(
+                    scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(),
+                            getEndOfMonth()));
             salary = hourlyRate * workHours;
 
             if (workHours > 80) {
@@ -138,7 +141,6 @@ public class BossService {
                 salary *= INCOME_PERCENT;
                 allowance *= INCOME_PERCENT;
             }
-
 
             //급여명세서
             List<Receipt> receipts = receiptRepository.findAllByContract(contract);
@@ -165,7 +167,8 @@ public class BossService {
     }
 
     public LocalDateTime getEndOfMonth() {
-        return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).with(LocalTime.MAX); // 월의 마지막 날 23:59:59
+        return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth())
+                .with(LocalTime.MAX); // 월의 마지막 날 23:59:59
     }
 
     public CrewSaveResponse saveCrew(CustomUserDetails customUserDetails, CrewSaveRequest crewSaveRequest) {
@@ -174,7 +177,8 @@ public class BossService {
         if (crew.alreadyHired()) {
             throw new DuplicateException("이미 등록된 알바생입니다.");
         }
-        Company company = companyRepository.findByCompanyIdAndBoss_Email(crewSaveRequest.companyId(), customUserDetails.getUsername())
+        Company company = companyRepository.findByCompanyIdAndBoss_Email(crewSaveRequest.companyId(),
+                        customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다."));
         crew.hiredCompany(company);
         crewRepository.save(crew);

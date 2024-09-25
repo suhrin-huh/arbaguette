@@ -3,7 +3,7 @@ package com.lucky.arbaguette.schedule.service;
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
 
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;

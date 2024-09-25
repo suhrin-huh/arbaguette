@@ -1,5 +1,6 @@
-package com.lucky.arbaguette.common.domain.dto;
+package com.lucky.arbaguette.common.domain;
 
+import com.lucky.arbaguette.common.domain.dto.CommonUserInfo;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;

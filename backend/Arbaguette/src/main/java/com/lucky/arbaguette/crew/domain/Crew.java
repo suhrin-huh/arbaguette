@@ -1,10 +1,10 @@
 package com.lucky.arbaguette.crew.domain;
 
-import static com.lucky.arbaguette.common.domain.dto.enums.CrewStatus.SIGNED;
-import static com.lucky.arbaguette.common.domain.dto.enums.CrewStatus.UNREGISTERED;
-import static com.lucky.arbaguette.common.domain.dto.enums.CrewStatus.UNSIGNED;
+import static com.lucky.arbaguette.common.domain.enums.CrewStatus.SIGNED;
+import static com.lucky.arbaguette.common.domain.enums.CrewStatus.UNREGISTERED;
+import static com.lucky.arbaguette.common.domain.enums.CrewStatus.UNSIGNED;
 
-import com.lucky.arbaguette.common.domain.dto.enums.CrewStatus;
+import com.lucky.arbaguette.common.domain.enums.CrewStatus;
 import com.lucky.arbaguette.company.domain.Company;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
