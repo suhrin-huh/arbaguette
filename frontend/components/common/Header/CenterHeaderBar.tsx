@@ -21,10 +21,10 @@ interface CenterHeaderbarProps {
 }
 
 const HeaderContainer = styled.View(({ theme }) => ({
-  height: 90,
+  height: 70,
   backgroundColor: Colors.BACKGROUND,
   justifyContent: 'center',
-  alignItems: 'center',
+  alignItems: 'flex-start',
 }));
 
 const ContentContainer = styled.View(({ theme }) => ({
@@ -33,13 +33,13 @@ const ContentContainer = styled.View(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: 80,
+  height: '100%',
 }));
 
 const LeftContainer = styled.View(({ theme }) => ({
   flex: 1,
   justifyContent: 'center',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   paddingTop: 20,
   paddingLeft: theme.layout.PADDING.HEADER,
   height: '100%',
@@ -61,7 +61,7 @@ const Title = styled.Text(({ theme }) => ({
 const RightContainer = styled.View(({ theme }) => ({
   flex: 1,
   justifyContent: 'center', // 수직 중앙 정렬
-  alignItems: 'center', // 수평 중앙 정렬
+  alignItems: 'flex-end', // 수평 중앙 정렬
   paddingTop: 20,
   paddingRight: theme.layout.PADDING.HEADER,
   height: '100%',

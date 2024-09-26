@@ -51,4 +51,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     @Query("SELECT s FROM Schedule s where DATE(s.startTime) = :date AND s.crew.crewId IN :crewIds order by s.startTime")
     List<Schedule> findByStartTimeAndCrewIdIn(@Param("date") LocalDate date, @Param("crewIds") List<Integer> crewIds);
 
+    Optional<Schedule> findByScheduleIdAndCrew(int scheduleId, Crew crew);
 }

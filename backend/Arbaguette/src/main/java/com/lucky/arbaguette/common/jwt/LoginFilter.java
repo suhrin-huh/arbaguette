@@ -85,8 +85,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String accessToken = jwtUtil.createJwt("access", email, role, getCrewStatus(email, role));
-        String refreshToken = jwtUtil.createJwt("refresh", email, role, getCrewStatus(email, role));
+        String accessToken = jwtUtil.createJwt("access", email, role, getCrewStatus(email, role),
+                getCrewId(email, role));
+        String refreshToken = jwtUtil.createJwt("refresh", email, role, getCrewStatus(email, role),
+                getCrewId(email, role));
 
         //Refresh 토큰 저장
         saveRefreshEntity(email, refreshToken);
@@ -131,6 +133,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         return crewRepository.findByEmail(email)
                 .orElseThrow(null)
                 .getCrewStatus().name();
+    }
+
+    private int getCrewId(String email, String role) {
+        if ("BOSS".equals(role)) {
+            return -1;
+        }
+        return crewRepository.findByEmail(email)
+                .orElseThrow(null)
+                .getCrewId();
     }
 
     private void saveRefreshEntity(String email, String refreshToken) {
