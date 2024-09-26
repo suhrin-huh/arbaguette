@@ -7,7 +7,7 @@ import TimeCard from '@/components/crew/Card/TimeCard';
 
 const CrewMainScreen = () => {
   const handlePressNfcCard = () => {
-    router.push('/(app)/crew/main/modal');
+    router.push('/crew/authorized/main/modal');
   };
 
   return (

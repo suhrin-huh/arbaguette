@@ -11,7 +11,7 @@ const Calendar = () => {
   const handleDateChange = (_: EventTypes, newDate: Date) => {
     const selectedYear = newDate ? newDate.getFullYear() : currentYear;
     const selectedMonth = newDate ? newDate.getMonth() : currentMonth;
-    router.navigate({ pathname: '/crew/management/', params: { year: selectedYear, month: selectedMonth } });
+    router.navigate({ pathname: '/crew/authorized/management/', params: { year: selectedYear, month: selectedMonth } });
   };
 
   return (

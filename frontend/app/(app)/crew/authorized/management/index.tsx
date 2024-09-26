@@ -30,7 +30,7 @@ const CrewManagementScreen = () => {
   const currentMonth = (Number(month) || now.getMonth()) + 1;
 
   const handleShowContract = () => {
-    router.navigate({ pathname: '/crew/management/contract' });
+    router.navigate({ pathname: '/crew/authorized/management/contract' });
   };
 
   return (
