@@ -30,7 +30,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
     @Query("SELECT s FROM Schedule s WHERE s.crew.crewId = :crewId AND ("
             + "(s.startTime <= :nowDate AND :nowDate <= s.endTime) "
-            + "OR s.startTime >= :nowDate)")
+            + "OR s.startTime >= :nowDate) AND s.outTime IS NULL ORDER BY s.startTime LIMIT 1")
     Optional<Schedule> findNextByCrewAndTime(@Param("crewId") int crewId,
                                              @Param("nowDate") LocalDateTime nowDate);
 
