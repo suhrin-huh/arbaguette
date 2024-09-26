@@ -10,17 +10,20 @@ import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
 import com.lucky.arbaguette.contract.domain.Contract;
+import com.lucky.arbaguette.contract.domain.dto.ContractInfo;
 import com.lucky.arbaguette.contract.domain.dto.ContractSaveRequest;
 import com.lucky.arbaguette.contractworkingday.domain.ContractWorkingDay;
 import com.lucky.arbaguette.contractworkingday.domain.dto.WorkingDayInfo;
 import com.lucky.arbaguette.contractworkingday.repository.ContractWorkingDayRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -81,4 +84,14 @@ public class ContractService {
         crewRepository.save(crew);
         contractRepository.save(contract);
     }
+
+    public ContractInfo getContract(CustomUserDetails customUserDetails, int crewId) {
+        Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new BadRequestException("알바생을 찾을 수 없습니다."));
+        Contract contract = contractRepository.findByCrew(crew).orElseThrow(() -> new NotFoundException("근로계약서를 찾을 수 없습니다."));
+        List<WorkingDayInfo> workingDayInfos = contractWorkingDayRepository.findAllByContract(contract).stream()
+                .map(WorkingDayInfo::to)
+                .toList();
+        return ContractInfo.from(crew.getCompany(), crew, contract, workingDayInfos);
+    }
+
 }
