@@ -1,5 +1,6 @@
 import styled from '@emotion/native';
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
