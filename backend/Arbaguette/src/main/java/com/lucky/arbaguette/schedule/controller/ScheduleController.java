@@ -50,14 +50,17 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ApiResponse<MonthlyScheduleResponse> getMonthlySchedules(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int month, @RequestParam int companyId) {
+    public ApiResponse<MonthlyScheduleResponse> getMonthlySchedules(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                    @RequestParam int month,
+                                                                    @RequestParam int companyId) {
         return ApiResponse.success(scheduleService.getMonthlySchedules(customUserDetails, month, companyId));
     }
 
-    @GetMapping("day")
-    public ApiResponse<DayScheduleResponse> getDaySchedules(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam String date) {
-        
-
+    @GetMapping("/day")
+    public ApiResponse<DailyScheduleResponse> getDaySchedules(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                              @RequestParam int companyId,
+                                                              @RequestParam LocalDate date) {
+        return ApiResponse.success(scheduleService.getDaySchedules(customUserDetails, companyId, date));
     }
 
 }
