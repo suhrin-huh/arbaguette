@@ -49,17 +49,18 @@ const LoginScreen = () => {
       const { accessToken, role } = response.data.data;
       await AsyncStorage.setItem('accessToken', accessToken);
 
-      router.dismissAll();
       if (role === 'BOSS') {
         router.replace('/(app)/boss');
       } else if (role === 'CREW') {
         router.replace('/(app)/crew');
       }
     },
-    onError: (error: AxiosError) => {
+    onError: async (error: AxiosError) => {
       if (error.status === 404) {
         setIsValid(false);
         setErrorMessage('아이디와 비밀번호를 확인해주세요.');
+      } else if (error.status === 418) {
+        await AsyncStorage.clear();
       }
     },
   });
