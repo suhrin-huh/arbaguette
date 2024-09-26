@@ -25,7 +25,12 @@ type ScreenProps = PropsWithChildren<
 const Screen = ({ children, viewOption, statusbarOption }: ScreenProps) => {
   return (
     <ScreenContainer>
-      <ArbaguetteStatusBar animated={true} backgroundColor={Theme.color.PRIMARY} {...statusbarOption} />
+      <ArbaguetteStatusBar
+        animated={true}
+        backgroundColor={Theme.color.PRIMARY}
+        barStyle="light-content"
+        {...statusbarOption}
+      />
       <ScrollView
         {...viewOption}
         showsVerticalScrollIndicator={false}
