@@ -1,6 +1,6 @@
 import Styled from '@emotion/native';
 import { useEffect, useState } from 'react';
-import type { DimensionValue, LayoutChangeEvent } from 'react-native';
+import type { LayoutChangeEvent } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import ProgressBarThumb from '@/components/crew/ProgressBarThumb';
