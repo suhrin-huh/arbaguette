@@ -1,8 +1,5 @@
 package com.lucky.arbaguette.boss.service;
 
-import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
-import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
-
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.dto.request.CrewSaveRequest;
 import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
@@ -31,15 +28,19 @@ import com.lucky.arbaguette.receipt.domain.dto.ReceiptInfo;
 import com.lucky.arbaguette.receipt.repository.ReceiptRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
 
 @Service
 @RequiredArgsConstructor
@@ -113,36 +114,34 @@ public class BossService {
         List<CrewInfo> crewInfoList = new ArrayList<>();
 
         for (Crew crew : crewList) {
-            int salary = 0;
-            Optional<Contract> contract = contractRepository.findByCrew(crew);
-            if (contract.isPresent()) {
-                int hourlyRate = contract.get().getSalary();
+            contractRepository.findByCrew(crew).ifPresentOrElse(contract -> {
+                List<Integer> weekdays = contractWorkingDayRepository.findAllByContract(contract).stream()
+                        .map(contractWorkingDay -> contractWorkingDay.getId().getWeekday())
+                        .toList();
 
+                int hourlyRate = contract.getSalary();
                 int workHours = calculateWorkHours(
                         scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(),
                                 getEndOfMonth()));
-
                 int allowance = 0;
+
                 if (workHours > 80) {
                     allowance = (int) (hourlyRate * 1.5 * (workHours - 80));
                 }
 
-                salary = hourlyRate * workHours + allowance;
+                int salary = hourlyRate * workHours + allowance;
 
-                if (INSU.equals(contract.get().getTax())) {
+                if (INSU.equals(contract.getTax())) {
                     salary *= INSU_PERCENT;
                 }
-                if (INCOME.equals(contract.get().getTax())) {
+                if (INCOME.equals(contract.getTax())) {
                     salary *= INCOME_PERCENT;
                 }
-            }
 
-            crewInfoList.add(CrewInfo.from(crew, salary));
-
+                crewInfoList.add(CrewInfo.from(crew, salary, contract, weekdays));
+            }, () -> crewInfoList.add(CrewInfo.from(crew, 0)));
         }
-
         return new CrewListResponse(crewInfoList);
-
     }
 
     public CrewDetailResponse getCrewDetails(CustomUserDetails customUserDetails, int crewId) {
