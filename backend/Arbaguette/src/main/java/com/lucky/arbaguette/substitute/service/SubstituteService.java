@@ -4,6 +4,7 @@ import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
+import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
@@ -24,10 +25,11 @@ public class SubstituteService {
     private final SubstituteRepository substituteRepository;
     private final CrewRepository crewRepository;
     private final ScheduleRepository scheduleRepository;
+    private final CompanyRepository companyRepository;
 
     public SubstituteSaveResponse saveSubstitute(CustomUserDetails userDetails, SubstituteRequest request) {
         Crew crew = crewRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundException("알바생이 아니거나, 찾을 수 없습니다."));
         Schedule schedule = scheduleRepository.findByScheduleIdAndCrew(request.scheduleId(), crew)
                 .orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
 
@@ -47,10 +49,10 @@ public class SubstituteService {
         return SubstituteSaveResponse.of(subStitute);
     }
 
-    public SubstitutesResponse getSubstitutes(CustomUserDetails userDetails, int companyId) {
-        //companyId를 가지고 있는 알바생을 먼저 찾음
-        //해당 알바생을 가지고 있는 스케줄을 찾음
-        //해당 스케줄을 가지고 있는 대타를 찾음 (이 때, permit 이 false 인 것만 찾음)
-        return null;
+    public SubstitutesResponse getSubstitutes(int companyId) {
+        if (!companyRepository.existsById(companyId)) {
+            throw new NotFoundException("사업장을 찾을 수 없습니다.");
+        }
+        return SubstitutesResponse.of(substituteRepository.findByCompanyIdAndPermitIsFalse(companyId));
     }
 }
