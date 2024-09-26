@@ -24,14 +24,15 @@ public record MonthlyScheduleResponse(List<MonthlySchedule> monthlyScheduleList)
     public record DailySchedule(int crewId,
                                 String name,
                                 int scheduleId,
+                                boolean SubstituteRequest,
                                 LocalTime startTime,
                                 LocalTime endTime) {
-
-        public static DailySchedule from(Crew crew, Schedule schedule) {
+        public static DailySchedule from(Crew crew, Schedule schedule, boolean SubstituteRequest) {
             return new DailySchedule(
                     crew.getCrewId(),
                     crew.getName(),
                     schedule.getScheduleId(),
+                    SubstituteRequest,
                     schedule.getStartTime().toLocalTime(),
                     schedule.getEndTime().toLocalTime());
         }
