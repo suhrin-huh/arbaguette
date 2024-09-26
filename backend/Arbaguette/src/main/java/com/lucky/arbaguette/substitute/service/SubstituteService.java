@@ -3,6 +3,7 @@ package com.lucky.arbaguette.substitute.service;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
+import com.lucky.arbaguette.common.exception.ForbiddenException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
@@ -31,7 +32,7 @@ public class SubstituteService {
         Crew crew = crewRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("알바생이 아니거나, 찾을 수 없습니다."));
         Schedule schedule = scheduleRepository.findByScheduleIdAndCrew(request.scheduleId(), crew)
-                .orElseThrow(() -> new NotFoundException("스케줄을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ForbiddenException("스케줄을 찾을 수 없습니다."));
 
         if (schedule.getStartTime().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("이미 지난 날짜는 요청할 수 없습니다.");
