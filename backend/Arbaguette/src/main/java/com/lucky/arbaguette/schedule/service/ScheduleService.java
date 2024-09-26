@@ -1,10 +1,5 @@
 package com.lucky.arbaguette.schedule.service;
 
-import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
-import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
-import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
-import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
-
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
@@ -25,17 +20,21 @@ import com.lucky.arbaguette.schedule.dto.request.ScheduleSaveRequest;
 import com.lucky.arbaguette.schedule.dto.response.*;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
 import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
+import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
 import static com.lucky.arbaguette.schedule.domain.StatusType.*;
 import static com.lucky.arbaguette.schedule.dto.response.DailyScheduleResponse.CrewScheduleInfo;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
+import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
 
 @RequiredArgsConstructor
 @Service
@@ -174,8 +173,7 @@ public class ScheduleService {
     }
 
     public DailyScheduleResponse getDaySchedules(CustomUserDetails customUserDetails, int companyId, LocalDate date) {
-        Company company = companyRepository.findByCompanyIdAndBoss_Email(companyId, customUserDetails.getUsername()).orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다."));
-
+        Company company = findCompany(customUserDetails, companyId);
         List<Crew> crews = crewRepository.findByCompany(company);
         //알바생들의 Id만 리스트로 추출
         List<Integer> crewIds = crews.stream()
@@ -197,6 +195,15 @@ public class ScheduleService {
         //미출근 count
         int yetCount = totalCount - normalCount - absentCount;
         return DailyScheduleResponse.from(totalCount, normalCount, absentCount, yetCount, crewScheduleInfos);
+    }
+
+    private Company findCompany(CustomUserDetails customUserDetails, int companyId) {
+        if (customUserDetails.isCrew()) {
+            return crewRepository.findByEmail(customUserDetails.getUsername())
+                    .orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다.")).getCompany();
+        }
+        return companyRepository.findByCompanyIdAndBoss_Email(companyId, customUserDetails.getUsername())
+                .orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다."));
     }
 }
 
