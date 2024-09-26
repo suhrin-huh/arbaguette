@@ -8,10 +8,6 @@ const ManagementLayout = () => {
       initialRouteName="index"
       screenOptions={{
         headerShown: false,
-        contentStyle: {
-          paddingHorizontal: Theme.layout.PADDING.HORIZONTAL,
-          backgroundColor: Theme.color.WHITE,
-        },
       }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="contract" options={{ presentation: 'modal' }} />

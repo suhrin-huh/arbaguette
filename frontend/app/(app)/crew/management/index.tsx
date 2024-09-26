@@ -1,10 +1,11 @@
 import Styled from '@emotion/native';
-import { Link, router } from 'expo-router';
-import { ScrollView, Text, View } from 'react-native';
+import { router } from 'expo-router';
 
+import Screen from '@/components/common/Screen';
 import ShowContractButton from '@/components/crew/ShowContractButton';
 import WorkDaysTable from '@/components/crew/Table/WorkDaysTable';
 import WorkStatusTable from '@/components/crew/Table/WorkStatusTable';
+import Theme from '@/styles/Theme';
 
 const PlaceInfo = Styled.View({
   flexDirection: 'row',
@@ -24,7 +25,7 @@ const MonthText = Styled.Text({
 
 const CrewManagementScreen = () => {
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <Screen viewOption={{ style: { backgroundColor: Theme.color.WHITE } }}>
       <PlaceInfo>
         <PlaceInfoText>후라이드 참 잘하는 집</PlaceInfoText>
         <ShowContractButton onPress={() => router.push('/crew/management/contract')} />
@@ -32,7 +33,7 @@ const CrewManagementScreen = () => {
       <MonthText>2024년 9월</MonthText>
       <WorkDaysTable normal={10} absent={8} late={3} earlyLeave={1} />
       <WorkStatusTable />
-    </ScrollView>
+    </Screen>
   );
 };
 
