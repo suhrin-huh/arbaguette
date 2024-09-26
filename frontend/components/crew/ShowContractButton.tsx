@@ -1,5 +1,5 @@
 import styled from '@emotion/native';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable } from 'react-native';
 
 interface ShowContractButtonProps {
   onPress?: () => void;

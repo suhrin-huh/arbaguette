@@ -1,7 +1,5 @@
 import { Stack } from 'expo-router';
 
-import Theme from '@/styles/Theme';
-
 const AppLayout = () => {
   return (
     <Stack screenOptions={{ headerShown: false }} initialRouteName="public">

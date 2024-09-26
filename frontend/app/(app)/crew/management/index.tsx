@@ -1,6 +1,5 @@
 import Styled from '@emotion/native';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useEffect } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import Screen from '@/components/common/Screen';
 import ShowContractButton from '@/components/crew/ShowContractButton';
