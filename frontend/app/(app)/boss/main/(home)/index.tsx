@@ -1,4 +1,5 @@
 import styled from '@emotion/native';
+import { ScrollView } from 'react-native';
 
 import AttendanceStatusCard from '@/components/common/AttendanceStatusCard';
 import type { ProfileCardProps } from '@/components/common/AttendanceStatusCard/ProfileCard';
@@ -30,31 +31,45 @@ const profileCardsData = [
   },
 ];
 
+const InnerContainer = styled(ScrollView)(({ theme }) => ({
+  flexGrow: 1,
+  overflow: 'visible',
+  paddingVertical: theme.layout.PADDING.VERTICAL,
+}));
+
 const MainScreen = () => {
   return (
-    <ContainerView>
-      <CenterHeaderbar
-        left="store"
-        title={
-          <TitleDropdown
-            title="파리바게트 장덕점"
-            onPress={() => {
-              console.log('press');
-            }}
-          />
-        }
-        onPressLeft={() => {
-          console.log('left');
-        }}
-        onPressRight={() => {
-          console.log('right');
-        }}
-        right="bell"
-      />
-      <DateStatusCard />
-      <AttendanceStatusCard profileCardsData={profileCardsData as ProfileCardProps[]} />
-      <SalaryChartCard title="이번달 예상 지출" />
-    </ContainerView>
+    <InnerContainer
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{
+        justifyContent: 'flex-start',
+        paddingBottom: 60,
+      }}>
+      <ContainerView>
+        <CenterHeaderbar
+          bgColor="background"
+          left="store"
+          title={
+            <TitleDropdown
+              title="파리바게트 장덕점"
+              onPress={() => {
+                console.log('press');
+              }}
+            />
+          }
+          onPressLeft={() => {
+            console.log('left');
+          }}
+          onPressRight={() => {
+            console.log('right');
+          }}
+          right="bell"
+        />
+        <DateStatusCard />
+        <AttendanceStatusCard profileCardsData={profileCardsData as ProfileCardProps[]} />
+        <SalaryChartCard title="이번달 예상 지출" />
+      </ContainerView>
+    </InnerContainer>
   );
 };
 

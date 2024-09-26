@@ -14,7 +14,17 @@ type UserName = string;
 type Tel = string;
 type ProfileImage = number;
 
-type Days = '월' | '화' | '수' | '목' | '금' | '토' | '일';
+type Year = number;
+type Month = number;
+type Weekday = number;
+type Time = string;
+type WorkHours = number;
+
+interface WorkingDay {
+  weekday: Weekday;
+  startTime: Time;
+  endTime: Time;
+}
 
 interface LoginForm {
   email: Email;
@@ -92,8 +102,25 @@ interface GetCrewMemberListResponseData {
   crews: Crew[];
 }
 
+interface GetCrewMemberDetailResponseData {
+  id: CrewId;
+  name: CrewName;
+  profileImage: ProfileImage;
+  salary: Money;
+  workingDays: WorkingDay[];
+  tax: Money;
+  allowance: Money;
+  workHours: WorkHours;
+  receipts: Receipt[];
+}
+
+interface Receipt {
+  month: Month;
+  originSalary: Money;
+  totalTime: WorkHours;
+}
+
 type WorkStatus = string;
-type Time = string;
 
 interface CommuteCheckResponseData {
   workStatus: WorkStatus;
@@ -113,6 +140,7 @@ type RegistCompanyResponse = ArbaguetteResponse<void>;
 type GetCompanyListResponse = ArbaguetteResponse<GetCompanyListResponseData>;
 type RegistCrewMemberResponse = ArbaguetteResponse<void>;
 type GetCrewMemberListResponse = ArbaguetteResponse<GetCrewMemberListResponseData>;
+type GetCrewMemberDetailResponse = ArbaguetteResponse<GetCrewMemberDetailResponseData>;
 type GetMonthlyAccumulatedSalaryResponse = ArbaguetteResponse<Money>;
 type GetMonthlyEstimatedSalaryResponse = ArbaguetteResponse<Money>;
 type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;

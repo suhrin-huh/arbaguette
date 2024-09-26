@@ -1,32 +1,31 @@
 import styled from '@emotion/native';
 import Fontisto from '@expo/vector-icons/Fontisto';
-import { router } from 'expo-router';
 import React from 'react';
-import { StatusBar, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import Colors from '@/constants/Colors';
 
 const HeaderContainer = styled.View(({ theme }) => ({
   height: 70,
-  backgroundColor: Colors.BACKGROUND,
   justifyContent: 'center',
-  alignItems: 'flex-start',
+  alignItems: 'center',
 }));
 
 const ContentContainer = styled.View(({ theme }) => ({
-  flexDirection: 'row',
   flex: 1,
+  flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
   height: '100%',
+  paddingTop: 20,
 }));
 
 const TitleContainer = styled.View(({ theme }) => ({
   flex: 10,
   justifyContent: 'center',
   alignItems: 'flex-start',
-  paddingTop: 15,
+  // paddingTop: 15,
   height: '100%',
 }));
 
@@ -39,7 +38,7 @@ const RightContainer = styled.View(({ theme }) => ({
   flex: 1,
   justifyContent: 'center', // 수직 중앙 정렬
   alignItems: 'flex-end', // 수평 중앙 정렬
-  paddingTop: 20,
+  // paddingTop: 20,
   paddingRight: theme.layout.PADDING.HEADER,
   height: '100%',
 }));
@@ -51,21 +50,23 @@ const WhiteSpace = styled.View(({ theme }) => ({
 
 type HeaderTitle = React.ReactNode;
 type HeaderRight = 'bell' | 'none';
+type HeaderBgColor = 'white' | 'primary' | 'background' | 'transparent';
 
 interface CenterHeaderbarProps {
   title: HeaderTitle;
   right: HeaderRight;
+  bgColor?: HeaderBgColor;
   onPressTitle?: () => void;
 }
 
-const LeftHeaderbar = ({ title, right = 'bell', onPressTitle }: CenterHeaderbarProps) => {
+const LeftHeaderbar = ({ title, right = 'bell', bgColor = 'white', onPressTitle }: CenterHeaderbarProps) => {
   const pushNoticePage = () => {
     // router.push()
     console.log('알림 페이지로 이동');
   };
 
   return (
-    <HeaderContainer>
+    <HeaderContainer style={{ backgroundColor: `${bgColor === 'background' ? Colors.BACKGROUND : bgColor}` }}>
       <ContentContainer>
         <TitleContainer>
           <TouchableOpacity onPress={onPressTitle}>

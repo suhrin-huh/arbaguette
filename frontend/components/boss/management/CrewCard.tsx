@@ -12,7 +12,7 @@ type CrewCardType = 'crew';
 
 interface CrewCardProps {
   id: number;
-  day: Days[];
+  day: Weekday[];
   type: CrewCardType;
   name?: string;
   salary?: string;
