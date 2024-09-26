@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Pressable, ScrollView } from 'react-native';
+import { useRouter } from 'expo-router';
+import { ScrollView, StatusBar } from 'react-native';
 
 import CrewCard from '@/components/boss/management/CrewCard';
 import MonthBar from '@/components/boss/management/MonthBar';
@@ -8,12 +8,11 @@ import Button from '@/components/common/Button';
 import LeftHeaderbar from '@/components/common/Header/LeftHeaderBar';
 import ContainerView from '@/components/common/ScreenContainer';
 import Colors from '@/constants/Colors';
-import Layout from '@/constants/Layout';
 
 const InnerContainer = styled(ScrollView)(({ theme }) => ({
   flexGrow: 1,
   overflow: 'visible',
-  paddingVertical: Layout.PADDING.VERTICAL,
+  paddingVertical: theme.layout.PADDING.VERTICAL,
 }));
 
 const MonthButtonArea = styled.View(({ theme }) => ({
@@ -43,41 +42,45 @@ const mockData = [
     id: 0,
     name: '손다인',
     salary: '12만원',
-    day: ['월', '수', '토'],
+    day: [0, 3, 6],
   },
   {
     id: 1,
     name: '김지원',
     salary: '20만원',
-    day: ['월', '수', '토'],
+    day: [2, 3, 6],
   },
   {
     id: 2,
     name: '박지훈',
     salary: '50만원',
-    day: ['화', '목', '토'],
+    day: [1, 4, 6],
   },
   {
     id: 3,
     name: '박지훈',
     salary: '50만원',
-    day: ['일'],
+    day: [3],
   },
   {
     id: 4,
     name: '박지훈',
     salary: '50만원',
-    day: ['일'],
+    day: [5],
   },
   {
     id: 5,
     name: '박지훈',
     salary: '50만원',
-    day: ['일'],
+    day: [6],
   },
 ];
 
 const BossManagementScreen = () => {
+  const router = useRouter();
+  const pushRouteHandler = (id: number) => {
+    router.push(`/boss/main/management/detail/${id}`);
+  };
   return (
     <InnerContainer
       showsVerticalScrollIndicator={false}
@@ -85,10 +88,11 @@ const BossManagementScreen = () => {
         justifyContent: 'flex-start',
         paddingBottom: 60,
       }}>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.BLACK} />
       <ContainerView>
-        <LeftHeaderbar title="파리바게트 장덕점" right="bell" />
+        <LeftHeaderbar title="파리바게트 장덕점" right="bell" bgColor="background" />
         <MonthButtonArea>
-          <MonthBar />
+          <MonthBar year={2222} month={8} />
           <Button
             onPress={() => console.log('모두 송금')}
             size="hug"
@@ -106,12 +110,10 @@ const BossManagementScreen = () => {
               name={name}
               salary={salary}
               key={id}
-              day={day as Days[]} // 타입 캐스팅 추가
-              pressHandler={() => console.log('아아아')}
+              day={day as Weekday[]} // 타입 캐스팅 추가
+              pressHandler={() => pushRouteHandler(id)}
             />
           ))}
-          {/* 직원 추가 버튼 */}
-          {/* <CrewCard id={99} type="add" pressHandler={() => console.log('first')} /> */}
         </CrewCardArea>
       </ContainerView>
     </InnerContainer>
