@@ -1,6 +1,5 @@
 package com.lucky.arbaguette.schedule.service;
 
-import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
@@ -17,10 +16,7 @@ import com.lucky.arbaguette.crew.repository.CrewRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.dto.ScheduleStatusCount;
 import com.lucky.arbaguette.schedule.dto.request.ScheduleSaveRequest;
-import com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse;
-import com.lucky.arbaguette.schedule.dto.response.ScheduleCommutesResponse;
-import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
-import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
+import com.lucky.arbaguette.schedule.dto.response.*;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +30,8 @@ import java.util.Optional;
 
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
 import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
+import static com.lucky.arbaguette.schedule.domain.StatusType.*;
+import static com.lucky.arbaguette.schedule.dto.response.DailyScheduleResponse.CrewScheduleInfo;
 import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
 import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
 
@@ -47,7 +45,6 @@ public class ScheduleService {
     private final ContractRepository contractRepository;
     private final ContractWorkingDayRepository contractWorkingDayRepository;
     private final CompanyRepository companyRepository;
-    private final BossRepository bossRepository;
 
     public ScheduleSaveResponse saveCrewCommute(CustomUserDetails customUserDetails, ScheduleSaveRequest request,
                                                 LocalDateTime nowTime) {
@@ -162,6 +159,32 @@ public class ScheduleService {
 
         return new MonthlyScheduleResponse(monthlyScheduleList);
 
+    }
+
+    public DailyScheduleResponse getDaySchedules(CustomUserDetails customUserDetails, int companyId, LocalDate date) {
+        Company company = companyRepository.findByCompanyIdAndBoss_Email(companyId, customUserDetails.getUsername()).orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다."));
+
+        List<Crew> crews = crewRepository.findByCompany(company);
+        //알바생들의 Id만 리스트로 추출
+        List<Integer> crewIds = crews.stream()
+                .map(Crew::getCrewId)
+                .toList();
+        List<CrewScheduleInfo> crewScheduleInfos = scheduleRepository.findByStartTimeAndCrewIdIn(date, crewIds).stream()
+                .map(CrewScheduleInfo::from)
+                .toList();
+        //전체 count
+        int totalCount = crewScheduleInfos.size();
+        //출근, 지각, 조퇴 count
+        int normalCount = (int) crewScheduleInfos.stream()
+                .filter(crewScheduleInfo -> (crewScheduleInfo.status() == NORMAL) || (crewScheduleInfo.status() == LATE) || (crewScheduleInfo.status() == EARLY))
+                .count();
+        //결근 count
+        int absentCount = (int) crewScheduleInfos.stream()
+                .filter(crewScheduleInfo -> crewScheduleInfo.status() == ABSENT)
+                .count();
+        //미출근 count
+        int yetCount = totalCount - normalCount - absentCount;
+        return DailyScheduleResponse.from(totalCount, normalCount, absentCount, yetCount, crewScheduleInfos);
     }
 }
 

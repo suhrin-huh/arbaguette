@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -47,5 +48,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     @Query("SELECT s FROM Schedule s WHERE s.crew = :crew AND FUNCTION('MONTH', s.startTime) = :month AND FUNCTION('DAY', s.startTime) = :day")
     Optional<Schedule> findByCrewAndMonthAndDay(@Param("crew") Crew crew, @Param("month") int month, @Param("day") int day);
 
+    @Query("SELECT s FROM Schedule s where DATE(s.startTime) = :date AND s.crew.crewId IN :crewIds order by s.startTime")
+    List<Schedule> findByStartTimeAndCrewIdIn(@Param("date") LocalDate date, @Param("crewIds") List<Integer> crewIds);
 
 }
