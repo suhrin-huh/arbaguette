@@ -1,5 +1,10 @@
 package com.lucky.arbaguette.schedule.service;
 
+import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
+import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
+import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
+import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
+
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
@@ -22,20 +27,14 @@ import com.lucky.arbaguette.schedule.dto.response.ScheduleCommutesResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static com.lucky.arbaguette.common.util.DateFormatUtil.getEndOfMonth;
-import static com.lucky.arbaguette.common.util.DateFormatUtil.getStartOfMonth;
-import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
-import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -48,6 +47,7 @@ public class ScheduleService {
     private final ContractWorkingDayRepository contractWorkingDayRepository;
     private final CompanyRepository companyRepository;
     private final BossRepository bossRepository;
+    private final SubstituteRepository substituteRepository;
 
     public ScheduleSaveResponse saveCrewCommute(CustomUserDetails customUserDetails, ScheduleSaveRequest request,
                                                 LocalDateTime nowTime) {
@@ -110,8 +110,10 @@ public class ScheduleService {
     }
 
     public void saveSchedule(CustomUserDetails customUserDetails) {
-        Crew crew = crewRepository.findByEmail(customUserDetails.getUsername()).orElseThrow(() -> new UnAuthorizedException("사용자를 찾을 수 없습니다."));
-        Contract contract = contractRepository.findByCrew(crew).orElseThrow(() -> new NotFoundException("근로 계약서를 찾을 수 없습니다."));
+        Crew crew = crewRepository.findByEmail(customUserDetails.getUsername())
+                .orElseThrow(() -> new UnAuthorizedException("사용자를 찾을 수 없습니다."));
+        Contract contract = contractRepository.findByCrew(crew)
+                .orElseThrow(() -> new NotFoundException("근로 계약서를 찾을 수 없습니다."));
         //근로계약서 안의 startDate ~ endDate 기간 내에
         // 근무계약일 요일,시간에 해당하는 스케줄을 만든다.
         List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
@@ -151,10 +153,16 @@ public class ScheduleService {
             List<DailySchedule> dailySchedules = new ArrayList<>();
 
             for (Crew crew : crewRepository.findByCompany(company)) {
-                Optional<Schedule> schedule = scheduleRepository.findByCrewAndMonthAndDay(crew, month, date);
-                if (schedule.isPresent()) {
-                    dailySchedules.add(DailySchedule.from(crew, schedule.get()));
-                }
+                scheduleRepository.findByCrewAndMonthAndDay(crew, month, date)
+                        .ifPresent(schedule -> {
+                            boolean isSubstitute = substituteRepository.findByScheduleAndPermitIsFalse(schedule)
+                                    .map(substitute -> !substitute.isPermit())
+                                    .orElse(false);
+                            dailySchedules.add(DailySchedule.from(
+                                    crew,
+                                    schedule,
+                                    isSubstitute));
+                        });
             }
 
             monthlyScheduleList.add(MonthlySchedule.from(date, dailySchedules));

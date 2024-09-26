@@ -3,13 +3,12 @@ package com.lucky.arbaguette.schedule.repository;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.dto.ScheduleStatusCount;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
@@ -45,7 +44,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     List<ScheduleStatusCount> countByStatus();
 
     @Query("SELECT s FROM Schedule s WHERE s.crew = :crew AND FUNCTION('MONTH', s.startTime) = :month AND FUNCTION('DAY', s.startTime) = :day")
-    Optional<Schedule> findByCrewAndMonthAndDay(@Param("crew") Crew crew, @Param("month") int month, @Param("day") int day);
+    Optional<Schedule> findByCrewAndMonthAndDay(@Param("crew") Crew crew, @Param("month") int month,
+                                                @Param("day") int day);
 
-
+    Optional<Schedule> findByScheduleIdAndCrew(int scheduleId, Crew crew);
 }
