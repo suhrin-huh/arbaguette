@@ -2,7 +2,6 @@ package com.lucky.arbaguette.schedule.dto.response;
 
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.schedule.domain.Schedule;
-
 import java.time.LocalTime;
 import java.util.List;
 
@@ -24,6 +23,7 @@ public record MonthlyScheduleResponse(List<MonthlySchedule> monthlyScheduleList)
 
     public record DailySchedule(int crewId,
                                 String name,
+                                int scheduleId,
                                 LocalTime startTime,
                                 LocalTime endTime) {
 
@@ -31,6 +31,7 @@ public record MonthlyScheduleResponse(List<MonthlySchedule> monthlyScheduleList)
             return new DailySchedule(
                     crew.getCrewId(),
                     crew.getName(),
+                    schedule.getScheduleId(),
                     schedule.getStartTime().toLocalTime(),
                     schedule.getEndTime().toLocalTime());
         }
