@@ -1,10 +1,12 @@
-import { router, Tabs } from 'expo-router';
+import { router, Tabs, useGlobalSearchParams } from 'expo-router';
 
 import BellButton from '@/components/crew/BellButton';
 import CalendarButton from '@/components/crew/CalendarButton';
 import Theme from '@/styles/Theme';
 
 const CrewMainLayout = () => {
+  const { year, month } = useGlobalSearchParams<Partial<{ year: string; month: string }>>();
+
   return (
     <Tabs
       initialRouteName="main"
@@ -25,7 +27,11 @@ const CrewMainLayout = () => {
           title: '근무 내역',
           headerTitle: '근무 내역 조회',
           headerRight: () => <BellButton onPress={() => router.navigate('/crew/management/contract')} />,
-          headerLeft: () => <CalendarButton onPress={() => router.navigate('/crew/management/contract')} />,
+          headerLeft: () => (
+            <CalendarButton
+              onPress={() => router.navigate({ pathname: '/crew/management/calendar', params: { year, month } })}
+            />
+          ),
         }}
       />
       <Tabs.Screen name="banking" options={{ title: '뱅킹' }} />

@@ -1,7 +1,5 @@
 import { Stack } from 'expo-router';
 
-import Theme from '@/styles/Theme';
-
 const ManagementLayout = () => {
   return (
     <Stack
@@ -11,6 +9,7 @@ const ManagementLayout = () => {
       }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="contract" options={{ presentation: 'modal' }} />
+      <Stack.Screen name="calendar" options={{ presentation: 'transparentModal' }} />
     </Stack>
   );
 };

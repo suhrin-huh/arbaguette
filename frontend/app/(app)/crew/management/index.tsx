@@ -1,5 +1,6 @@
 import Styled from '@emotion/native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { useEffect } from 'react';
 
 import Screen from '@/components/common/Screen';
 import ShowContractButton from '@/components/crew/ShowContractButton';
@@ -24,13 +25,24 @@ const MonthText = Styled.Text({
 });
 
 const CrewManagementScreen = () => {
+  const { year, month } = useLocalSearchParams<Partial<{ year: string; month: string }>>();
+  const now = new Date();
+  const currentYear = Number(year) || now.getFullYear();
+  const currentMonth = (Number(month) || now.getMonth()) + 1;
+
+  const handleShowContract = () => {
+    router.navigate({ pathname: '/crew/management/contract' });
+  };
+
   return (
     <Screen viewOption={{ style: { backgroundColor: Theme.color.WHITE } }}>
       <PlaceInfo>
         <PlaceInfoText>후라이드 참 잘하는 집</PlaceInfoText>
-        <ShowContractButton onPress={() => router.push('/crew/management/contract')} />
+        <ShowContractButton onPress={handleShowContract} />
       </PlaceInfo>
-      <MonthText>2024년 9월</MonthText>
+      <MonthText>
+        {currentYear}년 {currentMonth}월
+      </MonthText>
       <WorkDaysTable normal={10} absent={8} late={3} earlyLeave={1} />
       <WorkStatusTable />
     </Screen>
