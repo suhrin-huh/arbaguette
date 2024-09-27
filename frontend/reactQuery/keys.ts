@@ -5,6 +5,7 @@ const keys = {
   crew: () => [...keys.all, 'crew'],
   nearCommuteInfo: () => [...keys.crew(), 'nearCommuteInfo'],
   salary: () => [...keys.crew(), 'salary'],
+  payStub: (month: Month) => [...keys.salary(), 'payStub', month],
   accumulatedSalary: () => [...keys.salary(), 'accumulatedSalary'],
   estimatedSalary: () => [...keys.salary(), 'estimatedSalary'],
   common: () => [...keys.all, 'common'],

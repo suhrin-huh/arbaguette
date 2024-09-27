@@ -26,4 +26,11 @@ export default {
   getNearCommuteInfo: async () => {
     return axios.get<GetNearCommuteInfoResponse>('/api/schedule/crew/near/commute');
   },
+  /**
+   * 급여명세서 조회
+   * @param month 조회할 달
+   */
+  getPayStub: async (month: Month) => {
+    return axios.get<GetPayStubResponse>('/api/crew/receipt', { params: { month } });
+  },
 };

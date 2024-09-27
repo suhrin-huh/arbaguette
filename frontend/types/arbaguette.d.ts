@@ -143,6 +143,21 @@ interface NearCommuteInfoResponseData {
   endTime: EndTime;
 }
 
+type OriginSalary = number;
+type Tax = number;
+type Allowance = number;
+type TotalTime = number;
+type SalaryDate = number;
+
+interface GetPayStubResponseData {
+  originSalary: OriginSalary;
+  tax: Tax;
+  allowance: Allowance;
+  totalTime: TotalTime;
+  companyName: CompanyName;
+  salaryDate: SalaryDate;
+}
+
 interface ErrorResponse {
   code: number;
   message: string;
@@ -161,3 +176,4 @@ type GetMonthlyAccumulatedSalaryResponse = ArbaguetteResponse<Money>;
 type GetMonthlyEstimatedSalaryResponse = ArbaguetteResponse<Money>;
 type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
+type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;

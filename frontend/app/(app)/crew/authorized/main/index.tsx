@@ -4,10 +4,12 @@ import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard
 import Screen from '@/components/common/Screen';
 import NfcCard from '@/components/crew/Card/NfcCard';
 import TimeCard from '@/components/crew/Card/TimeCard';
-import { useNearCommuteInfo } from '@/reactQuery/querys';
+import { useNearCommuteInfo, usePayStub } from '@/reactQuery/querys';
 
 const CrewMainScreen = () => {
-  const data = useNearCommuteInfo();
+  const prevMonth = new Date().getMonth();
+  const nearCommuteInfo = useNearCommuteInfo();
+  const prevMonthPayCheck = usePayStub(prevMonth);
 
   const handlePressNfcCard = () => {
     router.push('/crew/authorized/main/modal');
@@ -15,9 +17,16 @@ const CrewMainScreen = () => {
 
   return (
     <Screen viewOption={{ style: { gap: 10 } }}>
-      {data && <TimeCard {...data} />}
+      {nearCommuteInfo && <TimeCard {...nearCommuteInfo} />}
       <NfcCard onPress={handlePressNfcCard} />
-      <SalaryChartCard title="저번달 받은 임금" />
+      {prevMonthPayCheck && (
+        <SalaryChartCard
+          title="저번달 받은 임금"
+          originSalary={prevMonthPayCheck.originSalary}
+          tax={prevMonthPayCheck.originSalary}
+          allowance={prevMonthPayCheck.originSalary}
+        />
+      )}
     </Screen>
   );
 };

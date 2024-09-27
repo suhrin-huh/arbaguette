@@ -68,10 +68,28 @@ const useAccountBalance = () => {
   return { accountBalance, ...queryData };
 };
 
+/**
+ * 가까운 출퇴근 정보를 가져오는 쿼리 훅
+ */
 const useNearCommuteInfo = () => {
   const { data } = useQuery({
     queryKey: keys.nearCommuteInfo(),
     queryFn: () => arbaguette.getNearCommuteInfo(),
+  });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
+/**
+ *  급여명세서를 가져오는 쿼리 훅
+ * @param month 조회할 달
+ */
+const usePayStub = (month: Month) => {
+  const { data } = useQuery({
+    queryKey: keys.payStub(month),
+    queryFn: () => arbaguette.getPayStub(month),
   });
 
   if (!data) return null;
@@ -86,4 +104,5 @@ export {
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,
   useNearCommuteInfo,
+  usePayStub,
 };
