@@ -1,35 +1,15 @@
 import styled from '@emotion/native';
+import { useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
 
+import NoneCard from '@/components/boss/management/NoneScheduleCard';
 import AttendanceStatusCard from '@/components/common/AttendanceStatusCard';
-import type { ProfileCardProps } from '@/components/common/AttendanceStatusCard/ProfileCard';
 import DateStatusCard from '@/components/common/DateStatusCard';
 import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import TitleDropdown from '@/components/common/Header/TitleDropdown';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
 import ContainerView from '@/components/common/ScreenContainer';
-
-const profileCardsData = [
-  // 목업 데이터
-  {
-    name: '김철수',
-    phoneNumber: '010-1234-5678',
-    time: '09:00',
-    status: 'work',
-  },
-  {
-    name: '김철수',
-    phoneNumber: '010-1234-5678',
-    time: '09:00',
-    status: 'late',
-  },
-  {
-    name: '김철수',
-    phoneNumber: '010-1234-5678',
-    time: '09:00',
-    status: 'rest',
-  },
-];
+import { useDaySchedule } from '@/reactQuery/querys';
 
 const InnerContainer = styled(ScrollView)(({ theme }) => ({
   flexGrow: 1,
@@ -37,7 +17,19 @@ const InnerContainer = styled(ScrollView)(({ theme }) => ({
   paddingVertical: theme.layout.PADDING.VERTICAL,
 }));
 
+function todayFormatter() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}-${month}-${day}`;
+}
+
 const MainScreen = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { daySchedule } = useDaySchedule(todayFormatter(), Number(id));
+  console.log(daySchedule);
+  const crewScheduleInfos = daySchedule?.crewScheduleInfos;
   return (
     <InnerContainer
       showsVerticalScrollIndicator={false}
@@ -65,8 +57,12 @@ const MainScreen = () => {
           }}
           right="bell"
         />
-        <DateStatusCard />
-        <AttendanceStatusCard profileCardsData={profileCardsData as ProfileCardProps[]} />
+        <DateStatusCard dayScheduleData={daySchedule} />
+        {crewScheduleInfos && crewScheduleInfos.length > 0 ? (
+          <AttendanceStatusCard dayScheduleData={crewScheduleInfos} />
+        ) : (
+          <NoneCard title="금일 출근 예정 직원이 없습니다." fontSize={16} />
+        )}
         <SalaryChartCard title="이번달 예상 지출" />
       </ContainerView>
     </InnerContainer>
