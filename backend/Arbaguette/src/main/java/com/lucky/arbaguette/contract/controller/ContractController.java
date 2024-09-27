@@ -2,16 +2,15 @@ package com.lucky.arbaguette.contract.controller;
 
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.contract.domain.dto.ContractInfo;
 import com.lucky.arbaguette.contract.domain.dto.ContractSaveRequest;
 import com.lucky.arbaguette.contract.service.ContractService;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -34,5 +33,11 @@ public class ContractController {
         contractService.signCrewContract(customUserDetails, file);
         return ApiResponse.success();
     }
+
+    @GetMapping
+    public ApiResponse<ContractInfo> getContract(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int crewId) {
+        return ApiResponse.success(contractService.getContract(customUserDetails, crewId));
+    }
+
 
 }

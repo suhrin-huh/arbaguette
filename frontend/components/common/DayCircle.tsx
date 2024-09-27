@@ -1,6 +1,5 @@
 import styled from '@emotion/native';
 import React from 'react';
-import { Text, View } from 'react-native';
 
 const Container = styled.View(({ theme }) => ({
   width: 28,
@@ -20,14 +19,16 @@ const CircleText = styled.Text(({ theme }) => ({
   paddingBottom: 3,
 }));
 
+const dayOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
+
 interface DayCircleProps {
-  day: Days;
+  day: Weekday;
 }
 
 const DayCircle = ({ day }: DayCircleProps) => {
   return (
     <Container>
-      <CircleText>{day}</CircleText>
+      <CircleText>{dayOfWeek[day]}</CircleText>
     </Container>
   );
 };

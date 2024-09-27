@@ -38,10 +38,13 @@ public class Substitute {
 
     private boolean permit;
 
+    private int companyId;
+
     @Builder
-    private Substitute(Crew crew, Schedule schedule, boolean permit) {
+    private Substitute(Crew crew, Schedule schedule, boolean permit, int companyId) {
         this.crew = crew;
         this.schedule = schedule;
         this.permit = permit;
+        this.companyId = companyId;
     }
 }

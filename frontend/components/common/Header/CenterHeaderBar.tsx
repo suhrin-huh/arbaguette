@@ -10,11 +10,13 @@ import Colors from '@/constants/Colors';
 type HeaderLeft = React.ReactNode | 'before' | 'store' | 'none';
 type HeaderTitle = React.ReactNode;
 type HeaderRight = 'bell' | 'none';
+type HeaderBgColor = 'white' | 'primary' | 'background' | 'transparent';
 
 interface CenterHeaderbarProps {
   left: HeaderLeft;
   title: HeaderTitle;
   right: HeaderRight;
+  bgColor?: HeaderBgColor;
   onPressLeft?: () => void;
   onPressTitle?: () => void;
   onPressRight?: () => void;
@@ -22,9 +24,8 @@ interface CenterHeaderbarProps {
 
 const HeaderContainer = styled.View(({ theme }) => ({
   height: 70,
-  backgroundColor: Colors.BACKGROUND,
   justifyContent: 'center',
-  alignItems: 'flex-start',
+  alignItems: 'center',
 }));
 
 const ContentContainer = styled.View(({ theme }) => ({
@@ -33,7 +34,6 @@ const ContentContainer = styled.View(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   width: '100%',
-  height: '100%',
 }));
 
 const LeftContainer = styled.View(({ theme }) => ({
@@ -55,7 +55,7 @@ const TitleContainer = styled.View(({ theme }) => ({
 
 const Title = styled.Text(({ theme }) => ({
   fontSize: 24,
-  fontWeight: 'semibold',
+  fontWeight: 'bold',
 }));
 
 const RightContainer = styled.View(({ theme }) => ({
@@ -81,7 +81,7 @@ const LeftIcon = ({ left }: { left: HeaderLeft }) => {
     case 'none':
       return <WhiteSpace />;
     default:
-      return left;
+      return <FontAwesome5 name="chevron-left" size={20} color={Colors.PRIMARY} />;
   }
 };
 
@@ -89,13 +89,13 @@ const CenterHeaderbar = ({
   left = 'before',
   title,
   right = 'bell',
+  bgColor = 'white',
   onPressLeft,
   onPressTitle,
   onPressRight,
 }: CenterHeaderbarProps) => {
   return (
-    <HeaderContainer>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.BACKGROUND} />
+    <HeaderContainer style={{ backgroundColor: `${bgColor === 'background' ? Colors.BACKGROUND : bgColor}` }}>
       <ContentContainer>
         <LeftContainer>
           <TouchableOpacity onPress={onPressLeft}>

@@ -1,23 +1,15 @@
 import styled from '@emotion/native';
 import React from 'react';
-import { StatusBar } from 'react-native';
-
-import Colors from '@/constants/Colors';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 const Container = styled.View(({ theme }) => ({
   flexGrow: 1,
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  paddingTop: theme.layout.PADDING.VERTICAL - 10,
+  paddingHorizontal: 30,
   gap: 15,
 }));
 
-const ContainerView = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Container>
-      <StatusBar barStyle="dark-content" backgroundColor={Colors.WHITE} />
-      {children}
-    </Container>
-  );
+const ContainerView = ({ children, ...props }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) => {
+  return <Container style={props.style}>{children}</Container>;
 };
 
 export default ContainerView;
