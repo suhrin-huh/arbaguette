@@ -9,6 +9,12 @@ type RefreshToken = string;
 type Role = 'BOSS' | 'CREW';
 type CrewStatus = 'UNREGISTERED' | 'UNSIGNED' | 'SIGNED';
 
+interface AccessTokenPayload {
+  role: Role;
+  crewStatus: CrewStatus;
+  email: Email;
+}
+
 type Email = string;
 type Password = string;
 type UserName = string;
