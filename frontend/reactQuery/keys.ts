@@ -6,6 +6,7 @@ const keys = {
   companyList: () => [...keys.company(), 'list'],
   crew: () => [...keys.all, 'crew'],
   crewList: () => [...keys.boss(), 'crews'],
+  crewDetail: (crewId: CrewId) => [...keys.crew(), 'detail', crewId],
   nearCommuteInfo: () => [...keys.crew(), 'nearCommuteInfo'],
   salary: () => [...keys.crew(), 'salary'],
   accumulatedSalary: () => [...keys.salary(), 'accumulatedSalary'],
