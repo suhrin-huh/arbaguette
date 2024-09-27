@@ -6,10 +6,10 @@ import { useEffect } from 'react';
 import { Alert } from 'react-native';
 
 import pickImageToFormData from '@/util/boss/pickImageToFormData';
-import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
+import useRootStore from '@/zustand';
 
 const UploadBusinessCertificateScreen = () => {
-  const { clearCertifiedPaper, setCertifiedPaper, setPaperUri } = useCertifiedPaperStore();
+  const { clearCertifiedPaper, setCertifiedPaper, setPaperUri } = useRootStore();
 
   const handleCameraPress = () => {
     router.push('/boss/config/register/upload/camera');

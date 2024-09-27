@@ -7,6 +7,7 @@ interface ArbaguetteResponse<T> {
 type AccessToken = string;
 type RefreshToken = string;
 type Role = 'BOSS' | 'CREW';
+type CrewStatus = 'UNREGISTERED' | 'UNSIGNED' | 'SIGNED';
 
 type Email = string;
 type Password = string;
@@ -127,6 +128,15 @@ interface CommuteCheckResponseData {
   time: Time;
 }
 
+type StartTime = string;
+type EndTime = string;
+
+interface NearCommuteInfoResponseData {
+  companyName: CompanyName;
+  startTime: StartTime;
+  endTime: EndTime;
+}
+
 interface ErrorResponse {
   code: number;
   message: string;
@@ -144,3 +154,4 @@ type GetCrewMemberDetailResponse = ArbaguetteResponse<GetCrewMemberDetailRespons
 type GetMonthlyAccumulatedSalaryResponse = ArbaguetteResponse<Money>;
 type GetMonthlyEstimatedSalaryResponse = ArbaguetteResponse<Money>;
 type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
+type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;

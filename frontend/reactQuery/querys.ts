@@ -68,4 +68,22 @@ const useAccountBalance = () => {
   return { accountBalance, ...queryData };
 };
 
-export { useAccountBalance, useCrewMemberList, useEmailCheck, useMonthlyAccumulatedSalary, useMonthlyEstimatedSalary };
+const useNearCommuteInfo = () => {
+  const { data } = useQuery({
+    queryKey: keys.nearCommuteInfo(),
+    queryFn: () => arbaguette.getNearCommuteInfo(),
+  });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
+export {
+  useAccountBalance,
+  useCrewMemberList,
+  useEmailCheck,
+  useMonthlyAccumulatedSalary,
+  useMonthlyEstimatedSalary,
+  useNearCommuteInfo,
+};

@@ -20,4 +20,10 @@ export default {
   commuteCheck: async (companyId: CompanyId) => {
     return axios.post<CommuteCheckResponse>('/api/schedule/crew/commute', { companyId });
   },
+  /**
+   * 가까운 출근 정보 확인
+   */
+  getNearCommuteInfo: async () => {
+    return axios.get<GetNearCommuteInfoResponse>('/api/schedule/crew/near/commute');
+  },
 };

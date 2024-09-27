@@ -3,6 +3,7 @@ const keys = {
   boss: () => [...keys.all, 'boss'],
   crewList: () => [...keys.boss(), 'list'],
   crew: () => [...keys.all, 'crew'],
+  nearCommuteInfo: () => [...keys.crew(), 'nearCommuteInfo'],
   salary: () => [...keys.crew(), 'salary'],
   accumulatedSalary: () => [...keys.salary(), 'accumulatedSalary'],
   estimatedSalary: () => [...keys.salary(), 'estimatedSalary'],

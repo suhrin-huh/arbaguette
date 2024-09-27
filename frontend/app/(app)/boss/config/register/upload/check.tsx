@@ -6,12 +6,10 @@ import { Alert } from 'react-native';
 import CertifiedPaperBox from '@/components/boss/upload/CertifiedPaperBox';
 import Button from '@/components/common/Button';
 import postCertifiedPaper from '@/services/boss/postCertifiedPaper';
-import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
-import { useCompanyInfoStore } from '@/zustand/boss/useCompanyInfoStore';
+import useRootStore from '@/zustand';
 
 const CheckScreen = () => {
-  const { certifiedPaper, paperUri } = useCertifiedPaperStore();
-  const { setCompanyInfo } = useCompanyInfoStore();
+  const { certifiedPaper, paperUri, setCompanyInfo } = useRootStore();
 
   const handleResetPress = () => {
     router.push('./');

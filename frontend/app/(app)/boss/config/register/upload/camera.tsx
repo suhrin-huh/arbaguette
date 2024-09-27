@@ -7,12 +7,12 @@ import { View } from 'react-native';
 
 import Button from '@/components/common/Button';
 import takePictureToFormData from '@/util/boss/takePictureToFormData';
-import { useCertifiedPaperStore } from '@/zustand/boss/useCertifiedPaperStore';
+import useRootStore from '@/zustand';
 
 const CameraScreen = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView | null>(null);
-  const { setCertifiedPaper, setPaperUri } = useCertifiedPaperStore();
+  const { setCertifiedPaper, setPaperUri } = useRootStore();
 
   const takePicture = async () => {
     const result = await takePictureToFormData(cameraRef);

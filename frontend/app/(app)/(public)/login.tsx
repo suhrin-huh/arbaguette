@@ -1,14 +1,13 @@
 import Styled from '@emotion/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
-import { router } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
 import arbaguette from '@/services/arbaguette';
+import useRootStore from '@/zustand';
 
 const Container = Styled.View(({ theme }) => ({
   flex: 1,
@@ -39,6 +38,7 @@ const ErrorText = Styled.Text(() => ({
 }));
 
 const LoginScreen = () => {
+  const { login: storeAuth, logout } = useRootStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState(true);
@@ -46,20 +46,14 @@ const LoginScreen = () => {
   const { mutate: login } = useMutation({
     mutationFn: arbaguette.login,
     onSuccess: async (response) => {
-      const { accessToken, role } = response.data.data;
-      await AsyncStorage.setItem('accessToken', accessToken);
-
-      router.dismissAll();
-      if (role === 'BOSS') {
-        router.replace('/(app)/boss');
-      } else if (role === 'CREW') {
-        router.replace('/(app)/crew');
-      }
+      storeAuth(response.data.data);
     },
-    onError: (error: AxiosError) => {
+    onError: async (error: AxiosError) => {
       if (error.status === 404) {
         setIsValid(false);
         setErrorMessage('아이디와 비밀번호를 확인해주세요.');
+      } else if (error.status === 418) {
+        logout();
       }
     },
   });
