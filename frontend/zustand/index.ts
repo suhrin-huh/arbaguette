@@ -21,6 +21,7 @@ const useRootStore = create<RootState>()(
         refreshToken: state.refreshToken,
         isLoggedIn: state.isLoggedIn,
         role: state.role,
+        crewStatus: state.crewStatus,
       }),
     },
   ),
