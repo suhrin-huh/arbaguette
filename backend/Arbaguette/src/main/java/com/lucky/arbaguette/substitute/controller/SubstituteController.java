@@ -31,7 +31,8 @@ public class SubstituteController {
 
     @GetMapping
     public ApiResponse<SubstitutesResponse> getSubstitutes(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int companyId) {
-        return ApiResponse.success(substituteService.getSubstitutes(companyId));
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam(required = false, defaultValue = "0") int companyId) {
+        return ApiResponse.success(substituteService.getSubstitutes(customUserDetails, companyId));
     }
 }
