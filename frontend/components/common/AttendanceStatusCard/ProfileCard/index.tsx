@@ -8,7 +8,9 @@ import type { ProfileProps } from '@/components/common/Profile';
 import Profile from '@/components/common/Profile';
 
 export interface ProfileCardProps extends ProfileProps, PhoneProps {
-  time: string;
+  startTime: Time;
+  endTime: Time;
+  status: WorkStatus;
 }
 
 const ProfileContainer = Styled.View({ flexDirection: 'row' });
@@ -31,18 +33,20 @@ const PhoneContainer = Styled.View({
   justifyContent: 'center',
 });
 
-const ProfileCard = ({ time, status, name, phoneNumber, source }: ProfileCardProps) => {
+const ProfileCard = ({ startTime, endTime, status, name, tel, source }: ProfileCardProps) => {
   return (
     <ProfileContainer>
       <Profile name={name} status={status} source={source} />
       <TimeContainer>
-        <Text>{time}</Text>
+        <Text>
+          {startTime} - {endTime}
+        </Text>
       </TimeContainer>
       <StatusContainer>
-        <Status status={status || 'rest'} />
+        <Status status={status} />
       </StatusContainer>
       <PhoneContainer>
-        <Phone phoneNumber={phoneNumber} />
+        <Phone tel={tel} />
       </PhoneContainer>
     </ProfileContainer>
   );

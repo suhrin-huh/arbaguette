@@ -16,28 +16,39 @@ const useEmailCheck = (email: Email) => {
 };
 
 /**
+ * 사업장 리스트를 가져오는 쿼리 훅
+ */
+const useCompanyList = () => {
+  const { data } = useQuery({ queryKey: keys.companyList(), queryFn: () => arbaguette.getCompanyList() });
+
+  const companyList = data?.data.data.companies || [];
+
+  return { companyList };
+};
+
+/**
  * 크루 리스트를 가져오는 쿼리 훅
  */
 const useCrewMemberList = () => {
-  const { data, ...queryData } = useQuery({ queryKey: keys.crewList(), queryFn: () => arbaguette.getCrewMemberList() });
+  const { data } = useQuery({ queryKey: keys.crewList(), queryFn: () => arbaguette.getCrewMemberList() });
 
   const crewList = data?.data.data.crews || [];
 
-  return { crewList, ...queryData };
+  return { crewList };
 };
 
 /**
  * 당월 누적 급여를 가져오는 쿼리 훅
  */
 const useMonthlyAccumulatedSalary = () => {
-  const { data, ...queryData } = useQuery({
+  const { data } = useQuery({
     queryKey: keys.accumulatedSalary(),
     queryFn: () => arbaguette.getMonthlyAccumulatedSalary(),
   });
 
   const accumulatedSalary = data?.data.data || 0;
 
-  return { accumulatedSalary, ...queryData };
+  return { accumulatedSalary };
 };
 
 /**
@@ -79,9 +90,25 @@ const useNearCommuteInfo = () => {
   return data.data.data;
 };
 
+/**
+ * 사업장의 일별 스케쥴을 가져오는 훅
+ */
+const useDaySchedule = (date: string, companyId: CompanyId) => {
+  const { data } = useQuery({
+    queryKey: keys.daySchedule(date, companyId),
+    queryFn: () => arbaguette.getDaySchedule(date, companyId),
+  });
+
+  const daySchedule = data?.data.data;
+
+  return { daySchedule };
+};
+
 export {
   useAccountBalance,
+  useCompanyList,
   useCrewMemberList,
+  useDaySchedule,
   useEmailCheck,
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,

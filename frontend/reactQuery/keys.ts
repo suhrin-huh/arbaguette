@@ -1,8 +1,11 @@
 const keys = {
   all: ['arbaguette'] as const,
   boss: () => [...keys.all, 'boss'],
-  crewList: () => [...keys.boss(), 'list'],
+  company: () => [...keys.boss(), 'company'],
+  daySchedule: (date: string, companyId: CompanyId) => [...keys.company(), 'schedule', date, companyId],
+  companyList: () => [...keys.company(), 'list'],
   crew: () => [...keys.all, 'crew'],
+  crewList: () => [...keys.boss(), 'crews'],
   nearCommuteInfo: () => [...keys.crew(), 'nearCommuteInfo'],
   salary: () => [...keys.crew(), 'salary'],
   accumulatedSalary: () => [...keys.salary(), 'accumulatedSalary'],
