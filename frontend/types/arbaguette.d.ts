@@ -28,6 +28,8 @@ type Time = string;
 type WorkHours = number;
 type DateString = string;
 
+type TaxType = 'INCOME' | 'NONE' | 'INSU';
+
 interface WorkingDay {
   weekday: Weekday;
   startTime: Time;
