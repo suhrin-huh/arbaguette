@@ -121,6 +121,7 @@ export {
   useAccountBalance,
   useCompanyList,
   useCrewMemberList,
+  useCrewMemeberDetail,
   useDaySchedule,
   useEmailCheck,
   useMonthlyAccumulatedSalary,
