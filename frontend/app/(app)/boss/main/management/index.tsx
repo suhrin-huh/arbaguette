@@ -4,10 +4,12 @@ import { ScrollView, StatusBar } from 'react-native';
 
 import CrewCard from '@/components/boss/management/CrewCard';
 import MonthBar from '@/components/boss/management/MonthBar';
+import NoneCard from '@/components/boss/management/NoneScheduleCard';
 import Button from '@/components/common/Button';
 import LeftHeaderbar from '@/components/common/Header/LeftHeaderBar';
 import ContainerView from '@/components/common/ScreenContainer';
 import Colors from '@/constants/Colors';
+import { useCrewMemberList } from '@/reactQuery/querys';
 
 const InnerContainer = styled(ScrollView)(({ theme }) => ({
   flexGrow: 1,
@@ -37,46 +39,8 @@ const CrewCardArea = styled.View(({ theme }) => ({
   paddingBottom: 260,
 }));
 
-const mockData = [
-  {
-    id: 0,
-    name: '손다인',
-    salary: '12만원',
-    day: [0, 3, 6],
-  },
-  {
-    id: 1,
-    name: '김지원',
-    salary: '20만원',
-    day: [2, 3, 6],
-  },
-  {
-    id: 2,
-    name: '박지훈',
-    salary: '50만원',
-    day: [1, 4, 6],
-  },
-  {
-    id: 3,
-    name: '박지훈',
-    salary: '50만원',
-    day: [3],
-  },
-  {
-    id: 4,
-    name: '박지훈',
-    salary: '50만원',
-    day: [5],
-  },
-  {
-    id: 5,
-    name: '박지훈',
-    salary: '50만원',
-    day: [6],
-  },
-];
-
 const BossManagementScreen = () => {
+  const { crewList } = useCrewMemberList();
   const router = useRouter();
   const pushRouteHandler = (id: number) => {
     router.push(`/boss/main/management/detail/${id}`);
@@ -103,17 +67,21 @@ const BossManagementScreen = () => {
 
         {/* 직원 카드 리스트 */}
         <CrewCardArea>
-          {mockData.map(({ id, name, salary, day }) => (
-            <CrewCard
-              type="crew"
-              id={id}
-              name={name}
-              salary={salary}
-              key={id}
-              day={day as Weekday[]} // 타입 캐스팅 추가
-              pressHandler={() => pushRouteHandler(id)}
-            />
-          ))}
+          {crewList.length > 0 ? (
+            crewList.map(({ id, name, salary, weekdays }) => (
+              <CrewCard
+                type="crew"
+                id={id}
+                name={name}
+                salary={salary}
+                key={id}
+                day={weekdays}
+                pressHandler={() => pushRouteHandler(id)}
+              />
+            ))
+          ) : (
+            <NoneCard title="직원을 추가하세요" fontSize={18} />
+          )}
         </CrewCardArea>
       </ContainerView>
     </InnerContainer>

@@ -9,6 +9,12 @@ type RefreshToken = string;
 type Role = 'BOSS' | 'CREW';
 type CrewStatus = 'UNREGISTERED' | 'UNSIGNED' | 'SIGNED';
 
+interface AccessTokenPayload {
+  role: Role;
+  crewStatus: CrewStatus;
+  email: Email;
+}
+
 type Email = string;
 type Password = string;
 type UserName = string;
@@ -20,6 +26,7 @@ type Month = number;
 type Weekday = number;
 type Time = string;
 type WorkHours = number;
+type DateString = string;
 
 interface WorkingDay {
   weekday: Weekday;
@@ -87,6 +94,7 @@ interface Company {
 }
 
 type CrewId = number;
+type Period = number;
 
 interface Crew {
   id: CrewId;
@@ -95,12 +103,18 @@ interface Crew {
   salary: Money;
 }
 
+interface CrewWithWeekdays extends Crew {
+  weekdays: Weekday[];
+  period: Period;
+  endDate: DateString;
+}
+
 interface GetCompanyListResponseData {
   companies: Company[];
 }
 
 interface GetCrewMemberListResponseData {
-  crews: Crew[];
+  crews: CrewWithWeekdays[];
 }
 
 interface GetCrewMemberDetailResponseData {
@@ -121,7 +135,7 @@ interface Receipt {
   totalTime: WorkHours;
 }
 
-type WorkStatus = string;
+type WorkStatus = 'NORMAL' | 'LATE' | 'EARLY' | 'ABSENT';
 
 interface CommuteCheckResponseData {
   workStatus: WorkStatus;
@@ -137,9 +151,26 @@ interface NearCommuteInfoResponseData {
   endTime: EndTime;
 }
 
+interface GetDayScheduleResponseData {
+  totalCount: number;
+  normalCount: number;
+  absentCount: number;
+  yetCount: number;
+  crewScheduleInfos: CrewScheduleInfo[];
+}
+
 interface ErrorResponse {
   code: number;
   message: string;
+}
+
+interface CrewScheduleInfo {
+  name: CrewName;
+  profileImage: ProfileImage;
+  startTime: StartTime;
+  endTime: EndTime;
+  status: WorkStatus;
+  tel: Tel;
 }
 
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
@@ -155,3 +186,4 @@ type GetMonthlyAccumulatedSalaryResponse = ArbaguetteResponse<Money>;
 type GetMonthlyEstimatedSalaryResponse = ArbaguetteResponse<Money>;
 type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
+type GetDayScheduleResponse = ArbaguetteResponse<GetDayScheduleResponseData>;

@@ -10,10 +10,9 @@ const CrewLayout = () => {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }} initialRouteName="(unauthorized)/wait">
+    <Stack screenOptions={{ headerShown: false }} initialRouteName="unauthorized">
+      <Stack.Screen name="unauthorized" />
       <Stack.Screen name="authorized" />
-      <Stack.Screen name="(unauthorized)/wait" />
-      <Stack.Screen name="(unauthorized)/signature" />
     </Stack>
   );
 };

@@ -5,27 +5,20 @@ import React from 'react';
 
 import Colors from '@/constants/Colors';
 
-interface willStoreDto {
-  // 일단 임시로 가게 정보 타입 선언
-  storeId: number;
-  name: string;
-  address: string;
+interface CompanyCardProps {
+  companyData: Company | 'ADD';
+  onPress: (card: Company) => void;
+  onPressNFC?: (card: Company) => void;
 }
 
-interface StoredCardProps {
-  storeData: any | string;
-  onPress: (card: willStoreDto) => void;
-  onPressNFC?: (card: willStoreDto) => void;
-}
-
-const StoreCard = ({ storeData, onPress, onPressNFC }: StoredCardProps) => {
+const CompanyCard = ({ companyData, onPress, onPressNFC }: CompanyCardProps) => {
   const handlePressCard = () => {
-    onPress(storeData);
+    onPress(companyData as Company);
   };
   const handlePressNfc = () => {
-    onPressNFC && onPressNFC(storeData);
+    onPressNFC && onPressNFC(companyData as Company);
   };
-  if (storeData === 'ADD') {
+  if (companyData === 'ADD') {
     return (
       <PressableArea onPress={handlePressCard}>
         <AddContainer>
@@ -39,8 +32,8 @@ const StoreCard = ({ storeData, onPress, onPressNFC }: StoredCardProps) => {
   return (
     <PressableArea onPress={handlePressCard}>
       <LeftContainer>
-        <StoreName>{storeData.name}</StoreName>
-        <StoreAddress>{storeData.address}</StoreAddress>
+        <StoreName>{companyData.name}</StoreName>
+        <StoreAddress>{companyData.address}</StoreAddress>
       </LeftContainer>
       <IconContainer onPress={handlePressNfc}>
         <NfcIcon name="nfc" size={36} />
@@ -49,7 +42,7 @@ const StoreCard = ({ storeData, onPress, onPressNFC }: StoredCardProps) => {
   );
 };
 
-export default StoreCard;
+export default CompanyCard;
 
 const PressableArea = styled.Pressable(({ theme }) => ({
   flexDirection: 'row',
