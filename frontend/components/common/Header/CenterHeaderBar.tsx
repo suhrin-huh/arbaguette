@@ -13,9 +13,9 @@ type HeaderRight = 'bell' | 'none';
 type HeaderBgColor = 'white' | 'primary' | 'background' | 'transparent';
 
 interface CenterHeaderbarProps {
-  left: HeaderLeft;
+  left?: HeaderLeft;
   title: HeaderTitle;
-  right: HeaderRight;
+  right?: HeaderRight;
   bgColor?: HeaderBgColor;
   onPressLeft?: () => void;
   onPressTitle?: () => void;
