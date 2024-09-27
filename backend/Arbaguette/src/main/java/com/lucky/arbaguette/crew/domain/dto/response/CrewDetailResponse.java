@@ -8,6 +8,8 @@ import java.util.List;
 
 public record CrewDetailResponse(int id,
                                  String name,
+                                 String tel,
+                                 int profileImage,
                                  List<WorkingDayInfo> workingDays,
                                  int salary,
                                  int tax,
@@ -18,6 +20,8 @@ public record CrewDetailResponse(int id,
     public static CrewDetailResponse from(Crew crew, List<WorkingDayInfo> workingDayInfos, int salary, int tax, int allowance, int workHours, List<ReceiptInfo> receipts) {
         return new CrewDetailResponse(crew.getCrewId(),
                 crew.getName(),
+                crew.getTel(),
+                crew.getProfileImage(),
                 workingDayInfos,
                 salary,
                 tax,
