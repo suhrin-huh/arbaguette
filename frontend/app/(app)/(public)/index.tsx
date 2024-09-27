@@ -24,11 +24,11 @@ const WelcomeScreen = () => {
   const token = useToken();
 
   const handleLoginButton = () => {
-    router.push('/public/login');
+    router.push('/login');
   };
 
   const handleSignUpButton = () => {
-    router.push('/public/signup/memberType');
+    router.push('/signup/memberType');
   };
 
   useEffect(() => {
