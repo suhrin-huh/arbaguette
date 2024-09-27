@@ -94,10 +94,21 @@ const usePayStub = (month: Month) => {
 
   return data.data.data;
 };
+const useDailySchedule = (date: string, companyId?: CompanyId) => {
+  const { data } = useQuery({
+    queryKey: keys.dailySchedule(date, companyId),
+    queryFn: () => arbaguette.getDailySchedule(date, companyId),
+  });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
 
 export {
   useAccountBalance,
   useCrewMemberList,
+  useDailySchedule,
   useEmailCheck,
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,

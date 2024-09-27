@@ -158,9 +158,27 @@ interface GetPayStubResponseData {
   salaryDate: SalaryDate;
 }
 
-interface ErrorResponse {
-  code: number;
-  message: string;
+type TotalCount = number;
+type NormalCount = number;
+type AbsentCount = number;
+type YetCount = number;
+type Status = 'NORMAL' | 'LATE' | 'ABSENT' | 'EARLY' | null;
+
+interface CrewSchedule {
+  name: CrewName;
+  profileImage: ProfileImage;
+  tel: Tel;
+  startTime: StartTime;
+  endTime: EndTime;
+  status: Status;
+}
+
+interface GetDailyScheduleResponseData {
+  totalCount: TotalCount;
+  normalCount: NormalCount;
+  absentCount: AbsentCount;
+  yetCount: YetCount;
+  crews: CrewSchedule[];
 }
 
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
@@ -177,3 +195,4 @@ type GetMonthlyEstimatedSalaryResponse = ArbaguetteResponse<Money>;
 type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
 type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
+type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;

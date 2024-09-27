@@ -12,6 +12,7 @@ const keys = {
   email: (email: Email) => [...keys.common(), 'email', email],
   bank: () => [...keys.common(), 'bank'],
   balance: () => [...keys.bank(), 'balance'],
+  dailySchedule: (date: string, companyId?: CompanyId) => [...keys.common(), 'dailySchedule', date, companyId],
 };
 
 export default keys;
