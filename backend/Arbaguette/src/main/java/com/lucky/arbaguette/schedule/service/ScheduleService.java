@@ -21,6 +21,7 @@ import com.lucky.arbaguette.schedule.dto.response.*;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
 import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -142,6 +143,18 @@ public class ScheduleService {
                     });
             currentDate = currentDate.plusDays(1);
         }
+    }
+
+    @Scheduled(cron = "0 0 0/1 * * *")
+    public void autoAbsenceProcessing() {
+        // 지금 status가 null 이면서 지금시간에 퇴근시간이 지난거 찾기.
+        List<Schedule> schedules = scheduleRepository.findByEndTimeBeforeAndStatusIsNull(LocalDateTime.now());
+
+        // 상태를 ABSENT로 변경
+        for (Schedule schedule : schedules) {
+            schedule.markAsAbsent();
+        }
+
     }
 
     public MonthlyScheduleResponse getMonthlySchedules(CustomUserDetails customUserDetails, int month, int companyId) {
