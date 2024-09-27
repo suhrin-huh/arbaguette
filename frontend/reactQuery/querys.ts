@@ -30,14 +30,12 @@ const useCrewMemberList = () => {
  * 당월 누적 급여를 가져오는 쿼리 훅
  */
 const useMonthlyAccumulatedSalary = () => {
-  const { data, ...queryData } = useQuery({
+  const { data } = useQuery({
     queryKey: keys.accumulatedSalary(),
     queryFn: () => arbaguette.getMonthlyAccumulatedSalary(),
   });
 
-  const accumulatedSalary = data?.data.data || 0;
-
-  return { accumulatedSalary, ...queryData };
+  return data?.data.data || 0;
 };
 
 /**

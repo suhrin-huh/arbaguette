@@ -3,13 +3,15 @@ import { router } from 'expo-router';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
 import Screen from '@/components/common/Screen';
 import NfcCard from '@/components/crew/Card/NfcCard';
+import SalaryCard from '@/components/crew/Card/SalaryCard';
 import TimeCard from '@/components/crew/Card/TimeCard';
-import { useNearCommuteInfo, usePayStub } from '@/reactQuery/querys';
+import { useMonthlyAccumulatedSalary, useNearCommuteInfo, usePayStub } from '@/reactQuery/querys';
 
 const CrewMainScreen = () => {
   const prevMonth = new Date().getMonth();
   const nearCommuteInfo = useNearCommuteInfo();
   const prevMonthPayCheck = usePayStub(prevMonth);
+  const accumulatedSalary = useMonthlyAccumulatedSalary();
 
   const handlePressNfcCard = () => {
     router.push('/crew/authorized/main/modal');
@@ -27,6 +29,7 @@ const CrewMainScreen = () => {
           allowance={prevMonthPayCheck.originSalary}
         />
       )}
+      {!!accumulatedSalary && <SalaryCard salary={accumulatedSalary} />}
     </Screen>
   );
 };
