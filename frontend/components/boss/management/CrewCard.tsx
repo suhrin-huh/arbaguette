@@ -15,7 +15,7 @@ interface CrewCardProps {
   day: Weekday[];
   type: CrewCardType;
   name?: string;
-  salary?: string;
+  salary?: number;
   pressHandler?: () => void;
 }
 
