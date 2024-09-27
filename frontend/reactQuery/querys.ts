@@ -27,7 +27,7 @@ const useCompanyList = () => {
 };
 
 /**
- * 크루 리스트를 가져오는 쿼리 훅
+ * 알바생 리스트를 가져오는 쿼리 훅
  */
 const useCrewMemberList = () => {
   const { data } = useQuery({ queryKey: keys.crewList(), queryFn: () => arbaguette.getCrewMemberList() });
@@ -35,6 +35,19 @@ const useCrewMemberList = () => {
   const crewList = data?.data.data.crews || [];
 
   return { crewList };
+};
+
+/**
+ * 알바생 상세 정보를 가져오는 쿼리 훅
+ */
+const useCrewMemeberDetail = (crewId: CrewId) => {
+  const { data } = useQuery({
+    queryKey: keys.crewDetail(crewId),
+    queryFn: () => arbaguette.getCrewMemberDetail(crewId),
+  });
+
+  const crewDetail = data?.data.data;
+  return { crewDetail };
 };
 
 /**
