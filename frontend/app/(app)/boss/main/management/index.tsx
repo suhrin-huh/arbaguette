@@ -45,6 +45,10 @@ const BossManagementScreen = () => {
   const pushRouteHandler = (id: number) => {
     router.push(`/boss/main/management/detail/${id}`);
   };
+
+  const addCrewHandler = () => {
+    router.push('/boss/main/management/register');
+  };
   return (
     <InnerContainer
       showsVerticalScrollIndicator={false}
@@ -58,7 +62,7 @@ const BossManagementScreen = () => {
         <MonthButtonArea>
           <MonthBar year={2222} month={8} />
           <Button
-            onPress={() => console.log('모두 송금')}
+            onPress={addCrewHandler}
             size="hug"
             buttonStyle={{ backgroundColor: Colors.GRAY[2], borderRadius: 18, height: 56 }}>
             <ButtonText>직원 추가</ButtonText>
