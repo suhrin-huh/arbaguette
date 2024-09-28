@@ -25,7 +25,7 @@ const CrewMainScreen = () => {
     <Screen viewOption={{ style: { gap: 10 } }}>
       {nearCommuteInfo && <TimeCard {...nearCommuteInfo} />}
       <NfcCard onPress={handlePressNfcCard} />
-      <AttendanceStatusCard />
+      {dailySchedule && <AttendanceStatusCard dayScheduleData={dailySchedule.crews} />}
       {prevMonthPayCheck && (
         <SalaryChartCard
           title="저번달 받은 임금"
