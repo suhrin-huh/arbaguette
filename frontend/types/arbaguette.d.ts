@@ -36,6 +36,10 @@ interface WorkingDay {
   endTime: Time;
 }
 
+interface WorkingDayInfo extends WorkingDay {
+  id: number;
+}
+
 interface LoginForm {
   email: Email;
   password: Password;
