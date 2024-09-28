@@ -9,7 +9,7 @@ import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import TitleDropdown from '@/components/common/Header/TitleDropdown';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
 import ContainerView from '@/components/common/ScreenContainer';
-import { useDaySchedule } from '@/reactQuery/querys';
+import { useDailySchedule } from '@/reactQuery/querys';
 
 const InnerContainer = styled(ScrollView)(({ theme }) => ({
   flexGrow: 1,
@@ -27,9 +27,10 @@ function todayFormatter() {
 
 const MainScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { daySchedule } = useDaySchedule(todayFormatter(), Number(id));
+  const daySchedule = useDailySchedule(todayFormatter(), Number(id));
   console.log(daySchedule);
-  const crewScheduleInfos = daySchedule?.crewScheduleInfos;
+  const crewScheduleInfos = daySchedule?.crews;
+
   return (
     <InnerContainer
       showsVerticalScrollIndicator={false}
@@ -63,7 +64,7 @@ const MainScreen = () => {
         ) : (
           <NoneCard title="금일 출근 예정 직원이 없습니다." fontSize={16} />
         )}
-        <SalaryChartCard title="이번달 예상 지출" />
+        <SalaryChartCard title="이번달 예상 지출" originSalary={0} tax={0} allowance={0} />
       </ContainerView>
     </InnerContainer>
   );

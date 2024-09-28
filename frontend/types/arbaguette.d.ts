@@ -141,7 +141,7 @@ interface Receipt {
   totalTime: WorkHours;
 }
 
-type WorkStatus = 'NORMAL' | 'LATE' | 'EARLY' | 'ABSENT';
+type WorkStatus = string;
 
 interface CommuteCheckResponseData {
   workStatus: WorkStatus;
@@ -157,26 +157,42 @@ interface NearCommuteInfoResponseData {
   endTime: EndTime;
 }
 
-interface GetDayScheduleResponseData {
-  totalCount: number;
-  normalCount: number;
-  absentCount: number;
-  yetCount: number;
-  crewScheduleInfos: CrewScheduleInfo[];
+type OriginSalary = number;
+type Tax = number;
+type Allowance = number;
+type TotalTime = number;
+type SalaryDate = number;
+
+interface GetPayStubResponseData {
+  originSalary: OriginSalary;
+  tax: Tax;
+  allowance: Allowance;
+  totalTime: TotalTime;
+  companyName: CompanyName;
+  salaryDate: SalaryDate;
 }
 
-interface ErrorResponse {
-  code: number;
-  message: string;
-}
+type TotalCount = number;
+type NormalCount = number;
+type AbsentCount = number;
+type YetCount = number;
+type Status = 'NORMAL' | 'LATE' | 'ABSENT' | 'EARLY' | null;
 
-interface CrewScheduleInfo {
+interface CrewSchedule {
   name: CrewName;
   profileImage: ProfileImage;
+  tel: Tel;
   startTime: StartTime;
   endTime: EndTime;
-  status: WorkStatus;
-  tel: Tel;
+  status: Status;
+}
+
+interface GetDailyScheduleResponseData {
+  totalCount: TotalCount;
+  normalCount: NormalCount;
+  absentCount: AbsentCount;
+  yetCount: YetCount;
+  crews: CrewSchedule[];
 }
 
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
@@ -192,4 +208,5 @@ type GetMonthlyAccumulatedSalaryResponse = ArbaguetteResponse<Money>;
 type GetMonthlyEstimatedSalaryResponse = ArbaguetteResponse<Money>;
 type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
-type GetDayScheduleResponse = ArbaguetteResponse<GetDayScheduleResponseData>;
+type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
+type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;

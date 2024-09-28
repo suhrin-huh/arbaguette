@@ -10,7 +10,7 @@ import Profile from '@/components/common/Profile';
 export interface ProfileCardProps extends ProfileProps, PhoneProps {
   startTime: Time;
   endTime: Time;
-  status: WorkStatus;
+  status: Status;
 }
 
 const ProfileContainer = Styled.View({ flexDirection: 'row' });

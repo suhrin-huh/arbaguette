@@ -8,6 +8,14 @@ export default {
     return minute ? `${month}월 ${day}일 ${hour}시 ${minute}분` : `${month}월 ${day}일 ${hour}시 `;
   },
 
+  dateToString: (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  },
+
   dateToHourAndMinute: (date: Date) => {
     const hour = String(date.getHours());
     const minute = String(date.getMinutes()).padStart(2, '0');
