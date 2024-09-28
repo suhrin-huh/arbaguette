@@ -6,16 +6,18 @@ const INITIAL_STATE: Omit<AuthSlice, 'login' | 'logout'> = {
   accessToken: '',
   refreshToken: '',
   role: null,
+  crewId: null,
   crewStatus: null,
 };
 
 const createAuthSlice: StateCreator<RootState, [], [], AuthSlice> = (set) => ({
   ...INITIAL_STATE,
   login: (authData: LoginResponseData) => {
-    const { crewStatus, role } = jwtDecode<AccessTokenPayload>(authData.accessToken);
+    const { crewId, crewStatus, role } = jwtDecode<AccessTokenPayload>(authData.accessToken);
     set({
       ...authData,
       isLoggedIn: true,
+      crewId,
       role,
       crewStatus,
     });

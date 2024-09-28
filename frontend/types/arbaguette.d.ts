@@ -11,6 +11,7 @@ type CrewStatus = 'UNREGISTERED' | 'UNSIGNED' | 'SIGNED';
 
 interface AccessTokenPayload {
   role: Role;
+  crewId: CrewId;
   crewStatus: CrewStatus;
   email: Email;
 }
@@ -202,7 +203,7 @@ interface DailySchedule {
 
 interface MonthlySchedule {
   date: number;
-  dailySchedule: DailySchedule[];
+  dailySchedules: DailySchedule[];
 }
 
 interface GetMonthlyScheduleResponseData {
