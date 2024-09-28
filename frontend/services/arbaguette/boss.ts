@@ -51,6 +51,6 @@ export default {
    * @param companyId 조회할 사업장 아이디
    */
   getDaySchedule: async (date: string, companyId: CompanyId) => {
-    return axios.get<GetDayScheduleResponse>(`/api/schedule/day?companyId=${companyId}&date=${date}`);
+    return axios.get<GetDailyScheduleResponseData>(`/api/schedule/day?companyId=${companyId}&date=${date}`);
   },
 };
