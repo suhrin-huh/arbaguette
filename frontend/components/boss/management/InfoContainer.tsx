@@ -2,10 +2,11 @@ import styled from '@emotion/native';
 import React from 'react';
 
 const Container = styled.View(({ theme }) => ({
-  flex: 1,
-  backgroundColor: theme.color.WHITE,
   gap: 20,
   paddingHorizontal: 10,
+  width: '100%',
+  height: 180,
+  justifyContent: 'center',
 }));
 
 const InfoHeader = styled.View(({ theme }) => ({
