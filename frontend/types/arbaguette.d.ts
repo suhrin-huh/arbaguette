@@ -191,6 +191,24 @@ interface GetDailyScheduleResponseData {
   crews: CrewSchedule[];
 }
 
+interface DailySchedule {
+  crewId: CrewId;
+  name: CrewName;
+  scheduleId: number;
+  SubstituteRequest: boolean;
+  startTime: StartTime;
+  endTime: EndTime;
+}
+
+interface MonthlySchedule {
+  date: number;
+  dailySchedule: DailySchedule[];
+}
+
+interface GetMonthlyScheduleResponseData {
+  monthlyScheduleList: MonthlySchedule[];
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type EmailCheckResponse = ArbaguetteResponse<void>;
@@ -206,3 +224,4 @@ type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
 type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
 type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;
+type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseData>;
