@@ -1,21 +1,22 @@
 import Styled from '@emotion/native';
 
-type AttendanceStatus = 'work' | 'late' | 'rest';
-
 interface StatusProps {
-  status: AttendanceStatus;
+  status: WorkStatus | null;
 }
 
 const StatusText = Styled.Text<StatusProps>(({ theme, status }) => ({
-  color: status === 'work' ? theme.color.PRIMARY : status === 'late' ? theme.color.DANGER : theme.color.GRAY['3'],
+  color: status === 'NORMAL' ? theme.color.PRIMARY : status === 'LATE' ? theme.color.DANGER : theme.color.GRAY['3'],
 }));
 
 const Status = ({ status }: StatusProps) => {
-  const text = {
-    work: '근무중',
-    late: '지각',
-    rest: '휴식중',
-  }[status];
+  const text = status
+    ? {
+        NORMAL: '근무중',
+        LATE: '지각',
+        ABSENT: '결근',
+        EARLY: '조퇴',
+      }[status]
+    : '미출근';
 
   return <StatusText status={status}>{text}</StatusText>;
 };

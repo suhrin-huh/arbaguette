@@ -13,8 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static com.lucky.arbaguette.schedule.domain.StatusType.LATE;
-import static com.lucky.arbaguette.schedule.domain.StatusType.NORMAL;
+import static com.lucky.arbaguette.schedule.domain.StatusType.*;
 
 @Entity
 @Getter
@@ -80,5 +79,9 @@ public class Schedule {
         this.crew = crew;
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public void markAsAbsent() {
+        this.status = ABSENT;
     }
 }

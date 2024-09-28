@@ -32,15 +32,23 @@ const StatusText = styled.Text(({ theme }) => ({
   color: theme.color.WHITE,
 }));
 
-const DateStatusCard = () => {
+const DateStatusCard = ({ dayScheduleData }: { dayScheduleData?: GetDayScheduleResponseData }) => {
+  const { totalCount, normalCount, absentCount, yetCount } = dayScheduleData || {};
+
+  const dateFomatter = () => {
+    const date = new Date();
+    const day = date.getDay();
+    const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+    return `${date.getMonth() + 1}월 ${date.getDate()}일(${dayOfWeek[day]})`;
+  };
   return (
     <CardContainer>
       <InnerContainer>
-        <StatusTitle>9월 2일(수)</StatusTitle>
+        <StatusTitle>{dateFomatter()}</StatusTitle>
         <StatusBox>
-          <StatusText>총 4명</StatusText>
-          <StatusText>출근 2명</StatusText>
-          <StatusText>미출근 2명</StatusText>
+          <StatusText>총 {totalCount || 0}명</StatusText>
+          <StatusText>출근 {normalCount || 0}명</StatusText>
+          <StatusText>미출근 {yetCount || 0}명</StatusText>
         </StatusBox>
       </InnerContainer>
     </CardContainer>

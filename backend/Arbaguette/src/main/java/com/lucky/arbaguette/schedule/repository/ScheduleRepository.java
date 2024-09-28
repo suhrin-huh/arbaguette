@@ -52,4 +52,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     List<Schedule> findByStartTimeAndCrewIdIn(@Param("date") LocalDate date, @Param("crewIds") List<Integer> crewIds);
 
     Optional<Schedule> findByScheduleIdAndCrew(int scheduleId, Crew crew);
+
+    List<Schedule> findByEndTimeBeforeAndStatusIsNull(LocalDateTime now);
 }

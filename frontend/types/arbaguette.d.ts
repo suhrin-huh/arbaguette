@@ -26,6 +26,9 @@ type Month = number;
 type Weekday = number;
 type Time = string;
 type WorkHours = number;
+type DateString = string;
+
+type TaxType = 'INCOME' | 'NONE' | 'INSU';
 
 interface WorkingDay {
   weekday: Weekday;
@@ -93,6 +96,7 @@ interface Company {
 }
 
 type CrewId = number;
+type Period = number;
 
 interface Crew {
   id: CrewId;
@@ -101,12 +105,18 @@ interface Crew {
   salary: Money;
 }
 
+interface CrewWithWeekdays extends Crew {
+  weekdays: Weekday[];
+  period: Period;
+  endDate: DateString;
+}
+
 interface GetCompanyListResponseData {
   companies: Company[];
 }
 
 interface GetCrewMemberListResponseData {
-  crews: Crew[];
+  crews: CrewWithWeekdays[];
 }
 
 interface GetCrewMemberDetailResponseData {
