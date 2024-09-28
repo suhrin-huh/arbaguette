@@ -42,8 +42,8 @@ const CrewCardArea = styled.View(({ theme }) => ({
 const BossManagementScreen = () => {
   const { crewList } = useCrewMemberList();
   const router = useRouter();
-  const pushRouteHandler = (id: number) => {
-    router.push(`/boss/main/management/detail/${id}`);
+  const pushRouteHandler = (crewId: number) => {
+    router.push(`/boss/main/management/detail/${crewId}`);
   };
 
   const addCrewHandler = () => {

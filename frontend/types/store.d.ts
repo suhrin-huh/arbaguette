@@ -24,7 +24,10 @@ interface AuthSlice {
   logout: () => void;
 }
 
+type Step1 = 'name' | 'date' | 'time' | 'next';
+
 interface RegistCrewSlice {
+  step1: Step1;
   registName: CrewName;
   registTel: Tel;
   registCrewId: CrewId;
@@ -34,7 +37,9 @@ interface RegistCrewSlice {
   registTaxType: TaxType;
   registStartDate: DateString;
   registEndDate: DateString;
-  registWorkingDayInfoList: WorkingDay[];
+  registWorkingDayInfoId: number;
+  registWorkingDayInfoList: WorkingDayInfo[];
+  setStep1: (step: Step1) => void;
   setRegistName: (name: CrewName) => void;
   setRegistTel: (tel: Tel) => void;
   setRegistCrewId: (crewId: CrewId) => void;
@@ -44,7 +49,8 @@ interface RegistCrewSlice {
   setRegistTaxType: (taxType: TaxType) => void;
   setRegistStartDate: (startDate: DateString) => void;
   setRegistEndDate: (endDate: DateString) => void;
-  setRegistWorkingDayInfoList: (workingDayInfoList: WorkingDay[]) => void;
+  setRegistWorkingDayInfoList: (workingDayInfoList: WorkingDayInfo[]) => void;
+  setRegistWorkingDayInfoId: (workingDayInfoId: number) => void;
 }
 
 type RootState = CertifiedPaperSlice & CompanyInfoSlice & AuthSlice & RegistCrewSlice;
