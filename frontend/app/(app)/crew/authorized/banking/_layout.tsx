@@ -5,6 +5,7 @@ const BankingLayout = () => {
     <Stack initialRouteName="banking" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="certification" />
+      <Stack.Screen name="transaction" />
     </Stack>
   );
 };
