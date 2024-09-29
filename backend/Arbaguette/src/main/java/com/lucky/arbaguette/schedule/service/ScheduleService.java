@@ -34,13 +34,12 @@ import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
 import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
-
-import org.springframework.scheduling.annotation.Scheduled;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,7 +106,11 @@ public class ScheduleService {
             throw new NotFoundException("근무 내역을 찾을 수 없습니다.");
         }
 
-        List<ScheduleStatusCount> statusCounts = scheduleRepository.countByStatus();
+        ScheduleStatusCount statusCounts = scheduleRepository.countByStatus(
+                crew.getCrewId(),
+                getStartOfMonth(date),
+                getEndOfMonth(date)
+        );
 
         return ScheduleCommutesResponse.from(
                 crew,
