@@ -114,17 +114,15 @@ public class ScheduleService {
                 .orElseThrow(() -> new UnAuthorizedException("사용자를 찾을 수 없습니다."));
         Contract contract = contractRepository.findByCrew(crew)
                 .orElseThrow(() -> new NotFoundException("근로 계약서를 찾을 수 없습니다."));
-        if (contract.notInWorkingPeriod()) {
+        //일하기로 시작한 달과 현재 달이 다르면 현재 달에 해당하는 스케줄을 만들 필요 없음
+        if (contract.nowMonthNotInWorkingPeriod()) {
             return;
         }
         List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
 
         LocalDate now = LocalDate.now();
-        LocalDate firstDayOfMonth = now.withDayOfMonth(1);
-        LocalDate lastDayOfMonth = now.withDayOfMonth(now.lengthOfMonth());
-
-        LocalDate startDate = contract.getStartDate().isAfter(firstDayOfMonth) ? contract.getStartDate() : firstDayOfMonth;
-        LocalDate endDate = contract.getEndDate().isBefore(lastDayOfMonth) ? contract.getEndDate() : lastDayOfMonth;
+        LocalDate startDate = contract.getStartDate();
+        LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth());
 
         while ((!startDate.isAfter(endDate))) {
             //람다 내부에서 사용되는 변수는 final 이어야함
@@ -136,9 +134,11 @@ public class ScheduleService {
                         //스케줄 생성
                         LocalDateTime startTime = LocalDateTime.of(dateForSchedule, workingDay.getStartTime());
                         LocalDateTime endTime = LocalDateTime.of(dateForSchedule, workingDay.getEndTime());
-
+                        if (scheduleRepository.existsByCrewAndStartTime(crew, startTime)) {
+                            return;
+                        }
                         Schedule schedule = Schedule.builder()
-                                .crew(contract.getCrew())
+                                .crew(crew)
                                 .startTime(startTime)
                                 .endTime(endTime)
                                 .build();
@@ -157,16 +157,13 @@ public class ScheduleService {
             if (contract.notInWorkingPeriod()) {
                 return;
             }
-
             //근로계약서 안의 startDate ~ endDate 기간 내에 근무계약일 요일,시간에 해당하는 스케줄을 만든다.
             List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
-            LocalDate now = LocalDate.now();
-            LocalDate firstDayOfMonth = now.withDayOfMonth(1); //이번 달의 첫 날
-            LocalDate lastDayOfMonth = now.withDayOfMonth(now.lengthOfMonth()); //이번 달의 마지막 날
 
             //이번 달의 스케줄 만들 첫날과 끝날 정하기
-            LocalDate startDate = contract.getStartDate().isAfter(firstDayOfMonth) ? contract.getStartDate() : firstDayOfMonth;
-            LocalDate endDate = contract.getEndDate().isBefore(lastDayOfMonth) ? contract.getEndDate() : lastDayOfMonth;
+            LocalDate now = LocalDate.now();
+            LocalDate startDate = now.withDayOfMonth(1);//이번 달의 첫 날
+            LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth()); //이번 달의 마지막 날
 
             while ((!startDate.isAfter(endDate))) {
                 //람다 내부에서 사용되는 변수는 final 이어야함
@@ -178,8 +175,8 @@ public class ScheduleService {
                             //스케줄 생성
                             LocalDateTime startTime = LocalDateTime.of(dateForSchedule, workingDay.getStartTime());
                             LocalDateTime endTime = LocalDateTime.of(dateForSchedule, workingDay.getEndTime());
-                            if (scheduleRepository.existsByCrewAndStartTimeAndOutTime(contract.getCrew(), startTime, endTime)) {
-
+                            if (scheduleRepository.existsByCrewAndStartTime(contract.getCrew(), startTime)) {
+                                return;
                             }
                             Schedule schedule = Schedule.builder()
                                     .crew(contract.getCrew())
