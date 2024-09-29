@@ -135,6 +135,22 @@ const useDailySchedule = (date: string, companyId?: CompanyId) => {
   return data.data.data;
 };
 
+/**
+ * 월별 스케줄을 가져오는 쿼리 훅
+ * @param month 조회할 월
+ * @param companyId 사업장 ID
+ */
+const useMonthlySchedule = (month: Month, companyId?: CompanyId) => {
+  const { data } = useQuery({
+    queryKey: keys.monthlySchedule(month, companyId),
+    queryFn: () => arbaguette.getMonthlySchedule(month, companyId),
+  });
+
+  if (!data) return null;
+
+  return data.data.data.monthlyScheduleList;
+};
+
 export {
   useAccountBalance,
   useCompanyList,
@@ -144,6 +160,7 @@ export {
   useEmailCheck,
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,
+  useMonthlySchedule,
   useNearCommuteInfo,
   usePayStub,
 };

@@ -19,6 +19,7 @@ interface AuthSlice {
   accessToken: string;
   refreshToken: string;
   role: null | 'BOSS' | 'CREW';
+  crewId: null | CrewId;
   crewStatus: null | CrewStatus;
   login: (authData: LoginResponseData) => void;
   logout: () => void;

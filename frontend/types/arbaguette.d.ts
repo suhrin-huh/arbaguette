@@ -11,6 +11,7 @@ type CrewStatus = 'UNREGISTERED' | 'UNSIGNED' | 'SIGNED';
 
 interface AccessTokenPayload {
   role: Role;
+  crewId: CrewId;
   crewStatus: CrewStatus;
   email: Email;
 }
@@ -195,6 +196,32 @@ interface GetDailyScheduleResponseData {
   crews: CrewSchedule[];
 }
 
+interface DailySchedule {
+  crewId: CrewId;
+  name: CrewName;
+  scheduleId: number;
+  SubstituteRequest: boolean;
+  startTime: StartTime;
+  endTime: EndTime;
+}
+
+interface MonthlySchedule {
+  date: number;
+  dailySchedules: DailySchedule[];
+}
+
+interface GetMonthlyScheduleResponseData {
+  monthlyScheduleList: MonthlySchedule[];
+}
+
+type ScheduleId = number;
+type SubstituteId = number;
+
+interface PostRequestSubstituteResponseData {
+  substituteId: SubstituteId;
+  scheduleId: ScheduleId;
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type EmailCheckResponse = ArbaguetteResponse<void>;
@@ -210,3 +237,5 @@ type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
 type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
 type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;
+type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseData>;
+type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
