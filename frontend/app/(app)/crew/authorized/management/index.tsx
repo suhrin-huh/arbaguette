@@ -54,7 +54,7 @@ const CrewManagementScreen = () => {
         late={workHistory.late}
         earlyLeave={workHistory.earlyLeave}
       />
-      <WorkStatusTable />
+      <WorkStatusTable commuteData={workHistory.commutes} />
     </Screen>
   );
 };
