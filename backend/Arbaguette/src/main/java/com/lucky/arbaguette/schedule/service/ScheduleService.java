@@ -130,35 +130,11 @@ public class ScheduleService {
         if (contract.nowMonthNotInWorkingPeriod()) {
             return;
         }
-        List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
-
         LocalDate now = LocalDate.now();
-        LocalDate startDate = contract.getStartDate();
-        LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth());
+        LocalDate startDate = contract.getStartDate(); //계약 첫 날
+        LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth()); //이번달의 마지막 날
 
-        while ((!startDate.isAfter(endDate))) {
-            //람다 내부에서 사용되는 변수는 final 이어야함
-            final LocalDate dateForSchedule = startDate;
-            int currentWeekDay = (dateForSchedule.getDayOfWeek().getValue() % 7) - 1;
-            workingDays.stream()
-                    .filter(workingDay -> workingDay.getId().getWeekday() == currentWeekDay)
-                    .forEach(workingDay -> {
-                        //스케줄 생성
-                        LocalDateTime startTime = LocalDateTime.of(dateForSchedule, workingDay.getStartTime());
-                        LocalDateTime endTime = LocalDateTime.of(dateForSchedule, workingDay.getEndTime());
-                        if (scheduleRepository.existsByCrewAndStartTime(crew, startTime)) {
-                            return;
-                        }
-                        Schedule schedule = Schedule.builder()
-                                .crew(crew)
-                                .startTime(startTime)
-                                .endTime(endTime)
-                                .build();
-                        scheduleRepository.save(schedule);
-                    });
-            startDate = startDate.plusDays(1);
-        }
-
+        saveScheduleInContractPeriod(contract, startDate, endDate);
     }
 
     @Scheduled(cron = "0 0 0 1 * *")
@@ -169,36 +145,38 @@ public class ScheduleService {
             if (contract.notInWorkingPeriod()) {
                 return;
             }
-            //근로계약서 안의 startDate ~ endDate 기간 내에 근무계약일 요일,시간에 해당하는 스케줄을 만든다.
-            List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
-
             //이번 달의 스케줄 만들 첫날과 끝날 정하기
             LocalDate now = LocalDate.now();
             LocalDate startDate = now.withDayOfMonth(1);//이번 달의 첫 날
             LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth()); //이번 달의 마지막 날
 
-            while ((!startDate.isAfter(endDate))) {
-                //람다 내부에서 사용되는 변수는 final 이어야함
-                final LocalDate dateForSchedule = startDate;
-                int currentWeekDay = (dateForSchedule.getDayOfWeek().getValue() % 7) - 1;
-                workingDays.stream()
-                        .filter(workingDay -> workingDay.getId().getWeekday() == currentWeekDay)
-                        .forEach(workingDay -> {
-                            //스케줄 생성
-                            LocalDateTime startTime = LocalDateTime.of(dateForSchedule, workingDay.getStartTime());
-                            LocalDateTime endTime = LocalDateTime.of(dateForSchedule, workingDay.getEndTime());
-                            if (scheduleRepository.existsByCrewAndStartTime(contract.getCrew(), startTime)) {
-                                return;
-                            }
-                            Schedule schedule = Schedule.builder()
-                                    .crew(contract.getCrew())
-                                    .startTime(startTime)
-                                    .endTime(endTime)
-                                    .build();
-                            scheduleRepository.save(schedule);
-                        });
-                startDate = startDate.plusDays(1);
-            }
+            saveScheduleInContractPeriod(contract, startDate, endDate);
+        }
+    }
+    private void saveScheduleInContractPeriod(Contract contract, LocalDate startDate, LocalDate endDate) {
+        //근로계약서 안의 startDate ~ endDate 기간 내에 근무계약일 요일,시간에 해당하는 스케줄을 만든다.
+        List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
+        while ((!startDate.isAfter(endDate))) {
+            //람다 내부에서 사용되는 변수는 final 이어야함
+            final LocalDate dateForSchedule = startDate;
+            int currentWeekDay = (dateForSchedule.getDayOfWeek().getValue() % 7) - 1;
+            workingDays.stream()
+                    .filter(workingDay -> workingDay.getId().getWeekday() == currentWeekDay)
+                    .forEach(workingDay -> {
+                        //스케줄 생성
+                        LocalDateTime startTime = LocalDateTime.of(dateForSchedule, workingDay.getStartTime());
+                        LocalDateTime endTime = LocalDateTime.of(dateForSchedule, workingDay.getEndTime());
+                        if (scheduleRepository.existsByCrewAndStartTime(contract.getCrew(), startTime)) {
+                            return;
+                        }
+                        Schedule schedule = Schedule.builder()
+                                .crew(contract.getCrew())
+                                .startTime(startTime)
+                                .endTime(endTime)
+                                .build();
+                        scheduleRepository.save(schedule);
+                    });
+            startDate = startDate.plusDays(1);
         }
     }
 
