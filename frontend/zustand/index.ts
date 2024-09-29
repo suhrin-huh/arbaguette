@@ -5,6 +5,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import createAuthSlice from '@/zustand/auth/authSlice';
 import { createCertifiedPaperSlice } from '@/zustand/boss/certifiedPaperSlice';
 import { createCompanyInfoSlice } from '@/zustand/boss/companyInfoSlice';
+import { createRegistCrewSlice } from '@/zustand/boss/registCrewSlice';
 
 const useRootStore = create<RootState>()(
   persist(
@@ -12,6 +13,7 @@ const useRootStore = create<RootState>()(
       ...createAuthSlice(...a),
       ...createCompanyInfoSlice(...a),
       ...createCertifiedPaperSlice(...a),
+      ...createRegistCrewSlice(...a),
     }),
     {
       name: 'z',
@@ -21,6 +23,8 @@ const useRootStore = create<RootState>()(
         refreshToken: state.refreshToken,
         isLoggedIn: state.isLoggedIn,
         role: state.role,
+        crewId: state.crewId,
+        crewStatus: state.crewStatus,
       }),
     },
   ),

@@ -1,11 +1,12 @@
 import styled from '@emotion/native';
 import React from 'react';
 
+import Colors from '@/constants/Colors';
+
 const Container = styled.View(({ theme }) => ({
   width: 28,
   height: 28,
   borderRadius: 50,
-  backgroundColor: theme.color.SECONDARY,
   justifyContent: 'center',
   alignItems: 'center',
 }));
@@ -23,11 +24,12 @@ const dayOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
 
 interface DayCircleProps {
   day: Weekday;
+  color?: string;
 }
 
-const DayCircle = ({ day }: DayCircleProps) => {
+const DayCircle = ({ day, color = Colors.SECONDARY }: DayCircleProps) => {
   return (
-    <Container>
+    <Container style={{ backgroundColor: color }}>
       <CircleText>{dayOfWeek[day]}</CircleText>
     </Container>
   );

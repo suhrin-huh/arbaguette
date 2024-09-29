@@ -3,16 +3,16 @@ import ProfileCard from '@/components/common/AttendanceStatusCard/ProfileCard';
 import CardContainer from '@/components/common/CardContainer';
 
 interface AttendanceStatusCardProps {
-  profileCardsData?: ProfileCardProps[];
+  dayScheduleData?: ProfileCardProps[];
 }
 
-const AttendanceStatusCard = ({ profileCardsData }: AttendanceStatusCardProps) => {
-  if (!profileCardsData || !profileCardsData.length) return null;
+const AttendanceStatusCard = ({ dayScheduleData }: AttendanceStatusCardProps) => {
+  if (!dayScheduleData || !dayScheduleData.length) return null;
 
   return (
     <CardContainer style={{ gap: 20 }}>
-      {profileCardsData.map((profileCardData, index) => (
-        <ProfileCard key={`${index}-${profileCardData}`} {...profileCardData} />
+      {dayScheduleData.map((daySchedule, index) => (
+        <ProfileCard key={`${index}-${daySchedule}`} {...daySchedule} />
       ))}
     </CardContainer>
   );

@@ -50,7 +50,13 @@ public class SubstituteService {
         return SubstituteSaveResponse.of(subStitute);
     }
 
-    public SubstitutesResponse getSubstitutes(int companyId) {
+    public SubstitutesResponse getSubstitutes(CustomUserDetails customUserDetails, int companyId) {
+        if (companyId == 0) {
+            companyId = crewRepository.findByEmail(customUserDetails.getUsername())
+                    .orElseThrow(() -> new NotFoundException("해당하는 회사를 찾을 수 없습니다."))
+                    .getCompany().getCompanyId();
+        }
+
         if (!companyRepository.existsById(companyId)) {
             throw new NotFoundException("사업장을 찾을 수 없습니다.");
         }
