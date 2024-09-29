@@ -1,5 +1,6 @@
 import styled from '@emotion/native';
 import { useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import { ScrollView, StatusBar } from 'react-native';
 
 import CrewCard from '@/components/boss/management/CrewCard';
@@ -10,6 +11,7 @@ import LeftHeaderbar from '@/components/common/Header/LeftHeaderBar';
 import ContainerView from '@/components/common/ScreenContainer';
 import Colors from '@/constants/Colors';
 import { useCrewMemberList } from '@/reactQuery/querys';
+import useRootStore from '@/zustand';
 
 const InnerContainer = styled(ScrollView)(({ theme }) => ({
   flexGrow: 1,
@@ -40,6 +42,7 @@ const CrewCardArea = styled.View(({ theme }) => ({
 }));
 
 const BossManagementScreen = () => {
+  const { selectedCompanyName, selectedCompanyId, registCompanyId, setRegistCompanyId } = useRootStore();
   const { crewList } = useCrewMemberList();
   const router = useRouter();
   const pushRouteHandler = (crewId: number) => {
@@ -47,8 +50,14 @@ const BossManagementScreen = () => {
   };
 
   const addCrewHandler = () => {
+    setRegistCompanyId(selectedCompanyId);
     router.push('/boss/main/management/register');
   };
+
+  useEffect(() => {
+    router.replace('/boss/main/management');
+  }, []);
+
   return (
     <InnerContainer
       showsVerticalScrollIndicator={false}
@@ -58,7 +67,7 @@ const BossManagementScreen = () => {
       }}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.BLACK} />
       <ContainerView>
-        <LeftHeaderbar title="파리바게트 장덕점" right="bell" bgColor="background" />
+        <LeftHeaderbar title={selectedCompanyName} right="bell" bgColor="background" />
         <MonthButtonArea>
           <MonthBar year={2222} month={8} />
           <Button

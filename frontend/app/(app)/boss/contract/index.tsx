@@ -1,3 +1,4 @@
+import { useRoute } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, ScrollView } from 'react-native';
@@ -26,6 +27,8 @@ const ManagementRegisterScreen1 = () => {
     registWorkingDayInfoList,
     setRegistWorkingDayInfoId,
     setRegistWorkingDayInfoList,
+    setRegistCompanyId,
+    selectedCompanyId,
   } = useRootStore();
   const telFormat = registTel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
   const scrollViewRef = useRef(null);
@@ -45,14 +48,16 @@ const ManagementRegisterScreen1 = () => {
 
   useEffect(() => {
     // UI 구현용 더미데이터
+    const timer = setTimeout(() => setStep1('date'), 1000);
     setRegistWorkingDayInfoId(0);
     setRegistStartDate('근무 시작일');
     setRegistEndDate('근무 종료일');
     setIsReady(true); // 네비게이션이 준비되었음을 설정
     setRegistWorkingDayInfoList([]);
     setStep1('name');
+    setRegistCompanyId(selectedCompanyId);
 
-    return () => {};
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -63,7 +68,6 @@ const ManagementRegisterScreen1 = () => {
 
   // 애니메이션 코드. 나중에 커스텀 훅으로 뺄 것.
   useEffect(() => {
-    const timer = setTimeout(() => setStep1('date'), 1000);
     if (step1 === 'name') {
       Animated.parallel([
         Animated.timing(fadeAnimInfo, {
@@ -117,19 +121,22 @@ const ManagementRegisterScreen1 = () => {
         }),
       ]).start();
     }
-
-    return () => clearTimeout(timer);
   }, [step1]);
 
-  const routeBack = () => {
-    if (isReady) {
-      router.push('/boss/main/management/');
+  const pathRoute = (to: 'back' | 'next') => {
+    switch (to) {
+      case 'back':
+        router.push('/boss/main/management');
+        break;
+      case 'next':
+        router.push('/boss/contract/2');
+        break;
     }
   };
 
   return (
     <ContainerView style={{ backgroundColor: Colors.WHITE, paddingTop: 20 }}>
-      <CenterHeaderbar title="직원 정보 등록" right="none" onPressLeft={routeBack} />
+      <CenterHeaderbar title="계약 정보 등록" right="none" onPressLeft={() => pathRoute('back')} />
       <ScrollView
         ref={scrollViewRef}
         contentContainerStyle={{ flexGrow: 1, gap: 20, paddingBottom: 30 }}
@@ -150,12 +157,13 @@ const ManagementRegisterScreen1 = () => {
             <ContractScheduleBox />
           </Animated.View>
         )}
-        {step1 === 'next' ||
-          (registWorkingDayInfoList.length > 0 && (
-            <Animated.View style={{ opacity: fadeAnimButton, transform: [{ translateY: slideAnimButton }] }}>
-              <Button type="primary">다음</Button>
-            </Animated.View>
-          ))}
+        {step1 === 'next' && (
+          <Animated.View style={{ opacity: fadeAnimButton, transform: [{ translateY: slideAnimButton }] }}>
+            <Button type="primary" onPress={() => pathRoute('next')}>
+              다음
+            </Button>
+          </Animated.View>
+        )}
       </ScrollView>
     </ContainerView>
   );

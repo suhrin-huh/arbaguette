@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CompanyCard from '@/components/common/StoreCard';
 import Layout from '@/constants/Layout';
@@ -13,7 +13,7 @@ const ConfigScreen = () => {
     console.log('카드의 ID : ', card);
     router.push({
       pathname: '/(app)/boss/main/',
-      params: { id: card.companyId },
+      params: { id: card.companyId, name: card.name, address: card.address },
     });
   };
 

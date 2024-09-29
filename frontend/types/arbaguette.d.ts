@@ -58,6 +58,7 @@ interface SignUpForm {
 type CompanyName = string;
 type Address = string;
 type Representative = string;
+type CompanyAddress = string;
 
 interface CompanyRegisterForm {
   name: CompanyName;

@@ -1,5 +1,6 @@
 import styled from '@emotion/native';
 import Entypo from '@expo/vector-icons/Entypo';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import Modal from 'react-native-modal';
@@ -53,14 +54,13 @@ const NoneScheduleText = styled.Text(({ theme }) => ({
 }));
 
 const ContractScheduleBox = () => {
-  const [open, setOpen] = useState(false);
   const { registWorkingDayInfoList } = useRootStore();
   return (
     <ContractContainer>
       <InfoHeader>
         <InfoTitle>근무 일정</InfoTitle>
         <Button
-          onPress={() => setOpen(true)}
+          onPress={() => router.push('/(app)/boss/contract/DaySetModal')}
           type="primary"
           buttonStyle={{ width: 25, height: 25, paddingHorizontal: 0, borderRadius: 20 }}
           textStyle={{ fontSize: 12 }}>
@@ -77,24 +77,6 @@ const ContractScheduleBox = () => {
           <ScheduleAddCard key={info.id} data={info} />
         ))}
       </InfoContent>
-      <Modal
-        isVisible={open}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        animationInTiming={600} // 나타날 때 애니메이션 지속 시간 (밀리초)
-        animationOutTiming={600} // 사라질 때 애니메이션 지속 시간 (밀리초)
-        style={{ margin: 0, justifyContent: 'flex-end' }}
-        onBackdropPress={() => setOpen(false)}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            padding: 20,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-          }}>
-          <DayBottomSheet setOpen={setOpen} />
-        </View>
-      </Modal>
     </ContractContainer>
   );
 };
