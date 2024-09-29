@@ -1,11 +1,36 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import { router } from 'expo-router';
+import React, { useEffect } from 'react';
+import { ScrollView, Text, View } from 'react-native';
+
+import SignContractBox from '@/components/boss/management/SignContractBox';
+import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
+import ContainerView from '@/components/common/ScreenContainer';
+import Colors from '@/constants/Colors';
+import useRootStore from '@/zustand';
 
 const ManagementRegisterScreen3 = () => {
+  const {} = useRootStore();
+
+  const pathRoute = (to: 'back' | 'next') => {
+    switch (to) {
+      case 'back':
+        router.back();
+        break;
+      case 'next':
+        router.push('/boss/contract/4');
+        break;
+    }
+  };
   return (
-    <View>
-      <Text>3</Text>
-    </View>
+    <ContainerView style={{ backgroundColor: Colors.WHITE, paddingTop: 20 }}>
+      <CenterHeaderbar title="근로계약서 서명" right="none" onPressLeft={() => pathRoute('back')} />
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, gap: 20, paddingBottom: 30 }}
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}>
+        <SignContractBox pathRoute={pathRoute} />
+      </ScrollView>
+    </ContainerView>
   );
 };
 
