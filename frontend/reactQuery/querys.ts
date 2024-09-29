@@ -86,7 +86,6 @@ const useAccountBalance = () => {
   });
 
   const accountBalance = data?.data.data || 0;
-
   return { accountBalance, ...queryData };
 };
 
@@ -109,14 +108,12 @@ const useNearCommuteInfo = () => {
  * @param month 조회할 달
  */
 const usePayStub = (month: Month) => {
-  const { data } = useQuery({
+  const { data, ...queryData } = useQuery({
     queryKey: keys.payStub(month),
     queryFn: () => arbaguette.getPayStub(month),
   });
-
-  if (!data) return null;
-
-  return data.data.data;
+  const certification = data ? data.data.data : null;
+  return { certification, ...queryData };
 };
 
 /**
