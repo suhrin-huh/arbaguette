@@ -92,7 +92,7 @@ const ContractScheduleBox = () => {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
           }}>
-          <DayBottomSheet open={open} setOpen={setOpen} />
+          <DayBottomSheet setOpen={setOpen} />
         </View>
       </Modal>
     </ContractContainer>

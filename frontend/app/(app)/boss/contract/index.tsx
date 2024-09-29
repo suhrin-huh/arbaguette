@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Modal, ScrollView } from 'react-native';
+import { Animated, ScrollView } from 'react-native';
 
 import ContractContainerBox from '@/components/boss/management/ContractContainerBox';
 import ContractScheduleBox from '@/components/boss/management/ContractScheduleBox';
@@ -128,38 +128,36 @@ const ManagementRegisterScreen1 = () => {
   };
 
   return (
-    <Modal animationType="fade" transparent={true} visible={true}>
-      <ContainerView style={{ backgroundColor: Colors.WHITE }}>
-        <CenterHeaderbar title="직원 정보 등록" right="none" onPressLeft={routeBack} />
-        <ScrollView
-          ref={scrollViewRef}
-          contentContainerStyle={{ flexGrow: 1, gap: 20, paddingBottom: 30 }}
-          showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }}>
-          {(step1 === 'name' || step1 === 'date' || step1 === 'time' || step1 === 'next') && (
-            <Animated.View style={{ opacity: fadeAnimInfo, transform: [{ translateY: slideAnimInfo }] }}>
-              <InfoContainer title="직원 정보" topText={registName} bottomText={telFormat} />
+    <ContainerView style={{ backgroundColor: Colors.WHITE, paddingTop: 20 }}>
+      <CenterHeaderbar title="직원 정보 등록" right="none" onPressLeft={routeBack} />
+      <ScrollView
+        ref={scrollViewRef}
+        contentContainerStyle={{ flexGrow: 1, gap: 20, paddingBottom: 30 }}
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}>
+        {(step1 === 'name' || step1 === 'date' || step1 === 'time' || step1 === 'next') && (
+          <Animated.View style={{ opacity: fadeAnimInfo, transform: [{ translateY: slideAnimInfo }] }}>
+            <InfoContainer title="직원 정보" topText={registName} bottomText={telFormat} />
+          </Animated.View>
+        )}
+        {(step1 === 'date' || step1 === 'time' || step1 === 'next') && (
+          <Animated.View style={{ opacity: fadeAnimContract, transform: [{ translateY: slideAnimContract }] }}>
+            <ContractContainerBox />
+          </Animated.View>
+        )}
+        {(step1 === 'time' || step1 === 'next') && (
+          <Animated.View style={{ opacity: fadeAnimSchedule, transform: [{ translateY: slideAnimSchedule }] }}>
+            <ContractScheduleBox />
+          </Animated.View>
+        )}
+        {step1 === 'next' ||
+          (registWorkingDayInfoList.length > 0 && (
+            <Animated.View style={{ opacity: fadeAnimButton, transform: [{ translateY: slideAnimButton }] }}>
+              <Button type="primary">다음</Button>
             </Animated.View>
-          )}
-          {(step1 === 'date' || step1 === 'time' || step1 === 'next') && (
-            <Animated.View style={{ opacity: fadeAnimContract, transform: [{ translateY: slideAnimContract }] }}>
-              <ContractContainerBox />
-            </Animated.View>
-          )}
-          {(step1 === 'time' || step1 === 'next') && (
-            <Animated.View style={{ opacity: fadeAnimSchedule, transform: [{ translateY: slideAnimSchedule }] }}>
-              <ContractScheduleBox />
-            </Animated.View>
-          )}
-          {step1 === 'next' ||
-            (registWorkingDayInfoList.length > 0 && (
-              <Animated.View style={{ opacity: fadeAnimButton, transform: [{ translateY: slideAnimButton }] }}>
-                <Button type="primary">다음</Button>
-              </Animated.View>
-            ))}
-        </ScrollView>
-      </ContainerView>
-    </Modal>
+          ))}
+      </ScrollView>
+    </ContainerView>
   );
 };
 

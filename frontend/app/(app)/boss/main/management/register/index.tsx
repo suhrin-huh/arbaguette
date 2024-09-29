@@ -105,7 +105,7 @@ const ManagementRegisterScreen = () => {
             <Button type="outlined" onPress={() => router.back()}>
               닫기
             </Button>
-            <Button onPress={() => router.push('/boss/main/management/register/1')}>다음</Button>
+            <Button onPress={() => router.push('/(app)/boss/contract/')}>다음</Button>
           </ButtonContainer>
         </RegisterModal>
       </SendBackground>

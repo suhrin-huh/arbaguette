@@ -101,7 +101,7 @@ const weekdays: WeekModalType[] = [
     isSelected: false,
   },
 ];
-const DayBottomSheet = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
+const DayBottomSheet = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
   const {
     registWorkingDayInfoList,
     setRegistWorkingDayInfoList,
@@ -132,7 +132,7 @@ const DayBottomSheet = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
   };
 
   const addSchedule = () => {
-    const selectedWeekdays = weekdayList.filter((weekday) => weekday.isSelected);
+    let selectedWeekdays = weekdayList.filter((weekday) => weekday.isSelected);
     let newScheduleList: WorkingDayInfo[] = [];
     let newId = registWorkingDayInfoId;
 
@@ -152,6 +152,7 @@ const DayBottomSheet = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
       newScheduleList.push(newSchedule);
     });
 
+    selectedWeekdays = [];
     setOpen(false);
     setStep1('next');
     setRegistWorkingDayInfoId(newId);
