@@ -26,7 +26,7 @@ public record ScheduleCommutesResponse(String companyName,
                 commuteCounts,
                 schedules.stream()
                         .map(schedule -> new CommuteInfo(
-                                formatMonthDay(schedule.getInTime()),
+                                formatMonthDay(schedule.getStartTime()),
                                 formatTime(schedule.getInTime()),
                                 formatTime(schedule.getOutTime()),
                                 schedule.getStatus()
