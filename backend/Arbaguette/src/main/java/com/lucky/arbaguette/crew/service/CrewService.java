@@ -1,6 +1,9 @@
 package com.lucky.arbaguette.crew.service;
 
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
+
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
 import com.lucky.arbaguette.contract.domain.Contract;
@@ -11,17 +14,13 @@ import com.lucky.arbaguette.receipt.domain.dto.response.ReceiptDetailsResponse;
 import com.lucky.arbaguette.receipt.repository.ReceiptRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-
-import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
-import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +43,8 @@ public class CrewService {
                 .orElseThrow(() -> new NotFoundException("알바생에 해당하는 근로계약서가 없습니다."))
                 .getSalary();
 
-        int salary = hourlyRate * calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+        int salary = hourlyRate * calculateWorkHours(
+                scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
 
         return salary;
 
@@ -60,7 +60,9 @@ public class CrewService {
 
         if (contract != null) {
             int hourlyRate = contract.getSalary();
-            int workHours = calculateWorkHours(scheduleRepository.findAllScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+            int workHours = calculateWorkHours(
+                    scheduleRepository.findAllScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(),
+                            getEndOfMonth()));
             salary = hourlyRate * workHours;
 
             if (workHours > 80) {
@@ -74,7 +76,7 @@ public class CrewService {
             }
 
         }
-        
+
         return salary;
     }
 
@@ -91,7 +93,8 @@ public class CrewService {
     }
 
     public LocalDateTime getEndOfMonth() {
-        return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).with(LocalTime.MAX); // 월의 마지막 날 23:59:59
+        return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth())
+                .with(LocalTime.MAX); // 월의 마지막 날 23:59:59
     }
 
     public ReceiptDetailsResponse getReceipt(CustomUserDetails customUserDetails, int month) {

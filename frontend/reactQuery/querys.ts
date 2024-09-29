@@ -16,28 +16,50 @@ const useEmailCheck = (email: Email) => {
 };
 
 /**
- * 크루 리스트를 가져오는 쿼리 훅
+ * 사업장 리스트를 가져오는 쿼리 훅
+ */
+const useCompanyList = () => {
+  const { data } = useQuery({ queryKey: keys.companyList(), queryFn: () => arbaguette.getCompanyList() });
+
+  const companyList = data?.data.data.companies || [];
+
+  return { companyList };
+};
+
+/**
+ * 알바생 리스트를 가져오는 쿼리 훅
  */
 const useCrewMemberList = () => {
-  const { data, ...queryData } = useQuery({ queryKey: keys.crewList(), queryFn: () => arbaguette.getCrewMemberList() });
+  const { data } = useQuery({ queryKey: keys.crewList(), queryFn: () => arbaguette.getCrewMemberList() });
 
   const crewList = data?.data.data.crews || [];
 
-  return { crewList, ...queryData };
+  return { crewList };
+};
+
+/**
+ * 알바생 상세 정보를 가져오는 쿼리 훅
+ */
+const useCrewMemeberDetail = (crewId: CrewId) => {
+  const { data } = useQuery({
+    queryKey: keys.crewDetail(crewId),
+    queryFn: () => arbaguette.getCrewMemberDetail(crewId),
+  });
+
+  const crewDetail = data?.data.data;
+  return { crewDetail };
 };
 
 /**
  * 당월 누적 급여를 가져오는 쿼리 훅
  */
 const useMonthlyAccumulatedSalary = () => {
-  const { data, ...queryData } = useQuery({
+  const { data } = useQuery({
     queryKey: keys.accumulatedSalary(),
     queryFn: () => arbaguette.getMonthlyAccumulatedSalary(),
   });
 
-  const accumulatedSalary = data?.data.data || 0;
-
-  return { accumulatedSalary, ...queryData };
+  return data?.data.data || 0;
 };
 
 /**
@@ -68,4 +90,60 @@ const useAccountBalance = () => {
   return { accountBalance, ...queryData };
 };
 
-export { useAccountBalance, useCrewMemberList, useEmailCheck, useMonthlyAccumulatedSalary, useMonthlyEstimatedSalary };
+/**
+ * 가까운 출퇴근 정보를 가져오는 쿼리 훅
+ */
+const useNearCommuteInfo = () => {
+  const { data } = useQuery({
+    queryKey: keys.nearCommuteInfo(),
+    queryFn: () => arbaguette.getNearCommuteInfo(),
+  });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
+/**
+ *  급여명세서를 가져오는 쿼리 훅
+ * @param month 조회할 달
+ */
+const usePayStub = (month: Month) => {
+  const { data } = useQuery({
+    queryKey: keys.payStub(month),
+    queryFn: () => arbaguette.getPayStub(month),
+  });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
+/**
+ * 일별 스케줄을 가져오는 쿼리 훅
+ * @param date 조회할 날짜
+ * @param companyId 사업장 ID
+ */
+const useDailySchedule = (date: string, companyId?: CompanyId) => {
+  const { data } = useQuery({
+    queryKey: keys.dailySchedule(date, companyId),
+    queryFn: () => arbaguette.getDailySchedule(date, companyId),
+  });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
+export {
+  useAccountBalance,
+  useCompanyList,
+  useCrewMemberList,
+  useCrewMemeberDetail,
+  useDailySchedule,
+  useEmailCheck,
+  useMonthlyAccumulatedSalary,
+  useMonthlyEstimatedSalary,
+  useNearCommuteInfo,
+  usePayStub,
+};

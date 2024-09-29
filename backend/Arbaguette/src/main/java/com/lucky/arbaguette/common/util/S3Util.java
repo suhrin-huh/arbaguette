@@ -22,11 +22,11 @@ public class S3Util {
 
     public String upload(MultipartFile file) throws IOException {
         String fileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")).concat(Long.toString(System.nanoTime()));
-        ObjectMetadata metadata= new ObjectMetadata();
+        ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
         amazonS3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
-        return "https://" + bucket + "/" + fileName;
+        return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
 }

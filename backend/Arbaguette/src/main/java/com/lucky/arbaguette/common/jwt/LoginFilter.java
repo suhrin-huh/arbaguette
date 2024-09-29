@@ -1,16 +1,25 @@
 package com.lucky.arbaguette.common.jwt;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucky.arbaguette.common.ApiResponse;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.TokenRedis;
 import com.lucky.arbaguette.common.domain.dto.request.LoginRequest;
 import com.lucky.arbaguette.common.domain.dto.response.LoginResponse;
 import com.lucky.arbaguette.common.exception.BadRequestException;
+import com.lucky.arbaguette.common.repository.TokenRedisRepository;
+import com.lucky.arbaguette.crew.repository.CrewRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Iterator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,23 +31,22 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Iterator;
-
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
-
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final CrewRepository crewRepository;
+    private final TokenRedisRepository tokenRedisRepository;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+
+    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, CrewRepository crewRepository,
+                       TokenRedisRepository tokenRepository) {
         super.setAuthenticationManager(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.crewRepository = crewRepository;
+        this.tokenRedisRepository = tokenRepository;
         setFilterProcessesUrl("/api/login");
     }
 
@@ -76,13 +84,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(email, role, 60 * 60 * 10L * 1000);
+        //토큰 생성
+        String accessToken = jwtUtil.createJwt("access", email, role, getCrewStatus(email, role),
+                getCrewId(email, role));
+        String refreshToken = jwtUtil.createJwt("refresh", email, role, getCrewStatus(email, role),
+                getCrewId(email, role));
 
-        //TODO: refresh 토큰 추가
+        //Refresh 토큰 저장
+        saveRefreshEntity(email, refreshToken);
+
+        //응답 설정
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(
-                ApiResponse.success(LoginResponse.from(token, null, customUserDetails))));
+                ApiResponse.success(
+                        LoginResponse.from(
+                                accessToken,
+                                refreshToken,
+                                customUserDetails
+                        ))));
         response.getWriter().flush();
     }
 
@@ -104,5 +124,32 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 ApiResponse.error(HttpStatus.NOT_FOUND, errorMessage)
         ));
 
+    }
+
+    private String getCrewStatus(String email, String role) {
+        if ("BOSS".equals(role)) {
+            return null;
+        }
+        return crewRepository.findByEmail(email)
+                .orElseThrow(null)
+                .getCrewStatus().name();
+    }
+
+    private int getCrewId(String email, String role) {
+        if ("BOSS".equals(role)) {
+            return -1;
+        }
+        return crewRepository.findByEmail(email)
+                .orElseThrow(null)
+                .getCrewId();
+    }
+
+    private void saveRefreshEntity(String email, String refreshToken) {
+        tokenRedisRepository.save(
+                TokenRedis.builder()
+                        .email(email)
+                        .refreshToken(refreshToken)
+                        .build()
+        );
     }
 }

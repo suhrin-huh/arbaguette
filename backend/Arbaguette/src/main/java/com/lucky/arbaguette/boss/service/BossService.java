@@ -6,7 +6,7 @@ import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
 import com.lucky.arbaguette.boss.dto.response.CrewSaveResponse;
 import com.lucky.arbaguette.boss.dto.response.ExpectedCostResponse;
 import com.lucky.arbaguette.boss.repository.BossRepository;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
@@ -114,34 +114,34 @@ public class BossService {
         List<CrewInfo> crewInfoList = new ArrayList<>();
 
         for (Crew crew : crewList) {
-            int salary = 0;
-            Optional<Contract> contract = contractRepository.findByCrew(crew);
-            if (contract.isPresent()) {
-                int hourlyRate = contract.get().getSalary();
+            contractRepository.findByCrew(crew).ifPresentOrElse(contract -> {
+                List<Integer> weekdays = contractWorkingDayRepository.findAllByContract(contract).stream()
+                        .map(contractWorkingDay -> contractWorkingDay.getId().getWeekday())
+                        .toList();
 
-                int workHours = calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
-
+                int hourlyRate = contract.getSalary();
+                int workHours = calculateWorkHours(
+                        scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(),
+                                getEndOfMonth()));
                 int allowance = 0;
+
                 if (workHours > 80) {
                     allowance = (int) (hourlyRate * 1.5 * (workHours - 80));
                 }
 
-                salary = hourlyRate * workHours + allowance;
+                int salary = hourlyRate * workHours + allowance;
 
-                if (INSU.equals(contract.get().getTax())) {
+                if (INSU.equals(contract.getTax())) {
                     salary *= INSU_PERCENT;
                 }
-                if (INCOME.equals(contract.get().getTax())) {
+                if (INCOME.equals(contract.getTax())) {
                     salary *= INCOME_PERCENT;
                 }
-            }
 
-            crewInfoList.add(CrewInfo.from(crew, salary));
-
+                crewInfoList.add(CrewInfo.from(crew, salary, contract, weekdays));
+            }, () -> crewInfoList.add(CrewInfo.from(crew, 0)));
         }
-
         return new CrewListResponse(crewInfoList);
-
     }
 
     public CrewDetailResponse getCrewDetails(CustomUserDetails customUserDetails, int crewId) {
@@ -168,7 +168,9 @@ public class BossService {
 
             //현재까지 월급, 근무시간, 세금, 수당
             int hourlyRate = contract.getSalary();
-            workHours = calculateWorkHours(scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+            workHours = calculateWorkHours(
+                    scheduleRepository.findScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(),
+                            getEndOfMonth()));
             salary = hourlyRate * workHours;
 
             if (workHours > 80) {
@@ -185,7 +187,6 @@ public class BossService {
                 salary *= INCOME_PERCENT;
                 allowance *= INCOME_PERCENT;
             }
-
 
             //급여명세서
             List<Receipt> receipts = receiptRepository.findAllByContract(contract);
@@ -212,7 +213,8 @@ public class BossService {
     }
 
     public LocalDateTime getEndOfMonth() {
-        return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).with(LocalTime.MAX); // 월의 마지막 날 23:59:59
+        return LocalDateTime.now().withDayOfMonth(LocalDate.now().lengthOfMonth())
+                .with(LocalTime.MAX); // 월의 마지막 날 23:59:59
     }
 
     public CrewSaveResponse saveCrew(CustomUserDetails customUserDetails, CrewSaveRequest crewSaveRequest) {
@@ -221,7 +223,8 @@ public class BossService {
         if (crew.alreadyHired()) {
             throw new DuplicateException("이미 등록된 알바생입니다.");
         }
-        Company company = companyRepository.findByCompanyIdAndBoss_Email(crewSaveRequest.companyId(), customUserDetails.getUsername())
+        Company company = companyRepository.findByCompanyIdAndBoss_Email(crewSaveRequest.companyId(),
+                        customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다."));
         crew.hiredCompany(company);
         crewRepository.save(crew);

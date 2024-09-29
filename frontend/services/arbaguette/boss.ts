@@ -33,9 +33,24 @@ export default {
     return axios.post<RegistCrewMemberResponse>('/api/crew', crewRegisterForm);
   },
   /**
-   * 알바생 전체 조회
+   * 알바생 전체 목록 조회
    */
   getCrewMemberList: async () => {
-    return axios.get<GetCrewMemberListResponse>('/api/boss/crew');
+    return axios.get<GetCrewMemberListResponse>('/api/boss/crews');
+  },
+  /**
+   * 알바생 상세 조회
+   * @param crewId 조회할 알바생 아이디
+   */
+  getCrewMemberDetail: async (crewId: CrewId) => {
+    return axios.get<GetCrewMemberDetailResponse>(`/api/boss/crew/${crewId}`);
+  },
+  /**
+   * 일별 사업장 스케쥴 조회
+   * @param date 조회할 날짜
+   * @param companyId 조회할 사업장 아이디
+   */
+  getDaySchedule: async (date: string, companyId: CompanyId) => {
+    return axios.get<GetDailyScheduleResponseData>(`/api/schedule/day?companyId=${companyId}&date=${date}`);
   },
 };

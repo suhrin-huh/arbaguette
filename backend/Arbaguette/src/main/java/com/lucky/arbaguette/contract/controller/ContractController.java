@@ -1,7 +1,8 @@
 package com.lucky.arbaguette.contract.controller;
 
 import com.lucky.arbaguette.common.ApiResponse;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.contract.domain.dto.ContractInfo;
 import com.lucky.arbaguette.contract.domain.dto.ContractSaveRequest;
 import com.lucky.arbaguette.contract.service.ContractService;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +20,24 @@ public class ContractController {
     private final ContractService contractService;
 
     @PostMapping(value = "/boss", consumes = "multipart/form-data")
-    public ApiResponse<Void> saveContract(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestPart("body") ContractSaveRequest contractSaveRequest, @RequestPart("image") MultipartFile file) throws IOException {
+    public ApiResponse<Void> saveContract(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                          @RequestPart("body") ContractSaveRequest contractSaveRequest,
+                                          @RequestPart("image") MultipartFile file) throws IOException {
         contractService.saveContract(customUserDetails, contractSaveRequest, file);
         return ApiResponse.success();
     }
 
     @PostMapping(value = "/crew", consumes = "multipart/form-data")
-    public ApiResponse<Void> signCrewContract(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestPart("image") MultipartFile file) throws IOException {
+    public ApiResponse<Void> signCrewContract(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                              @RequestPart("image") MultipartFile file) throws IOException {
         contractService.signCrewContract(customUserDetails, file);
         return ApiResponse.success();
     }
+
+    @GetMapping
+    public ApiResponse<ContractInfo> getContract(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int crewId) {
+        return ApiResponse.success(contractService.getContract(customUserDetails, crewId));
+    }
+
 
 }

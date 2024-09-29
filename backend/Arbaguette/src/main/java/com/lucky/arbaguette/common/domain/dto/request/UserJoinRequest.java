@@ -1,7 +1,7 @@
 package com.lucky.arbaguette.common.domain.dto.request;
 
 import com.lucky.arbaguette.boss.domain.Boss;
-import com.lucky.arbaguette.common.domain.dto.enums.UserRole;
+import com.lucky.arbaguette.common.domain.enums.UserRole;
 import com.lucky.arbaguette.crew.domain.Crew;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

@@ -13,24 +13,27 @@ const ChartContainer = Styled.View(({ theme }) => ({
   gap: 10,
 }));
 
-const data = [
-  { x: '기본급', y: 13000 },
-  { x: '수당', y: 16500 },
-  { x: '세금', y: 4250 },
-];
-
 const COLOR_SCALE = [Theme.color.PRIMARY, Theme.color.SECONDARY, Theme.color.GRAY['1']];
 
-type SalaryChartCardTitle = '저번달 받은 임금' | '이번달 예상 지출' | 'none';
+type SalaryChartCardTitle = '저번달 받은 임금' | '이번달 예상 지출' | '급여명세서';
 
 interface SalaryChartCardProps {
-  title: SalaryChartCardTitle;
+  title?: SalaryChartCardTitle;
+  originSalary: OriginSalary;
+  tax: Tax;
+  allowance: Allowance;
 }
 
-const SalaryChartCard = ({ title }: SalaryChartCardProps) => {
+const SalaryChartCard = ({ title, originSalary, tax, allowance }: SalaryChartCardProps) => {
+  const data = [
+    { x: '기본급', y: originSalary },
+    { x: '수당', y: tax },
+    { x: '세금', y: allowance },
+  ];
+
   return (
     <CardContainer style={{ alignItems: 'center', gap: 30 }}>
-      {title !== 'none' && <Text>{title}</Text>}
+      {!!title && <Text>{title}</Text>}
       <ChartContainer>
         <VictoryPie
           data={data}

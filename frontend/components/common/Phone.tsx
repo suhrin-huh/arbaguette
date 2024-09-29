@@ -3,12 +3,12 @@ import * as Linking from 'expo-linking';
 import { Pressable } from 'react-native';
 
 export interface PhoneProps {
-  phoneNumber: string;
+  tel: Tel;
 }
 
-const Phone = ({ phoneNumber }: PhoneProps) => {
+const Phone = ({ tel }: PhoneProps) => {
   const handlePhoneCall = async () => {
-    await Linking.openURL('tel:' + phoneNumber);
+    await Linking.openURL('tel:' + tel);
   };
 
   return (

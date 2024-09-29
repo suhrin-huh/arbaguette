@@ -5,8 +5,13 @@ import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.jwt.JWTFilter;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.jwt.LoginFilter;
+import com.lucky.arbaguette.common.jwt.LogoutFilter;
+import com.lucky.arbaguette.common.repository.TokenRedisRepository;
+import com.lucky.arbaguette.crew.repository.CrewRepository;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +31,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -36,6 +38,8 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final CrewRepository crewRepository;
+    private final TokenRedisRepository tokenRedisRepository;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -58,16 +62,21 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         //누구나 접근 가능
-                        .requestMatchers("/", "/api/login", "/join", "/api/user/**").permitAll()
+                        .requestMatchers("/", "/api/login", "/api/logout", "/join", "/api/user/**").permitAll()
                         //dispatcher 를 통해 넘어오는 에러는 모두 접근 가능
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         //BOSS 만 접근 가능
                         .requestMatchers("/api/boss/**", "/api/contract/boss").hasAuthority("BOSS")
                         //CREW 만 접근 가능
-                        .requestMatchers("/api/crew/**", "/api/schedule/crew/**", "/api/contract/crew").hasAuthority("CREW")
+                        .requestMatchers("/api/crew/**", "/api/schedule/crew/**", "/api/contract/crew")
+                        .hasAuthority("CREW")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+                .addFilterBefore(new LogoutFilter(jwtUtil, tokenRedisRepository),
+                        org.springframework.security.web.authentication.logout.LogoutFilter.class)
+                .addFilterAt(
+                        new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, crewRepository,
+                                tokenRedisRepository),
                         UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(unauthorizedEntryPoint()) // 인증 예외 처리 (401)

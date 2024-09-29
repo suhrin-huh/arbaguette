@@ -1,7 +1,7 @@
 package com.lucky.arbaguette.crew.controller;
 
 import com.lucky.arbaguette.common.ApiResponse;
-import com.lucky.arbaguette.common.domain.dto.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.crew.service.CrewService;
 import com.lucky.arbaguette.receipt.domain.dto.response.ReceiptDetailsResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,8 @@ public class CrewController {
     }
 
     @GetMapping("/receipt")
-    public ApiResponse<ReceiptDetailsResponse> getReceipt(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam int month) {
+    public ApiResponse<ReceiptDetailsResponse> getReceipt(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                          @RequestParam int month) {
         return ApiResponse.success(crewService.getReceipt(customUserDetails, month));
     }
 

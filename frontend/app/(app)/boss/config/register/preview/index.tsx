@@ -5,10 +5,10 @@ import React from 'react';
 import UploadInitialScreen from '@/components/boss/upload/UploadInitialScreen';
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
-import { useCompanyInfoStore } from '@/zustand/boss/useCompanyInfoStore';
+import useRootStore from '@/zustand';
 
 const PreviewScreen = () => {
-  const { companyName, ceoName, address } = useCompanyInfoStore();
+  const { companyName, ceoName, address } = useRootStore();
 
   const handleBackPress = () => {
     router.push('/boss/config/register/upload');

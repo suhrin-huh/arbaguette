@@ -1,14 +1,20 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Stack } from 'expo-router';
 
-const CrewMainLayout = () => {
+import useRootStore from '@/zustand';
+
+const CrewLayout = () => {
+  const { isLoggedIn } = useRootStore();
+
+  if (!isLoggedIn) {
+    return <Redirect href="/login" />;
+  }
+
   return (
-    <Tabs initialRouteName="main" screenOptions={{ headerStyle: { backgroundColor: 'transparent', elevation: 0 } }}>
-      <Tabs.Screen name="main" options={{ title: '홈' }} />
-      <Tabs.Screen name="schedule" options={{ title: '스케줄' }} />
-      <Tabs.Screen name="management" options={{ title: '직원 관리' }} />
-      <Tabs.Screen name="banking" options={{ title: '뱅킹' }} />
-    </Tabs>
+    <Stack screenOptions={{ headerShown: false }} initialRouteName="unauthorized">
+      <Stack.Screen name="unauthorized" />
+      <Stack.Screen name="authorized" />
+    </Stack>
   );
 };
 
-export default CrewMainLayout;
+export default CrewLayout;
