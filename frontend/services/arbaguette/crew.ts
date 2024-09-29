@@ -41,4 +41,7 @@ export default {
   getDailySchedule: async (date: string, companyId?: CompanyId) => {
     return axios.get<GetDailyScheduleResponse>('/api/schedule/day', { params: { date, companyId } });
   },
+  requestSubstitute: async (scheduleId: ScheduleId) => {
+    return axios.post<PostRequestSubstituteResponse>('/api/substitute', { scheduleId });
+  },
 };

@@ -210,6 +210,14 @@ interface GetMonthlyScheduleResponseData {
   monthlyScheduleList: MonthlySchedule[];
 }
 
+type ScheduleId = number;
+type SubstituteId = number;
+
+interface PostRequestSubstituteResponseData {
+  substituteId: SubstituteId;
+  scheduleId: ScheduleId;
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type EmailCheckResponse = ArbaguetteResponse<void>;
@@ -226,3 +234,4 @@ type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData
 type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
 type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;
 type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseData>;
+type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;

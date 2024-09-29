@@ -24,11 +24,11 @@ const Modal = ({ children, ...props }: ModalProps) => {
 
   return (
     <BottomSheetModal
-      {...props}
       onDismiss={handleDismiss}
       ref={bottomSheetModalRef}
       snapPoints={snapPoints}
-      backdropComponent={CustomBackdrop}>
+      backdropComponent={CustomBackdrop}
+      {...props}>
       {children}
     </BottomSheetModal>
   );

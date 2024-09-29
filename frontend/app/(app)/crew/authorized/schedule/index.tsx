@@ -25,7 +25,7 @@ const CrewScheduleScreen = () => {
           marked: dailySchedules.some((schedule) => schedule.crewId === crewId),
           dots: dailySchedules.map((schedule) => {
             if (schedule.SubstituteRequest) {
-              return { key: 'substitute', color: Theme.color.SECONDARY };
+              return { key: 'substitute', color: Theme.color.DANGER };
             }
             if (schedule.crewId === crewId) {
               return { key: 'crew', color: Theme.color.PRIMARY };
@@ -43,12 +43,19 @@ const CrewScheduleScreen = () => {
         title: time.name,
         start: `${selectedDateString} ${time.startTime}`,
         end: `${selectedDateString} ${time.endTime}`,
-        id: String(time.crewId),
+        id: String(time.scheduleId),
+        summary: String(time.crewId),
+        color: time.SubstituteRequest
+          ? Theme.color.DANGER
+          : time.crewId === crewId
+            ? Theme.color.PRIMARY
+            : Theme.color.SECONDARY,
       }))
     : [];
 
   const handleMonthChange = (date: DateData) => {
     setCalendar(date);
+    setSelectedDate(new Date(`${date.year}-${date.month}-01`));
   };
 
   const handleDayPress = (date: DateData) => {
@@ -56,9 +63,22 @@ const CrewScheduleScreen = () => {
   };
 
   const handleEventPress = (event: TimelineEventProps) => {
+    if (new Date(event.start) < today) return;
+
+    const isRequested = schedule
+      ? schedule.some((day) =>
+          day.dailySchedules.some((schedule) => Number(event.id) === schedule.scheduleId && schedule.SubstituteRequest),
+        )
+      : false;
+    const isMyEvent = Number(event.summary) === Number(crewId);
+
     const serializedEvent = JSON.stringify(event);
 
-    router.navigate({ pathname: './apply', params: { event: serializedEvent } });
+    if (isMyEvent && !isRequested) {
+      router.navigate({ pathname: '/crew/authorized/schedule/request', params: { event: serializedEvent } });
+    } else if (!isMyEvent && isRequested) {
+      router.navigate({ pathname: '/crew/authorized/schedule/apply', params: { event: serializedEvent } });
+    }
   };
 
   return (
