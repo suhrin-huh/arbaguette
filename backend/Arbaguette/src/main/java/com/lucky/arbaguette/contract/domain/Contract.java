@@ -70,4 +70,9 @@ public class Contract {
         return ((nowTime.isAfter(this.endDate)) || (nowTime.isBefore(this.startDate)));
     }
 
+    public boolean nowMonthNotInWorkingPeriod(){
+        LocalDate nowTime = LocalDate.now();
+        return nowTime.getMonth() != this.startDate.getMonth();
+    }
+
 }
