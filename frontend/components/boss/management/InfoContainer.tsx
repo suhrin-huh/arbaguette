@@ -1,5 +1,6 @@
 import styled from '@emotion/native';
 import React from 'react';
+import type { StyleProp, TextStyle } from 'react-native';
 
 const Container = styled.View(({ theme }) => ({
   gap: 20,
@@ -67,9 +68,10 @@ interface InfoContainerProps {
   title: string;
   topText: string;
   bottomText: string;
+  bottomTextStyle?: StyleProp<TextStyle>;
 }
 
-const InfoContainer = ({ title, topText, bottomText }: InfoContainerProps) => {
+const InfoContainer = ({ title, topText, bottomText, bottomTextStyle }: InfoContainerProps) => {
   return (
     <Container>
       <InfoHeader>
@@ -80,7 +82,7 @@ const InfoContainer = ({ title, topText, bottomText }: InfoContainerProps) => {
           <InfoText>{topText}</InfoText>
         </InfoTopBox>
         <InfoBottomBox>
-          <InfoText>{bottomText}</InfoText>
+          <InfoText style={bottomTextStyle}>{bottomText}</InfoText>
         </InfoBottomBox>
       </InfoContent>
     </Container>
