@@ -222,6 +222,16 @@ interface PostRequestSubstituteResponseData {
   scheduleId: ScheduleId;
 }
 
+interface GetWorkHistoryResponseData {
+  companyName: CompanyName;
+  targetDate: string;
+  normal: number;
+  absent: number;
+  late: number;
+  earlyLeave: number;
+  commutes: { date: string; inTime: string; outTime: string; commuteStatus: Status }[];
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type EmailCheckResponse = ArbaguetteResponse<void>;
@@ -238,4 +248,5 @@ type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData
 type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
 type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;
 type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseData>;
+type GetWorkHistoryResponse = ArbaguetteResponse<GetWorkHistoryResponseData>;
 type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
