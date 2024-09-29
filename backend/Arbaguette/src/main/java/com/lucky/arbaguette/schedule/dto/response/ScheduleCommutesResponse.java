@@ -13,17 +13,23 @@ import java.util.List;
 
 public record ScheduleCommutesResponse(String companyName,
                                        String targetDate,
-                                       List<ScheduleStatusCount> commuteCounts,
+                                       long normal,
+                                       long absent,
+                                       long late,
+                                       long earlyLeave,
                                        List<CommuteInfo> commutes) {
 
     public static ScheduleCommutesResponse from(Crew crew,
                                                 LocalDateTime targetDate,
-                                                List<ScheduleStatusCount> commuteCounts,
+                                                ScheduleStatusCount commuteCounts,
                                                 List<Schedule> schedules) {
         return new ScheduleCommutesResponse(
                 crew.getCompany().getName(),
                 formatYearMonth(targetDate),
-                commuteCounts,
+                commuteCounts.normal(),
+                commuteCounts.absent(),
+                commuteCounts.late(),
+                commuteCounts.earlyLeave(),
                 schedules.stream()
                         .map(schedule -> new CommuteInfo(
                                 formatMonthDay(schedule.getStartTime()),
