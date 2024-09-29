@@ -53,5 +53,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
     Optional<Schedule> findByScheduleIdAndCrew(int scheduleId, Crew crew);
 
-    boolean existsByCrewAndStartTimeAndOutTime(Crew crew, LocalDateTime startTime, LocalDateTime outTime);
+    boolean existsByCrewAndStartTime(Crew crew, LocalDateTime startTime);
 }
