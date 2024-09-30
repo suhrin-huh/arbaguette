@@ -21,6 +21,7 @@ public class UserJoinRequest {
     @Enumerated(EnumType.STRING)
     private UserRole role;
     private int profileImage;
+    private String accountPassword;
 
     public Boss toBoss(BCryptPasswordEncoder bCryptPasswordEncoder, String account, String userKey) {
         return Boss.builder()
@@ -31,6 +32,7 @@ public class UserJoinRequest {
                 .profileImage(this.profileImage)
                 .account(account)
                 .userKey(userKey)
+                .accountPassword(bCryptPasswordEncoder.encode(this.accountPassword))
                 .build();
     }
 
@@ -43,6 +45,7 @@ public class UserJoinRequest {
                 .profileImage(this.profileImage)
                 .account(account)
                 .userKey(userKey)
+                .accountPassword(bCryptPasswordEncoder.encode(this.accountPassword))
                 .build();
     }
 }
