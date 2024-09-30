@@ -7,16 +7,12 @@ import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
 import com.lucky.arbaguette.common.domain.dto.request.UserReissueRequest;
 import com.lucky.arbaguette.common.domain.dto.response.LoginTokenResponse;
 import com.lucky.arbaguette.common.domain.dto.response.UserInfoResponse;
+import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -46,5 +42,13 @@ public class UserController {
     @PostMapping("/reissue")
     public ApiResponse<LoginTokenResponse> reissue(@RequestBody UserReissueRequest request) {
         return ApiResponse.success(userService.reissue(request.refreshToken()));
+    }
+
+    @GetMapping("/checkPassword")
+    public ApiResponse<Void> checkAccountPassword(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestParam String accountPassword) {
+        if (userService.checkAccountPassword(customUserDetails, accountPassword)) {
+            return ApiResponse.success();
+        }
+        throw new BadRequestException("비밀번호가 틀립니다.");
     }
 }
