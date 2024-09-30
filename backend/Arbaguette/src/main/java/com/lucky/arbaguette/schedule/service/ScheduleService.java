@@ -103,10 +103,6 @@ public class ScheduleService {
                 getEndOfMonth(date)
         );
 
-        if (schedules.isEmpty()) {
-            throw new NotFoundException("근무 내역을 찾을 수 없습니다.");
-        }
-
         ScheduleStatusCount statusCounts = scheduleRepository.countByStatus(
                 crew.getCrewId(),
                 getStartOfMonth(date),

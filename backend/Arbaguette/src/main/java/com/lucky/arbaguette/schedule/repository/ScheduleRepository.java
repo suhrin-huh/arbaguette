@@ -34,14 +34,14 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
                                              @Param("nowDate") LocalDateTime nowDate);
 
     @Query("""
-            SELECT new com.lucky.arbaguette.schedule.dto.ScheduleStatusCount(
-                SUM(CASE WHEN s.status = 'NORMAL' THEN 1 ELSE 0 END),
-                SUM(CASE WHEN s.status = 'ABSENT' THEN 1 ELSE 0 END),
-                SUM(CASE WHEN s.status = 'LATE' THEN 1 ELSE 0 END),
-                SUM(CASE WHEN s.status = 'EARLY' THEN 1 ELSE 0 END)
-            )
-            FROM Schedule s
-            where s.crew.crewId = :crewId AND s.startTime BETWEEN :startDate AND :endDate
+                SELECT new com.lucky.arbaguette.schedule.dto.ScheduleStatusCount(
+                    COALESCE(SUM(CASE WHEN s.status = 'NORMAL' THEN 1 ELSE 0 END), 0),
+                    COALESCE(SUM(CASE WHEN s.status = 'ABSENT' THEN 1 ELSE 0 END), 0),
+                    COALESCE(SUM(CASE WHEN s.status = 'LATE' THEN 1 ELSE 0 END), 0),
+                    COALESCE(SUM(CASE WHEN s.status = 'EARLY' THEN 1 ELSE 0 END), 0)
+                )
+                FROM Schedule s
+                where s.crew.crewId = :crewId AND s.startTime BETWEEN :startDate AND :endDate
             """)
     ScheduleStatusCount countByStatus(@Param("crewId") int crewId,
                                       @Param("startDate") LocalDateTime startDate,
