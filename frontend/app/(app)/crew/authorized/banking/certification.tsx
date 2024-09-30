@@ -1,17 +1,24 @@
 import Styled from '@emotion/native';
-import React, { useEffect, useState } from 'react';
-import { Alert, Button, View } from 'react-native';
+import { View } from 'react-native';
 
 import Text from '@/components/common/Text';
-// import CertificationChart from '@/components/crew/CertificationChart';
+import CertificationChart from '@/components/crew/CertificationChart';
+import DateSelector from '@/components/crew/DateSelector';
 
 const Certification = () => {
   return (
-    <View>
-      {/* <CertificationChart /> */}
+    <Container>
+      <DateSelector />
+      <CertificationChart />
       <Text>급여명세서</Text>
-    </View>
+    </Container>
   );
 };
+
+const Container = Styled.View(({ theme }) => ({
+  backgroundColor: 'white',
+  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
+  paddingVertical: theme.layout.PADDING.VERTICAL,
+}));
 
 export default Certification;
