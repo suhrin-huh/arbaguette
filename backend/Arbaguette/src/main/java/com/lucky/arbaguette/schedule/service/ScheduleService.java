@@ -10,7 +10,6 @@ import static com.lucky.arbaguette.schedule.dto.response.DailyScheduleResponse.C
 import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
 import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
 
-import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
@@ -33,16 +32,17 @@ import com.lucky.arbaguette.schedule.dto.response.ScheduleCommutesResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
+import com.lucky.arbaguette.substitute.domain.Substitute;
 import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -153,6 +153,7 @@ public class ScheduleService {
             saveScheduleInContractPeriod(contract, startDate, endDate);
         }
     }
+
     private void saveScheduleInContractPeriod(Contract contract, LocalDate startDate, LocalDate endDate) {
         //근로계약서 안의 startDate ~ endDate 기간 내에 근무계약일 요일,시간에 해당하는 스케줄을 만든다.
         List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
@@ -210,13 +211,12 @@ public class ScheduleService {
             for (Crew crew : crewRepository.findByCompany(company)) {
                 scheduleRepository.findByCrewAndMonthAndDay(crew, month, date)
                         .ifPresent(schedule -> {
-                            boolean isSubstitute = substituteRepository.findByScheduleAndPermitIsFalse(schedule)
-                                    .map(substitute -> !substitute.isPermit())
-                                    .orElse(false);
+                            Optional<Substitute> substitute = substituteRepository.findByScheduleAndPermitIsFalse(
+                                    schedule);
                             dailySchedules.add(DailySchedule.from(
                                     crew,
                                     schedule,
-                                    isSubstitute));
+                                    substitute));
                         });
             }
 
