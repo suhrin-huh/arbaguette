@@ -37,7 +37,11 @@ const CrewBankingScreen = () => {
           </Text>
           <ButtonGroup>
             <Button textStyle={{ fontWeight: 'bold' }}>송금</Button>
-            <Button textStyle={{ fontWeight: 'bold' }}>조회</Button>
+            <Button
+              textStyle={{ fontWeight: 'bold' }}
+              onPress={() => router.push('/(app)/crew/authorized/banking/transaction')}>
+              조회
+            </Button>
           </ButtonGroup>
         </AccountDetailsBox>
       </AccountSection>
