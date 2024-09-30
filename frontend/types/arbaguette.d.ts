@@ -229,8 +229,10 @@ interface GetWorkHistoryResponseData {
   absent: number;
   late: number;
   earlyLeave: number;
-  commutes: { date: string; inTime: string; outTime: string; commuteStatus: Status }[];
+  commutes: { date: string; inTime: string; outTime: string; commuteStatus: CommuteStatus }[];
 }
+
+type CommuteStatus = 'NORMAL' | 'ABSENT' | 'LATE';
 
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;

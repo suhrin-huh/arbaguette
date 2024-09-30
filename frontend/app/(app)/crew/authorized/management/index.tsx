@@ -16,13 +16,14 @@ const PlaceInfo = Styled.View({
 });
 
 const PlaceInfoText = Styled.Text({
-  fontSize: 16,
+  fontSize: 20,
 });
 
 const MonthText = Styled.Text({
   fontSize: 20,
   marginBottom: 50,
   marginTop: 20,
+  fontWeight: 500,
 });
 
 const CrewManagementScreen = () => {
@@ -54,7 +55,7 @@ const CrewManagementScreen = () => {
         late={workHistory.late}
         earlyLeave={workHistory.earlyLeave}
       />
-      <WorkStatusTable commuteData={workHistory.commutes} />
+      <WorkStatusTable commuteData={workHistory.commutes} targetDate={workHistory.targetDate} />
     </Screen>
   );
 };
