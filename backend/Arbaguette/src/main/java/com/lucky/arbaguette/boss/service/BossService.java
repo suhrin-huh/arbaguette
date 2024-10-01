@@ -241,5 +241,12 @@ public class BossService {
         receiptRepository.save(receiptSendRequest.toReceipt(contract));
     }
 
+    public void deleteCrew(CrewSaveRequest crewSaveRequest) {
+        Crew crew = crewRepository.findByCompany_CompanyIdAndNameAndTel(crewSaveRequest.companyId(), crewSaveRequest.name(), crewSaveRequest.tel())
+                .orElseThrow(()-> new NotFoundException("알바생을 찾을 수 없습니다."));
+        crew.cancelCompany();
+        crewRepository.save(crew);
+    }
+
 
 }
