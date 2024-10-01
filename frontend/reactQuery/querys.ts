@@ -66,27 +66,27 @@ const useMonthlyAccumulatedSalary = () => {
  * 당월 예상 급여를 가져오는 쿼리 훅
  */
 const useMonthlyEstimatedSalary = () => {
-  const { data, ...queryData } = useQuery({
+  const queryResult = useQuery({
     queryKey: keys.estimatedSalary(),
     queryFn: () => arbaguette.getMonthlyEstimatedSalary(),
   });
 
-  const estimatedSalary = data?.data.data || 0;
+  const estimatedSalary = queryResult.data?.data.data || 0;
 
-  return { estimatedSalary, ...queryData };
+  return { estimatedSalary, ...queryResult };
 };
 
 /**
  * 계좌 잔액을 가져오는 쿼리 훅
  */
 const useAccountBalance = () => {
-  const { data, ...queryData } = useQuery({
+  const queryResult = useQuery({
     queryKey: keys.balance(),
     queryFn: () => arbaguette.getAccountBalance(),
   });
 
-  const accountBalance = data?.data.data || 0;
-  return { accountBalance, ...queryData };
+  const accountBalance = queryResult.data?.data.data || 0;
+  return { accountBalance, ...queryResult };
 };
 
 /**
@@ -108,12 +108,12 @@ const useNearCommuteInfo = () => {
  * @param month 조회할 달
  */
 const usePayStub = (month: Month) => {
-  const { data, ...queryData } = useQuery({
+  const queryResult = useQuery({
     queryKey: keys.payStub(month),
     queryFn: () => arbaguette.getPayStub(month),
   });
-  const certification = data ? data.data.data : null;
-  return { certification, ...queryData };
+  const certification = queryResult.data?.data.data || null;
+  return { certification, ...queryResult };
 };
 
 /**
@@ -132,6 +132,16 @@ const useDailySchedule = (date: string, companyId?: CompanyId) => {
   return data.data.data;
 };
 
+const useGetBankHistory = () => {
+  const queryResult = useQuery({
+    queryKey: keys.bankHistory(),
+    queryFn: () => arbaguette.getBankHistory(),
+  });
+
+  const bankHistory = queryResult.data?.data.data || null;
+  return { bankHistory, ...queryResult };
+};
+
 export {
   useAccountBalance,
   useCompanyList,
@@ -139,6 +149,7 @@ export {
   useCrewMemeberDetail,
   useDailySchedule,
   useEmailCheck,
+  useGetBankHistory,
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,
   useNearCommuteInfo,

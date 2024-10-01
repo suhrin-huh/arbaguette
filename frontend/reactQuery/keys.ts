@@ -17,6 +17,7 @@ const keys = {
   bank: () => [...keys.common(), 'bank'],
   balance: () => [...keys.bank(), 'balance'],
   dailySchedule: (date: string, companyId?: CompanyId) => [...keys.common(), 'dailySchedule', date, companyId],
+  bankHistory: () => [...keys.bank(), 'bankHistory'],
 };
 
 export default keys;
