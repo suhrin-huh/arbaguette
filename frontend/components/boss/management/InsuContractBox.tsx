@@ -79,7 +79,7 @@ const InsuContractBox = () => {
       setStep2('next');
       setRegistTaxType(selectedInsuCnt[0].taxType);
     }
-  }, [selectedInsu, setStep2, setRegistTaxType]);
+  }, [selectedInsu]);
 
   return (
     <ContractContainer>

@@ -39,7 +39,7 @@ const MainScreen = () => {
       selectedCompanyName: name,
       selectedCompanyAddress: address,
     });
-  }, [id, name, address, setSelectedCompany]);
+  }, [id, name, address]);
 
   return (
     <InnerContainer

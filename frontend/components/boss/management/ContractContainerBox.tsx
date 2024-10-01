@@ -85,7 +85,7 @@ const ContractContainerBox = () => {
     if (registEndDate !== '근무 종료일' && step1 === 'date') {
       setStep1('time');
     }
-  }, [registEndDate, step1, setStep1]);
+  }, [registEndDate, step1]);
 
   return (
     <ContractContainer>
