@@ -89,6 +89,7 @@ const CrewMainLayout = () => {
           ),
         }}
       />
+      <Tabs.Screen name="password" />
     </Tabs>
   );
 };
