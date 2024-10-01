@@ -25,7 +25,7 @@ const CrewScheduleScreen = () => {
           marked: dailySchedules.some((schedule) => schedule.crewId === crewId),
           dots: dailySchedules.map((schedule) => {
             if (schedule.SubstituteRequest) {
-              return { key: 'substitute', color: Theme.color.DANGER };
+              return { key: 'substitute', color: Theme.color.SECONDARY };
             }
             if (schedule.crewId === crewId) {
               return { key: 'crew', color: Theme.color.PRIMARY };
@@ -46,10 +46,10 @@ const CrewScheduleScreen = () => {
         id: String(time.scheduleId),
         summary: String(time.crewId),
         color: time.SubstituteRequest
-          ? Theme.color.DANGER
+          ? Theme.color.SECONDARY
           : time.crewId === crewId
             ? Theme.color.PRIMARY
-            : Theme.color.SECONDARY,
+            : Theme.color.GRAY['2'],
       }))
     : [];
 
