@@ -1,38 +1,41 @@
 import Styled from '@emotion/native';
 import { useCallback, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import MonthPicker from 'react-native-month-year-picker';
 
 import ArrowImage from '@/assets/images/arrow.png';
 import Text from '@/components/common/Text';
 
-const DateSelector = () => {
-  const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
+interface DateSelectorProps {
+  date: Date;
+  setDate: (newDate: Date) => void;
+}
 
-  const showPicker = useCallback((value: Date): void => setShow(value), []);
+const DateSelector = ({ date, setDate }: DateSelectorProps) => {
+  const [show, setShow] = useState(false);
+  const showPicker = useCallback((value: boolean): void => setShow(value), []);
 
   const onValueChange = useCallback(
     (event, newDate) => {
       const selectedDate = newDate || date;
-
-      showPicker(false);
       setDate(selectedDate);
+      showPicker(false);
     },
-    [date, showPicker],
+    [date, setDate, showPicker],
   );
 
   return (
     <View>
       <DatePicker onPress={() => showPicker(true)}>
-        <Text size="base">{`${date.getFullYear()}년 ${date.getMonth()}월`}</Text>
+        <Text size="base">{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</Text>
+        <ArrowIcon source={ArrowImage} />
       </DatePicker>
       {show && (
         <MonthPicker
           onChange={onValueChange}
           value={date}
-          minimumDate={new Date()}
-          maximumDate={new Date(2025, 5)}
+          minimumDate={new Date(2000, 1)}
+          maximumDate={new Date()}
           locale="ko"
         />
       )}
@@ -42,7 +45,16 @@ const DateSelector = () => {
 
 const DatePicker = Styled.TouchableOpacity(() => ({
   flexDirection: 'row',
+  alignItems: 'center',
   width: 100,
-  gap: 10,
+  gap: 5,
 }));
+
+const ArrowIcon = Styled.Image(() => ({
+  width: 12,
+  height: 12,
+  marginTop: 3,
+  resizeMode: 'contain',
+}));
+
 export default DateSelector;
