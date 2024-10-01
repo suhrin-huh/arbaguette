@@ -1,6 +1,7 @@
 import Styled from '@emotion/native';
+import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Text } from 'react-native';
 import type { TimelineEventProps } from 'react-native-calendars';
 
@@ -31,12 +32,13 @@ const ContentText = Styled(Text)(({ theme }) => ({
 }));
 
 const ScheduleModal = () => {
+  const { dismiss } = useBottomSheetModal();
   const queryClient = useQueryClient();
   const { mutate: requestSubstitute } = useMutation({
     mutationFn: arbaguette.requestSubstitute,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: keys.common(), refetchType: 'all' });
-      router.back();
+      dismiss();
     },
   });
 
@@ -48,7 +50,7 @@ const ScheduleModal = () => {
   };
 
   return (
-    <BottomSheetModal onDismiss={() => null}>
+    <BottomSheetModal>
       <Container>
         <Content>
           <ContentText>{format.dateToKrString(new Date(start))}</ContentText>
