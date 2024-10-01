@@ -73,12 +73,18 @@ public class SubstituteService {
         companyRepository.findByCompanyIdAndBoss_Email(substitute.getCompanyId(), userDetails.getUsername())
                 .orElseThrow(() -> new UnAuthorizedException("요청하신 사업장의 사장님만 접근 가능합니다."));
 
-        if (substitute.getCrew() == null) {
+        Crew prevCrew = substitute.getPrevCrew();
+        Crew afterCrew = substitute.getCrew();
+
+        if (afterCrew == null) {
             throw new BadRequestException("대타 희망자가 없습니다. 대타 희망자가 있어야 승인 가능합니다.");
         }
 
+        if (prevCrew.getCrewId() == afterCrew.getCrewId()) {
+            throw new DuplicateException("이미 대타 승인완료 된 스케줄입니다.");
+        }
+
         //요청 승인, 스케줄 변경
-        Crew prevCrew = substitute.getPrevCrew();
         substitute.permitSubstitute();
 
         return SubstituteAgreeResponse.from(prevCrew, substitute.getCrew());
