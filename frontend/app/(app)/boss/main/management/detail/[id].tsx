@@ -52,19 +52,6 @@ const CrewDetailScreen = () => {
     router.back();
   };
 
-  useEffect(() => {
-    // 뒤로 가기 버튼으로 라우트 back... 인데 작동안함
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      router.back();
-      console.log('first');
-      return true;
-    });
-
-    return () => {
-      backHandler.remove();
-    };
-  }, []);
-
   if (!crewDetail) {
     return (
       <Modal visible={true} animationType="none">
