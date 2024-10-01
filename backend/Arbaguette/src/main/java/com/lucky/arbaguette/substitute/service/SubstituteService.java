@@ -20,8 +20,10 @@ import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class SubstituteService {
 
