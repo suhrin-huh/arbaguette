@@ -68,4 +68,9 @@ public class Crew {
         this.crewStatus = SIGNED;
     }
 
+    public void cancelCompany(){
+        this.company = null;
+        this.crewStatus = UNREGISTERED;
+    }
+
 }
