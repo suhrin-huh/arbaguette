@@ -47,4 +47,13 @@ public class Substitute {
         this.permit = permit;
         this.companyId = companyId;
     }
+
+    public void permitSubstitute() {
+        this.permit = true;
+        schedule.changeCrew(crew);
+    }
+
+    public Crew getPrevCrew() {
+        return schedule.getCrew();
+    }
 }
