@@ -12,12 +12,7 @@ import com.lucky.arbaguette.crew.domain.dto.response.CrewListResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/boss")
@@ -53,6 +48,12 @@ public class BossController {
     public ApiResponse<Void> sendReceipt(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                          @RequestBody ReceiptSendRequest receiptSendRequest) {
         bossService.sendReceipt(customUserDetails, receiptSendRequest);
+        return ApiResponse.success();
+    }
+
+    @DeleteMapping("/crew")
+    public ApiResponse<Void> deleteCrew(@RequestBody CrewSaveRequest crewSaveRequest) {
+        bossService.deleteCrew(crewSaveRequest);
         return ApiResponse.success();
     }
 
