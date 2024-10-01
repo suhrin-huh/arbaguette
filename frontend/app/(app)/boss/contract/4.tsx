@@ -21,7 +21,7 @@ const ManagementRegisterScreen4 = () => {
         break;
       case 'next':
         console.log('완료');
-        // router.push('/boss/main/management');
+        router.push('/boss/main/management');
         break;
     }
   };
