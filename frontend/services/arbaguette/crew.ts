@@ -41,7 +41,18 @@ export default {
   getDailySchedule: async (date: string, companyId?: CompanyId) => {
     return axios.get<GetDailyScheduleResponse>('/api/schedule/day', { params: { date, companyId } });
   },
+  /**
+   * 대타 요청
+   * @param scheduleId 스케줄 아이디
+   */
   requestSubstitute: async (scheduleId: ScheduleId) => {
     return axios.post<PostRequestSubstituteResponse>('/api/substitute', { scheduleId });
+  },
+  /**
+   * 월별 스케줄 조회
+   * @param date 조회할 날짜
+   */
+  getWorkHistory: async (date: string) => {
+    return axios.get<GetWorkHistoryResponse>('/api/schedule/crew/commutes', { params: { targetDate: date } });
   },
 };

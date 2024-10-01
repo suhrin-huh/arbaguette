@@ -1,5 +1,12 @@
 import Styled from '@emotion/native';
 
+import Day from '@/constants/Day';
+
+interface WorkStatusTableProps {
+  commuteData: GetWorkHistoryResponseData['commutes'];
+  targetDate: GetWorkHistoryResponseData['targetDate'];
+}
+
 const Table = Styled.View({ gap: 20, paddingVertical: 10 });
 
 const TableTitle = Styled.Text({ fontSize: 24, fontWeight: 600 });
@@ -22,8 +29,18 @@ const TableContentContainer = Styled.View({
   justifyContent: 'space-between',
 });
 
-const TableContentText = Styled.Text({ fontSize: 20 });
-const WorkStatusTable = () => {
+const TableContentText = Styled.Text<{ alert?: boolean }>(({ theme, alert }) => ({
+  fontSize: 20,
+  color: alert ? theme.color.DANGER : theme.color.BLACK,
+}));
+
+const STATUS: { [K in CommuteStatus]: string } = {
+  NORMAL: '정상',
+  LATE: '지각',
+  ABSENT: '결근',
+} as const;
+
+const WorkStatusTable = ({ commuteData, targetDate }: WorkStatusTableProps) => {
   return (
     <Table>
       <TableTitleContainer>
@@ -34,46 +51,20 @@ const WorkStatusTable = () => {
         <TableContentTitleText>시간</TableContentTitleText>
         <TableContentTitleText>상태</TableContentTitleText>
       </TableContentTitleContainer>
-      <TableContentContainer>
-        <TableContentText>09.01 (월)</TableContentText>
-        <TableContentText>8:58 - 12:00</TableContentText>
-        <TableContentText>정상</TableContentText>
-      </TableContentContainer>
-      <TableContentContainer>
-        <TableContentText>09.01 (월)</TableContentText>
-        <TableContentText>8:58 - 12:00</TableContentText>
-        <TableContentText>정상</TableContentText>
-      </TableContentContainer>
-      <TableContentContainer>
-        <TableContentText>09.01 (월)</TableContentText>
-        <TableContentText>8:58 - 12:00</TableContentText>
-        <TableContentText>정상</TableContentText>
-      </TableContentContainer>
-      <TableContentContainer>
-        <TableContentText>09.01 (월)</TableContentText>
-        <TableContentText>8:58 - 12:00</TableContentText>
-        <TableContentText>정상</TableContentText>
-      </TableContentContainer>
-      <TableContentContainer>
-        <TableContentText>09.01 (월)</TableContentText>
-        <TableContentText>8:58 - 12:00</TableContentText>
-        <TableContentText>정상</TableContentText>
-      </TableContentContainer>
-      <TableContentContainer>
-        <TableContentText>09.01 (월)</TableContentText>
-        <TableContentText>8:58 - 12:00</TableContentText>
-        <TableContentText>정상</TableContentText>
-      </TableContentContainer>
-      <TableContentContainer>
-        <TableContentText>09.01 (월)</TableContentText>
-        <TableContentText>8:58 - 12:00</TableContentText>
-        <TableContentText>정상</TableContentText>
-      </TableContentContainer>
-      <TableContentContainer>
-        <TableContentText>09.01 (월)</TableContentText>
-        <TableContentText>8:58 - 12:00</TableContentText>
-        <TableContentText>정상</TableContentText>
-      </TableContentContainer>
+      {!!commuteData.length &&
+        commuteData.map((commute) => (
+          <TableContentContainer key={commute.inTime + commute.outTime + commute.date}>
+            <TableContentText alert={commute.commuteStatus === 'LATE' || commute.commuteStatus === 'ABSENT'}>
+              {commute.date.replace('-', '.')} ({Day[new Date(targetDate + '-' + commute.date.split('-')[1]).getDay()]})
+            </TableContentText>
+            <TableContentText alert={commute.commuteStatus === 'LATE' || commute.commuteStatus === 'ABSENT'}>
+              {commute.inTime} - {commute.outTime}
+            </TableContentText>
+            <TableContentText alert={commute.commuteStatus === 'LATE' || commute.commuteStatus === 'ABSENT'}>
+              {STATUS[commute.commuteStatus]}
+            </TableContentText>
+          </TableContentContainer>
+        ))}
     </Table>
   );
 };

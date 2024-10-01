@@ -151,6 +151,14 @@ const useMonthlySchedule = (month: Month, companyId?: CompanyId) => {
   return data.data.data.monthlyScheduleList;
 };
 
+const useWorkHistory = (date: string) => {
+  const { data } = useQuery({ queryKey: keys.workHistory(date), queryFn: () => arbaguette.getWorkHistory(date) });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
 export {
   useAccountBalance,
   useCompanyList,
@@ -163,4 +171,5 @@ export {
   useMonthlySchedule,
   useNearCommuteInfo,
   usePayStub,
+  useWorkHistory,
 };
