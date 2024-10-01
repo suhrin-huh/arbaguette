@@ -1,4 +1,5 @@
 import styled from '@emotion/native';
+import { useMutation } from '@tanstack/react-query';
 import * as FileSystem from 'expo-file-system';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image } from 'react-native';
@@ -6,6 +7,8 @@ import type { SignatureViewRef } from 'react-native-signature-canvas';
 import Signature from 'react-native-signature-canvas';
 
 import Button from '@/components/common/Button';
+import arbaguette from '@/services/arbaguette';
+import useRootStore from '@/zustand';
 
 const ContractContainer = styled.View(({ theme }) => ({
   backgroundColor: theme.color.WHITE,
@@ -57,9 +60,44 @@ const InfoTitle = styled.Text(({ theme }) => ({
   color: theme.color.BLACK,
 }));
 
+interface SendObject {
+  companyId: CompanyId;
+  crewId: CrewId;
+  startDate: DateString;
+  endDate: DateString;
+  workingDayInfoList: WorkingDay[];
+  salary: Money;
+  salaryDate: SalaryDate;
+}
+
 const SignContractBox = ({ pathRoute }: { pathRoute: (to: 'back' | 'next') => void }) => {
+  // const queryClient = useQueryClient();
+  const { mutate: signContract } = useMutation({
+    mutationFn: arbaguette.signContract,
+    onSuccess: async (data) => {
+      // await queryClient.invalidateQueries({ queryKey: keys.common(), refetchType: 'all' });
+      // router.back();
+      pathRoute('next');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   const ref = useRef<SignatureViewRef>(null);
   const [signatureURI, setSignatureURI] = useState<string | null>(null);
+  const {
+    registCrewId,
+    registCompanyId,
+    registStartDate,
+    registEndDate,
+    registWorkingDayInfoList,
+    registSalary,
+    registSalaryDate,
+    registTaxType,
+  } = useRootStore();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // 서명이 완료되었을 때 호출되는 콜백
   const handleOK = async (signature: string) => {
@@ -114,34 +152,51 @@ const SignContractBox = ({ pathRoute }: { pathRoute: (to: 'back' | 'next') => vo
   const sendContrantHandler = async () => {
     // 이미지 전송 로직 추가
 
-    pathRoute('next');
-    //   if (!signatureURI) {
-    //     Alert.alert('오류', '서명된 이미지가 없습니다.');
-    //     return;
-    //   }
-    //   try {
-    //     const formData = new FormData();
-    //     formData.append('signature', {
-    //       uri: signatureURI,
-    //       name: `signature_${Date.now()}.png`,
-    //       type: 'image/png',
-    //     });
-    //     const response = await fetch('https://your-server.com/upload', {
-    //       method: 'POST',
-    //       body: formData,
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //     });
-    //     if (response.ok) {
-    //       Alert.alert('성공', '서명이 서버에 업로드되었습니다.');
-    //     } else {
-    //       Alert.alert('오류', '서명을 서버에 업로드하는 데 실패했습니다.');
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //     Alert.alert('오류', '서명을 업로드하는 중 오류가 발생했습니다.');
-    //   }
+    if (!signatureURI) {
+      Alert.alert('오류', '서명된 이미지가 없습니다.');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      const file = {
+        uri: signatureURI,
+        name: `sign_${Date.now()}.png`,
+        type: 'image/png',
+      };
+
+      const body = {
+        crewId: registCrewId,
+        companyId: registCompanyId,
+        startDate: registStartDate,
+        endDate: registEndDate,
+        workingDayInfoList: registWorkingDayInfoList.map((item) => {
+          return {
+            weekday: item.weekday,
+            startTime: item.startTime,
+            endTime: item.endTime,
+          };
+        }),
+        salary: registSalary,
+        salaryDate: registSalaryDate,
+        taxType: registTaxType,
+      };
+      console.log(body);
+      console.log(registCompanyId);
+
+      // formData.append('body', new Blob([JSON.stringify(body)], { type: 'application/json' }));
+      // formData.append('jsonData', JSON.stringify({ string: JSON.stringify(body), type: 'application/json' }));
+      formData.append('body', JSON.stringify(body));
+
+      // 이미지 추가
+      formData.append('image', file as any);
+
+      await signContract(formData);
+      console.log('signContract');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('오류', '서명을 업로드하는 중 오류가 발생했습니다.');
+    }
   };
 
   return (

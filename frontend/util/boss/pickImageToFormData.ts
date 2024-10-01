@@ -1,6 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 
-const createFileObject = (uri: string, fileName: string, type: string) => {
+export const createFileObject = (uri: string, fileName: string, type: string) => {
   return {
     uri, // 로컬 파일 경로
     type, // MIME 타입 (예: image/jpeg)

@@ -1,11 +1,15 @@
 import styled from '@emotion/native';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
-import { Modal, Text } from 'react-native';
+import { Alert, Modal, Text } from 'react-native';
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
 import ContainerView from '@/components/common/ScreenContainer';
+import keys from '@/reactQuery/keys';
+import arbaguette from '@/services/arbaguette';
 import useRootStore from '@/zustand';
 
 const SendBackground = styled(ContainerView)(({ theme }) => ({
@@ -51,11 +55,28 @@ const ButtonContainer = styled(ContainerView)(({ theme }) => ({
 }));
 
 const ManagementRegisterScreen = () => {
-  const { registName, registTel, setRegistName, setRegistTel } = useRootStore();
+  const { registName, registTel, registCompanyId, setRegistName, setRegistTel, setRegistCrewId } = useRootStore();
+  const telFormat = registTel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
 
-  useEffect(() => {
-    console.log(registName, registTel);
-  }, [registName, registTel]);
+  // const queryClient = useQueryClient();
+  const { mutate: registCrewMember } = useMutation({
+    mutationFn: arbaguette.registCrewMember,
+    onSuccess: async (data) => {
+      const crewId = data?.data?.data?.crewId;
+      setRegistCrewId(crewId);
+    },
+    onError: (error) => {
+      console.log(error);
+
+      if (error instanceof AxiosError && error?.response?.status !== 418) {
+        Alert.alert(error?.response?.data?.message);
+      } else {
+        Alert.alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+      }
+
+      router.back();
+    },
+  });
 
   const handleNameChange = (text: string) => {
     setRegistName(text);
@@ -70,6 +91,16 @@ const ManagementRegisterScreen = () => {
     }
 
     setRegistTel(text);
+  };
+
+  const handleNext = () => {
+    console.log(registName, telFormat, registCompanyId);
+    const data = registCrewMember({ name: registName, tel: telFormat, companyId: registCompanyId });
+
+    console.log(data);
+    // setRegistCrewId(data?.data.crewId);
+    // `data.data.data.crewId`의 정확한 타입이 명시되므로 타입 에러 해결
+    router.push('/(app)/boss/contract/');
   };
 
   return (
@@ -105,7 +136,7 @@ const ManagementRegisterScreen = () => {
             <Button type="outlined" onPress={() => router.back()}>
               닫기
             </Button>
-            <Button onPress={() => router.push('/(app)/boss/contract/')}>다음</Button>
+            <Button onPress={handleNext}>다음</Button>
           </ButtonContainer>
         </RegisterModal>
       </SendBackground>

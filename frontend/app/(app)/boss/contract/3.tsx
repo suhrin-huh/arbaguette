@@ -9,8 +9,6 @@ import Colors from '@/constants/Colors';
 import useRootStore from '@/zustand';
 
 const ManagementRegisterScreen3 = () => {
-  const {} = useRootStore();
-
   const pathRoute = (to: 'back' | 'next') => {
     switch (to) {
       case 'back':
