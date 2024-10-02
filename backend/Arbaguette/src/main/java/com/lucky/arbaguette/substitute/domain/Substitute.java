@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,12 +41,19 @@ public class Substitute {
 
     private int companyId;
 
+    @Version
+    private int version;
+
     @Builder
     private Substitute(Crew crew, Schedule schedule, boolean permit, int companyId) {
         this.crew = crew;
         this.schedule = schedule;
         this.permit = permit;
         this.companyId = companyId;
+    }
+
+    public void applySubstitute(Crew crew) {
+        this.crew = crew;
     }
 
     public void permitSubstitute() {

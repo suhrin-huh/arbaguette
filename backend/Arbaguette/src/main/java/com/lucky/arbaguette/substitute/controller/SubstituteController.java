@@ -44,4 +44,11 @@ public class SubstituteController {
             @RequestBody SubstituteRequest request) {
         return ApiResponse.success(substituteService.agreeSubstitute(customUserDetails, request));
     }
+
+    @PutMapping("/apply")
+    public ApiResponse<Void> applySubstitute(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                             @RequestBody SubstituteRequest request) {
+        substituteService.applySubstitute(customUserDetails, request);
+        return ApiResponse.success();
+    }
 }
