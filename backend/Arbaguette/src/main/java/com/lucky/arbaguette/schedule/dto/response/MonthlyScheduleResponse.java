@@ -37,8 +37,8 @@ public record MonthlyScheduleResponse(List<MonthlySchedule> monthlyScheduleList)
                     crew.getName(),
                     schedule.getScheduleId(),
                     substitute.isPresent(),
-                    substitute.map(sub -> sub.getCrew().getCrewId()).orElse(null),
-                    substitute.map(sub -> sub.getCrew().getName()).orElse(null),
+                    substitute.map(sub -> sub.existsCrew() ? sub.getCrew().getCrewId() : null).orElse(null),
+                    substitute.map(sub -> sub.existsCrew() ? sub.getCrew().getName() : null).orElse(null),
                     schedule.getStartTime().toLocalTime(),
                     schedule.getEndTime().toLocalTime());
         }
