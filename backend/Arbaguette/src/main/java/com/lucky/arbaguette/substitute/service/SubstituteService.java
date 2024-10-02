@@ -89,4 +89,21 @@ public class SubstituteService {
 
         return SubstituteAgreeResponse.from(prevCrew, substitute.getCrew());
     }
+
+    public void applySubstitute(CustomUserDetails userDetails, SubstituteRequest request) {
+        Crew crew = crewRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UnAuthorizedException("알바생이 아니거나, 찾을 수 없습니다."));
+        Schedule schedule = scheduleRepository.findByScheduleIdAndCrewIsNot(request.scheduleId(), crew)
+                .orElseThrow(() -> new NotFoundException("해당하는 스케줄이 존재하지 않습니다."));
+
+        if (scheduleRepository.existsByCrewAndStartTime(crew, schedule.getStartTime())) {
+            throw new DuplicateException("근무일이 겹칩니다.");
+        }
+
+        Substitute substitute = substituteRepository.findByIdWithOptimisticLocking(schedule.getScheduleId())
+                .orElseThrow(() -> new BadRequestException("이미 마감된 대타입니다."));
+
+        substitute.applySubstitute(crew);
+    }
+    
 }
