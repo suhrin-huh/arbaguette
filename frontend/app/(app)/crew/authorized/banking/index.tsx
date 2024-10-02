@@ -9,9 +9,12 @@ import PayrollImage from '@/assets/images/payroll.png';
 import BankingCard from '@/components/common/BankingCard';
 import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import Text from '@/components/common/Text';
-import ExpectedSalaryCard from '@/components/crew/Card/ExpectedSalaryCard';
+import ExpectedSalaryCard from '@/components/crew/ExpectedSalaryCard';
+// import useRootStore from '@/zustand';
 
 const CrewBankingScreen = () => {
+  // const { logout } = useRootStore();
+  // logout();
   return (
     <ScreenContainer>
       <CenterHeaderbar left="none" title="빵Pay" right="bell" />
