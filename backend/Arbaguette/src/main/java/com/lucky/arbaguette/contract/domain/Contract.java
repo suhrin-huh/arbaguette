@@ -45,6 +45,8 @@ public class Contract {
 
     private String crewSign;
 
+    private String url;
+
     @Builder
     public Contract(Company company, Crew crew, LocalDate startDate, LocalDate endDate, int salary, int salaryDate, TaxType tax, String bossSign) {
         this.company = company;
