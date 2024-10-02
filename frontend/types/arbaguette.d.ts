@@ -195,6 +195,12 @@ interface GetDailyScheduleResponseData {
   crews: CrewSchedule[];
 }
 
+interface GetExpectedPayrollResponseData {
+  originSalary: OriginSalary;
+  tax: Tax;
+  allowance: Allowance;
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type EmailCheckResponse = ArbaguetteResponse<void>;
@@ -210,3 +216,4 @@ type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
 type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
 type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;
+type GetExpectedPayrollResponse = ArbaguetteResponse<GetExpectedPayrollResponseData>;

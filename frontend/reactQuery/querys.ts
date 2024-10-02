@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { ExpectedSalaryCard } from '@/components/crew/Card/ExpectedSalaryCard';
 import keys from '@/reactQuery/keys';
 import arbaguette from '@/services/arbaguette';
 
@@ -132,6 +133,10 @@ const useDailySchedule = (date: string, companyId?: CompanyId) => {
   return data.data.data;
 };
 
+/**
+ * 입출금 내역을 가져오는 쿼리 훅
+ *
+ */
 const useGetBankHistory = () => {
   const queryResult = useQuery({
     queryKey: keys.bankHistory(),
@@ -142,6 +147,19 @@ const useGetBankHistory = () => {
   return { bankHistory, ...queryResult };
 };
 
+/**
+ * 사장님 이번달 예상지출 조회 쿼리 훅
+ */
+const useGetExpectedPayroll = () => {
+  const queryResult = useQuery({
+    queryKey: keys.bankHistory(),
+    queryFn: () => arbaguette.getExpectedPayroll(),
+  });
+
+  const expectedPayroll = queryResult.data?.data || null;
+  return { expectedPayroll, ...queryResult };
+};
+
 export {
   useAccountBalance,
   useCompanyList,
@@ -150,6 +168,7 @@ export {
   useDailySchedule,
   useEmailCheck,
   useGetBankHistory,
+  useGetExpectedPayroll,
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,
   useNearCommuteInfo,

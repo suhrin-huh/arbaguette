@@ -53,4 +53,11 @@ export default {
   getDaySchedule: async (date: string, companyId: CompanyId) => {
     return axios.get<GetDailyScheduleResponseData>(`/api/schedule/day?companyId=${companyId}&date=${date}`);
   },
+
+  /**
+   * 이번달 예상 지출 조회
+   */
+  getExpectedPayroll: async () => {
+    return axios.get<GetExpectedPayrollResponse>('/api/boss/expected');
+  },
 };
