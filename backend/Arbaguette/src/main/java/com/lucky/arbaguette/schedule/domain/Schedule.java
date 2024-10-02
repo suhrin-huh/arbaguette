@@ -97,4 +97,8 @@ public class Schedule {
     public void changeCrew(Crew crew) {
         this.crew = crew;
     }
+
+    public boolean checkSameCrew(Crew crew) {
+        return this.crew == crew;
+    }
 }
