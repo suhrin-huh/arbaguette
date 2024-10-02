@@ -64,4 +64,8 @@ public class Substitute {
     public Crew getPrevCrew() {
         return schedule.getCrew();
     }
+
+    public boolean existsCrew() {
+        return this.crew != null;
+    }
 }
