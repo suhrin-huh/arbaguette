@@ -3,10 +3,10 @@ import { router } from 'expo-router';
 import { Image } from 'react-native';
 
 import FireworkImage from '@/assets/images/firework.png';
+import ExpectedSalaryCard from '@/components/boss/ExpectedSalaryCard';
 import BankingCard from '@/components/common/BankingCard';
 import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import Text from '@/components/common/Text';
-import ExpectedSalaryCard from '@/components/crew/Card/ExpectedSalaryCard';
 
 const BossBankingScreen = () => {
   return (
