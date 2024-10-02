@@ -1,6 +1,5 @@
 import styled from '@emotion/native';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
 
 import CompanyCard from '@/components/common/StoreCard';
 import Layout from '@/constants/Layout';
@@ -19,7 +18,7 @@ const ConfigScreen = () => {
 
   const pressNfcButton = (card: Company) => {
     console.log('NFC 버튼 눌림 : ', card.companyId);
-    router.push('/(app)/boss/config/modal');
+    router.navigate({ pathname: '/boss/config/modal', params: { companyId: card.companyId } });
   };
 
   const addStoreHandler = () => {
