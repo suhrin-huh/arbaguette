@@ -22,6 +22,7 @@ interface AuthSlice {
   crewStatus: null | CrewStatus;
   login: (authData: LoginResponseData) => void;
   logout: () => void;
+  updateTokens: (accessToken: string, refreshToken: string) => void;
 }
 
 type Step1 = 'name' | 'date' | 'time' | 'next';

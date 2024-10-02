@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 import type { StateCreator } from 'zustand';
 
-const INITIAL_STATE: Omit<AuthSlice, 'login' | 'logout'> = {
+const INITIAL_STATE: Omit<AuthSlice, 'login' | 'logout' | 'updateTokens'> = {
   isLoggedIn: false,
   accessToken: '',
   refreshToken: '',
@@ -21,6 +21,13 @@ const createAuthSlice: StateCreator<RootState, [], [], AuthSlice> = (set) => ({
     });
   },
   logout: () => set({ ...INITIAL_STATE }),
+  updateTokens: (accessToken: string, refreshToken: string) => {
+    set((state) => ({
+      ...state,
+      accessToken,
+      refreshToken,
+    }));
+  },
 });
 
 export default createAuthSlice;
