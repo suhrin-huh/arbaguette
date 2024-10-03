@@ -7,11 +7,14 @@ import { createCertifiedPaperSlice } from '@/zustand/boss/certifiedPaperSlice';
 import { createCompanyInfoSlice } from '@/zustand/boss/companyInfoSlice';
 import { createRegistCrewSlice } from '@/zustand/boss/registCrewSlice';
 
+import { createSelectedCompanySlice } from './boss/selectedCompanySlice';
+
 const useRootStore = create<RootState>()(
   persist(
     (...a) => ({
       ...createAuthSlice(...a),
       ...createCompanyInfoSlice(...a),
+      ...createSelectedCompanySlice(...a),
       ...createCertifiedPaperSlice(...a),
       ...createRegistCrewSlice(...a),
     }),
@@ -23,6 +26,7 @@ const useRootStore = create<RootState>()(
         refreshToken: state.refreshToken,
         isLoggedIn: state.isLoggedIn,
         role: state.role,
+        crewId: state.crewId,
         crewStatus: state.crewStatus,
       }),
     },

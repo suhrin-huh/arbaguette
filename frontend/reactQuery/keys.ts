@@ -4,10 +4,11 @@ const keys = {
   company: () => [...keys.boss(), 'company'],
   daySchedule: (date: string, companyId: CompanyId) => [...keys.company(), 'schedule', date, companyId],
   companyList: () => [...keys.company(), 'list'],
-  crew: () => [...keys.all, 'crew'],
   crewList: () => [...keys.boss(), 'crews'],
+  crew: () => [...keys.all, 'crew'],
   crewDetail: (crewId: CrewId) => [...keys.crew(), 'detail', crewId],
   nearCommuteInfo: () => [...keys.crew(), 'nearCommuteInfo'],
+  workHistory: (date: string) => [...keys.crew(), 'workHistory', date],
   salary: () => [...keys.crew(), 'salary'],
   payStub: (month: Month) => [...keys.salary(), 'payStub', month],
   accumulatedSalary: () => [...keys.salary(), 'accumulatedSalary'],
@@ -18,6 +19,7 @@ const keys = {
   balance: () => [...keys.bank(), 'balance'],
   dailySchedule: (date: string, companyId?: CompanyId) => [...keys.common(), 'dailySchedule', date, companyId],
   bankHistory: () => [...keys.bank(), 'bankHistory'],
+  monthlySchedule: (month: Month, companyId?: CompanyId) => [...keys.common(), 'monthlySchedule', month, companyId],
 };
 
 export default keys;

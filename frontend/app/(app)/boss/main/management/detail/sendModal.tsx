@@ -8,7 +8,7 @@ import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
 import ContainerView from '@/components/common/ScreenContainer';
 
-import sendComplete from '../../../../../../assets/lottie/complete_check.json';
+import sendComplete from '../../../../../../assets/lottie/check.json';
 
 const SendBackground = styled(ContainerView)(({ theme }) => ({
   backgroundColor: 'rgba(0, 0, 0, 0.5)',

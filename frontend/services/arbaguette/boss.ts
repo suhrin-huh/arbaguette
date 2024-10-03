@@ -26,12 +26,22 @@ export default {
     return axios.get<GetCompanyListResponse>('/api/company');
   },
   /**
-   * 알바생 등록
-   * @param crewRegisterForm 알바생 등록 폼
+   * 알바생 추가
+   * @param crewRegisterForm 알바생 추가 폼
    */
   registCrewMember: async (crewRegisterForm: CrewRegisterForm) => {
-    return axios.post<RegistCrewMemberResponse>('/api/crew', crewRegisterForm);
+    return axios.post<RegistCrewMemberResponse>('/api/boss/crew', crewRegisterForm);
   },
+  /**
+   * 근로계약서 작성
+   * @returns formData
+   */
+  signContract: async (signContractForm: FormData) => {
+    return axios.post<FormData>('/api/contract/boss', signContractForm, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
   /**
    * 알바생 전체 목록 조회
    */

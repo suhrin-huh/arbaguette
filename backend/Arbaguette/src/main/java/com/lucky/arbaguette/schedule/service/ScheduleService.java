@@ -10,7 +10,6 @@ import static com.lucky.arbaguette.schedule.dto.response.DailyScheduleResponse.C
 import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.DailySchedule;
 import static com.lucky.arbaguette.schedule.dto.response.MonthlyScheduleResponse.MonthlySchedule;
 
-import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
@@ -33,14 +32,15 @@ import com.lucky.arbaguette.schedule.dto.response.ScheduleCommutesResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleNextResponse;
 import com.lucky.arbaguette.schedule.dto.response.ScheduleSaveResponse;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
+import com.lucky.arbaguette.substitute.domain.Substitute;
 import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
-
-import org.springframework.scheduling.annotation.Scheduled;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +54,7 @@ public class ScheduleService {
     private final ContractRepository contractRepository;
     private final ContractWorkingDayRepository contractWorkingDayRepository;
     private final CompanyRepository companyRepository;
-    private final BossRepository bossRepository;
+
     private final SubstituteRepository substituteRepository;
 
     public ScheduleSaveResponse saveCrewCommute(CustomUserDetails customUserDetails, ScheduleSaveRequest request,
@@ -103,11 +103,11 @@ public class ScheduleService {
                 getEndOfMonth(date)
         );
 
-        if (schedules.isEmpty()) {
-            throw new NotFoundException("근무 내역을 찾을 수 없습니다.");
-        }
-
-        List<ScheduleStatusCount> statusCounts = scheduleRepository.countByStatus();
+        ScheduleStatusCount statusCounts = scheduleRepository.countByStatus(
+                crew.getCrewId(),
+                getStartOfMonth(date),
+                getEndOfMonth(date)
+        );
 
         return ScheduleCommutesResponse.from(
                 crew,
@@ -122,17 +122,40 @@ public class ScheduleService {
                 .orElseThrow(() -> new UnAuthorizedException("사용자를 찾을 수 없습니다."));
         Contract contract = contractRepository.findByCrew(crew)
                 .orElseThrow(() -> new NotFoundException("근로 계약서를 찾을 수 없습니다."));
-        //근로계약서 안의 startDate ~ endDate 기간 내에
-        // 근무계약일 요일,시간에 해당하는 스케줄을 만든다.
-        List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
+        //일하기로 시작한 달과 현재 달이 다르면 현재 달에 해당하는 스케줄을 만들 필요 없음
+        if (contract.nowMonthNotInWorkingPeriod()) {
+            return;
+        }
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = contract.getStartDate(); //계약 첫 날
+        LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth()); //이번달의 마지막 날
 
-        //근로계약서 상 계약시작일~
-        LocalDate currentDate = contract.getStartDate();
-        //근로계약서 상 계약 종료일
-        LocalDate endDate = contract.getEndDate();
-        while ((!currentDate.isAfter(endDate))) {
+        saveScheduleInContractPeriod(contract, startDate, endDate);
+    }
+
+    @Scheduled(cron = "0 0 0 1 * *")
+    public void autoSchedule() {
+        List<Contract> contracts = contractRepository.findAll();
+        for (Contract contract : contracts) {
+            //현재 날짜가 계약 기간 내에 속하지 않으면 종료
+            if (contract.notInWorkingPeriod()) {
+                return;
+            }
+            //이번 달의 스케줄 만들 첫날과 끝날 정하기
+            LocalDate now = LocalDate.now();
+            LocalDate startDate = now.withDayOfMonth(1);//이번 달의 첫 날
+            LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth()); //이번 달의 마지막 날
+
+            saveScheduleInContractPeriod(contract, startDate, endDate);
+        }
+    }
+
+    private void saveScheduleInContractPeriod(Contract contract, LocalDate startDate, LocalDate endDate) {
+        //근로계약서 안의 startDate ~ endDate 기간 내에 근무계약일 요일,시간에 해당하는 스케줄을 만든다.
+        List<ContractWorkingDay> workingDays = contractWorkingDayRepository.findAllByContract(contract);
+        while ((!startDate.isAfter(endDate))) {
             //람다 내부에서 사용되는 변수는 final 이어야함
-            final LocalDate dateForSchedule = currentDate;
+            final LocalDate dateForSchedule = startDate;
             int currentWeekDay = (dateForSchedule.getDayOfWeek().getValue() % 7) - 1;
             workingDays.stream()
                     .filter(workingDay -> workingDay.getId().getWeekday() == currentWeekDay)
@@ -140,15 +163,17 @@ public class ScheduleService {
                         //스케줄 생성
                         LocalDateTime startTime = LocalDateTime.of(dateForSchedule, workingDay.getStartTime());
                         LocalDateTime endTime = LocalDateTime.of(dateForSchedule, workingDay.getEndTime());
-
+                        if (scheduleRepository.existsByCrewAndStartTime(contract.getCrew(), startTime)) {
+                            return;
+                        }
                         Schedule schedule = Schedule.builder()
-                                .crew(crew)
+                                .crew(contract.getCrew())
                                 .startTime(startTime)
                                 .endTime(endTime)
                                 .build();
                         scheduleRepository.save(schedule);
                     });
-            currentDate = currentDate.plusDays(1);
+            startDate = startDate.plusDays(1);
         }
     }
 
@@ -182,13 +207,12 @@ public class ScheduleService {
             for (Crew crew : crewRepository.findByCompany(company)) {
                 scheduleRepository.findByCrewAndMonthAndDay(crew, month, date)
                         .ifPresent(schedule -> {
-                            boolean isSubstitute = substituteRepository.findByScheduleAndPermitIsFalse(schedule)
-                                    .map(substitute -> !substitute.isPermit())
-                                    .orElse(false);
+                            Optional<Substitute> substitute = substituteRepository.findByScheduleAndPermitIsFalse(
+                                    schedule);
                             dailySchedules.add(DailySchedule.from(
                                     crew,
                                     schedule,
-                                    isSubstitute));
+                                    substitute));
                         });
             }
 

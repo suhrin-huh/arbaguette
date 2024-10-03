@@ -20,4 +20,12 @@ export default {
   getBankHistory: async () => {
     return axios.get('/api/bank/history');
   },
+  /**
+   * 월별 스케줄 조회
+   * @param month 조회할 월
+   * @param companyId 회사 ID
+   */
+  getMonthlySchedule: async (month: Month, companyId?: CompanyId) => {
+    return axios.get<GetMonthlyScheduleResponse>('/api/schedule', { params: { month, companyId } });
+  },
 };

@@ -101,7 +101,7 @@ const weekdays: WeekModalType[] = [
     isSelected: false,
   },
 ];
-const DayBottomSheet = ({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) => {
+const DayBottomSheet = ({ closeHandler }: { closeHandler: () => void }) => {
   const {
     registWorkingDayInfoList,
     setRegistWorkingDayInfoList,
@@ -132,7 +132,7 @@ const DayBottomSheet = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
   };
 
   const addSchedule = () => {
-    const selectedWeekdays = weekdayList.filter((weekday) => weekday.isSelected);
+    let selectedWeekdays = weekdayList.filter((weekday) => weekday.isSelected);
     let newScheduleList: WorkingDayInfo[] = [];
     let newId = registWorkingDayInfoId;
 
@@ -152,7 +152,8 @@ const DayBottomSheet = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
       newScheduleList.push(newSchedule);
     });
 
-    setOpen(false);
+    selectedWeekdays = [];
+    closeHandler();
     setStep1('next');
     setRegistWorkingDayInfoId(newId);
     setRegistWorkingDayInfoList([...registWorkingDayInfoList, ...newScheduleList]);
@@ -169,7 +170,7 @@ const DayBottomSheet = ({ open, setOpen }: { open: boolean; setOpen: (open: bool
         <Title>근무 일정 추가</Title>
         <Button
           onPress={() => {
-            setOpen(false);
+            closeHandler();
           }}
           type="primary"
           buttonStyle={{

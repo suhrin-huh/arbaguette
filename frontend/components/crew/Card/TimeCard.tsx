@@ -63,7 +63,7 @@ const TimeCard = ({ startTime, endTime, companyName }: TimeCardProps) => {
         </TextStrong>
         &nbsp;남았어요!
       </CardText>
-      {isOnDuty && <ProgressBar total={totalSeconds} current={remainTimeInSeconds} />}
+      {isOnDuty && <ProgressBar total={totalSeconds} current={totalSeconds - remainTimeInSeconds} />}
       <TimeText>
         {formattedStartTime} - {formattedEndTime}
       </TimeText>

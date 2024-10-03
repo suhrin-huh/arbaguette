@@ -1,5 +1,8 @@
 package com.lucky.arbaguette.boss.service;
 
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
+
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.dto.request.CrewSaveRequest;
 import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
@@ -28,19 +31,16 @@ import com.lucky.arbaguette.receipt.domain.dto.ReceiptInfo;
 import com.lucky.arbaguette.receipt.repository.ReceiptRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
-import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -76,7 +76,9 @@ public class BossService {
                 int curOriginSalary = 0;
 
                 int hourlyRate = contract.get().getSalary();
-                int workHours = calculateWorkHours(scheduleRepository.findAllScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(), getEndOfMonth()));
+                int workHours = calculateWorkHours(
+                        scheduleRepository.findAllScheduleByCrewAndMonth(crew.getCrewId(), getStartOfMonth(),
+                                getEndOfMonth()));
                 curOriginSalary = hourlyRate * workHours;
 
                 if (workHours > 80) {
@@ -217,6 +219,7 @@ public class BossService {
                 .with(LocalTime.MAX); // 월의 마지막 날 23:59:59
     }
 
+    @Transactional
     public CrewSaveResponse saveCrew(CustomUserDetails customUserDetails, CrewSaveRequest crewSaveRequest) {
         Crew crew = crewRepository.findByTelAndName(crewSaveRequest.tel(), crewSaveRequest.name())
                 .orElseThrow(() -> new BadRequestException("알바생을 찾을 수 없습니다."));
@@ -227,7 +230,7 @@ public class BossService {
                         customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("사업장을 찾을 수 없습니다."));
         crew.hiredCompany(company);
-        crewRepository.save(crew);
+//        crewRepository.save(crew);
         return new CrewSaveResponse(crew.getCrewId());
     }
 
@@ -239,6 +242,14 @@ public class BossService {
         }
 
         receiptRepository.save(receiptSendRequest.toReceipt(contract));
+    }
+
+    public void deleteCrew(CrewSaveRequest crewSaveRequest) {
+        Crew crew = crewRepository.findByCompany_CompanyIdAndNameAndTel(crewSaveRequest.companyId(),
+                        crewSaveRequest.name(), crewSaveRequest.tel())
+                .orElseThrow(() -> new NotFoundException("알바생을 찾을 수 없습니다."));
+        crew.cancelCompany();
+        crewRepository.save(crew);
     }
 
 

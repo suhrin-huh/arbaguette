@@ -66,7 +66,8 @@ public class SecurityConfig {
                         //dispatcher 를 통해 넘어오는 에러는 모두 접근 가능
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         //BOSS 만 접근 가능
-                        .requestMatchers("/api/boss/**", "/api/contract/boss").hasAuthority("BOSS")
+                        .requestMatchers("/api/boss/**", "/api/contract/boss", "/api/substitute/agree")
+                        .hasAuthority("BOSS")
                         //CREW 만 접근 가능
                         .requestMatchers("/api/crew/**", "/api/schedule/crew/**", "/api/contract/crew")
                         .hasAuthority("CREW")

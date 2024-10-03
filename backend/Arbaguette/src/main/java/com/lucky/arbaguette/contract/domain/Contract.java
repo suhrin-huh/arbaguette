@@ -45,8 +45,10 @@ public class Contract {
 
     private String crewSign;
 
+    private String url;
+
     @Builder
-    public Contract(Company company, Crew crew, LocalDate startDate, LocalDate endDate, int salary, int salaryDate, TaxType tax, String bossSign){
+    public Contract(Company company, Crew crew, LocalDate startDate, LocalDate endDate, int salary, int salaryDate, TaxType tax, String bossSign) {
         this.company = company;
         this.crew = crew;
         this.startDate = startDate;
@@ -57,11 +59,22 @@ public class Contract {
         this.bossSign = bossSign;
     }
 
-    public boolean alreadySigned(){
+    public boolean alreadySigned() {
         return this.crewSign != null;
     }
-    public void signCrew(String url){
+
+    public void signCrew(String url) {
         this.crewSign = url;
+    }
+
+    public boolean notInWorkingPeriod() {
+        LocalDate nowTime = LocalDate.now();
+        return ((nowTime.isAfter(this.endDate)) || (nowTime.isBefore(this.startDate)));
+    }
+
+    public boolean nowMonthNotInWorkingPeriod(){
+        LocalDate nowTime = LocalDate.now();
+        return nowTime.getMonth() != this.startDate.getMonth();
     }
 
 }

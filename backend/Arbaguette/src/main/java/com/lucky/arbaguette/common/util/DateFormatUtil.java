@@ -20,6 +20,9 @@ public class DateFormatUtil {
     }
 
     public static String formatTime(LocalDateTime dateTime) {
+        if (dateTime == null) {
+            return null;
+        }
         return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 

@@ -1,5 +1,6 @@
 import styled from '@emotion/native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 import { ScrollView } from 'react-native';
 
 import NoneCard from '@/components/boss/management/NoneScheduleCard';
@@ -10,6 +11,7 @@ import TitleDropdown from '@/components/common/Header/TitleDropdown';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
 import ContainerView from '@/components/common/ScreenContainer';
 import { useDailySchedule } from '@/reactQuery/querys';
+import useRootStore from '@/zustand';
 
 const InnerContainer = styled(ScrollView)(({ theme }) => ({
   flexGrow: 1,
@@ -26,10 +28,18 @@ function todayFormatter() {
 }
 
 const MainScreen = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, name, address } = useLocalSearchParams<{ id: string; name: string; address: string }>();
+  const { selectedCompanyId, selectedCompanyName, setSelectedCompany } = useRootStore();
   const daySchedule = useDailySchedule(todayFormatter(), Number(id));
-  console.log(daySchedule);
   const crewScheduleInfos = daySchedule?.crews;
+
+  useEffect(() => {
+    setSelectedCompany({
+      selectedCompanyId: Number(id),
+      selectedCompanyName: name,
+      selectedCompanyAddress: address,
+    });
+  }, [id, name, address]);
 
   return (
     <InnerContainer
@@ -44,14 +54,14 @@ const MainScreen = () => {
           left="store"
           title={
             <TitleDropdown
-              title="파리바게트 장덕점"
+              title={name}
               onPress={() => {
                 console.log('press');
               }}
             />
           }
           onPressLeft={() => {
-            console.log('left');
+            router.push('/boss/config/');
           }}
           onPressRight={() => {
             console.log('right');

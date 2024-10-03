@@ -12,7 +12,7 @@ interface ModalProps extends BottomSheetModalProps {
 
 const Modal = ({ children, ...props }: ModalProps) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ['40%', '40%'], []);
+  const snapPoints = useMemo(() => ['50%'], []);
 
   useEffect(() => {
     bottomSheetModalRef.current?.present();
@@ -24,11 +24,11 @@ const Modal = ({ children, ...props }: ModalProps) => {
 
   return (
     <BottomSheetModal
-      {...props}
       onDismiss={handleDismiss}
       ref={bottomSheetModalRef}
       snapPoints={snapPoints}
-      backdropComponent={CustomBackdrop}>
+      backdropComponent={CustomBackdrop}
+      {...props}>
       {children}
     </BottomSheetModal>
   );

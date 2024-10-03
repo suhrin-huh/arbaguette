@@ -20,6 +20,7 @@ const Calendar = () => {
       onChange={handleDateChange}
       minimumDate={new Date(1970, 1)}
       maximumDate={new Date()}
+      locale="ko"
     />
   );
 };

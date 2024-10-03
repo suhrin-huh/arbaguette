@@ -5,7 +5,9 @@ import Screen from '@/components/common/Screen';
 import ShowContractButton from '@/components/crew/ShowContractButton';
 import WorkDaysTable from '@/components/crew/Table/WorkDaysTable';
 import WorkStatusTable from '@/components/crew/Table/WorkStatusTable';
+import { useWorkHistory } from '@/reactQuery/querys';
 import Theme from '@/styles/Theme';
+import format from '@/util/format';
 
 const PlaceInfo = Styled.View({
   flexDirection: 'row',
@@ -14,13 +16,14 @@ const PlaceInfo = Styled.View({
 });
 
 const PlaceInfoText = Styled.Text({
-  fontSize: 16,
+  fontSize: 20,
 });
 
 const MonthText = Styled.Text({
   fontSize: 20,
   marginBottom: 50,
   marginTop: 20,
+  fontWeight: 500,
 });
 
 const CrewManagementScreen = () => {
@@ -28,22 +31,31 @@ const CrewManagementScreen = () => {
   const now = new Date();
   const currentYear = Number(year) || now.getFullYear();
   const currentMonth = (Number(month) || now.getMonth()) + 1;
+  const workHistory = useWorkHistory(format.dateToString(new Date(currentYear, currentMonth - 1, 1)));
 
   const handleShowContract = () => {
     router.navigate({ pathname: '/crew/authorized/management/contract' });
   };
 
+  console.log(workHistory);
+  if (!workHistory) return null;
+
   return (
     <Screen viewOption={{ style: { backgroundColor: Theme.color.WHITE } }}>
       <PlaceInfo>
-        <PlaceInfoText>후라이드 참 잘하는 집</PlaceInfoText>
+        <PlaceInfoText>{workHistory.companyName}</PlaceInfoText>
         <ShowContractButton onPress={handleShowContract} />
       </PlaceInfo>
       <MonthText>
         {currentYear}년 {currentMonth}월
       </MonthText>
-      <WorkDaysTable normal={10} absent={8} late={3} earlyLeave={1} />
-      <WorkStatusTable />
+      <WorkDaysTable
+        normal={workHistory.normal}
+        absent={workHistory.absent}
+        late={workHistory.late}
+        earlyLeave={workHistory.earlyLeave}
+      />
+      <WorkStatusTable commuteData={workHistory.commutes} targetDate={workHistory.targetDate} />
     </Screen>
   );
 };

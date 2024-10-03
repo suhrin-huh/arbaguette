@@ -17,6 +17,9 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
+if (__DEV__) {
+  import('../ReactotronConfig').then(() => console.log('ReactotronConfig loaded'));
+}
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 

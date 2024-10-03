@@ -22,7 +22,8 @@ public record ContractInfo(int contractId,
                            int salaryDate,
                            TaxType tax,
                            String bossSign,
-                           String crewSign) {
+                           String crewSign,
+                           String url) {
 
     public static ContractInfo from(Company company, Crew crew, Contract contract, List<WorkingDayInfo> workingDayInfoList) {
         return new ContractInfo(
@@ -39,7 +40,8 @@ public record ContractInfo(int contractId,
                 contract.getSalaryDate(),
                 contract.getTax(),
                 contract.getBossSign(),
-                contract.getCrewSign()
+                contract.getCrewSign(),
+                contract.getUrl()
         );
     }
 
