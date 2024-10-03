@@ -1,3 +1,4 @@
+import type { TagEvent } from 'react-native-nfc-manager';
 import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager';
 
 export type State = 'ready' | 'processing' | 'finish';
@@ -25,20 +26,20 @@ async function* writeNfcData(data: string): AsyncGenerator<State> {
   }
 }
 
-async function* readNfcData() {
+async function* readNfcData(): AsyncGenerator<{ state: State; data: TagEvent | null }> {
   try {
     console.log('NFC 시작');
     await NfcManager.start();
-    yield 'ready';
+    yield { state: 'ready', data: null };
 
     await NfcManager.requestTechnology(NfcTech.Ndef, { alertMessage: 'NFC 카드를 스마트폰 후면에 대주세요.' });
     console.log('NFC 카드를 인식했습니다.');
-    yield 'processing';
+    yield { state: 'processing', data: null };
 
     const tag = await NfcManager.getTag();
 
     await NfcManager.cancelTechnologyRequest();
-    yield tag;
+    yield { state: 'finish', data: tag };
   } finally {
     await NfcManager.cancelTechnologyRequest();
   }
