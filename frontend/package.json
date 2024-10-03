@@ -58,6 +58,7 @@
     "react-native-svg": "~14.1.0",
     "react-native-web": "~0.19.10",
     "react-native-webview": "^13.12.2",
+    "reactotron-plugin-zustand": "github:aylonmuramatsu/reactotron-zustand-plugin",
     "victory-native": "^37.1.1",
     "zustand": "^4.5.5"
   },
@@ -81,6 +82,7 @@
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "react-test-renderer": "18.2.0",
+    "reactotron-react-native": "^5.1.8",
     "typescript": "~5.3.3"
   },
   "private": true,
