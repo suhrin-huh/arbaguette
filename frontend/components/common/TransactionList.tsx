@@ -1,12 +1,25 @@
 import Styled from '@emotion/native';
-import { FlatList } from 'react-native';
+import { View } from 'react-native';
 
 import NoContent from '@/components/common/NoContent';
 import Text from '@/components/common/Text';
 import { useGetBankHistory } from '@/reactQuery/querys';
 
-interface TransactionItemType {
-  [key: string]: string;
+interface TransactionItem {
+  transactionUniqueNo: string;
+  transactionDate: string;
+  transactionTime: string;
+  transactionType: string;
+  transactionTypeName: string;
+  transactionAccountNo: string;
+  transactionBalance: string;
+  transactionAfterBalance: string;
+  transactionSummary: string;
+  transactionMemo: string;
+}
+
+interface TransactionItemProp {
+  item: TransactionItem;
 }
 
 const formatDateTime = (dateTimeString: string): string => {
@@ -21,7 +34,7 @@ const formatDateTime = (dateTimeString: string): string => {
 
 const formattedNumber = (number: string): string => `${parseInt(number, 10).toLocaleString('ko-KR')} 원`;
 
-const TransactionItem = ({ item }: { item: TransactionItemType }) => {
+const TransactionItem = ({ item }: TransactionItemProp) => {
   return (
     <TransactionBox>
       <Text size="base" color="gray">
@@ -47,15 +60,23 @@ const TransactionList = () => {
   const { bankHistory } = useGetBankHistory();
   if (bankHistory) {
     return (
-      <FlatList
-        data={bankHistory.list}
-        renderItem={({ item }) => <TransactionItem item={item} />}
-        showsVerticalScrollIndicator={false}
-      />
+      <View>
+        <Container
+          data={bankHistory.list}
+          renderItem={({ item }) => <TransactionItem item={item} />}
+          showsVerticalScrollIndicator={false}
+        />
+        <Block />
+      </View>
     );
   }
   return <NoContent message="입출금 내역이 없습니다." />;
 };
+
+const Container = Styled.FlatList(() => ({
+  paddingBottom: 80,
+}));
+const Block = Styled.View(() => ({}));
 
 const TransactionBox = Styled.View(({ theme }) => ({
   flex: 1,
