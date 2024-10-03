@@ -81,7 +81,6 @@ const NfcModal = () => {
   const snapPoints = useMemo(() => ['40%', '40%'], []);
 
   useEffect(() => {
-    console.log('mounted');
     bottomSheetModalRef.current?.present();
     (async () => {
       const stateGenerator = writeNfcData(companyId);
