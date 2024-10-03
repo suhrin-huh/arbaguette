@@ -1,78 +1,39 @@
-import Styled from '@emotion/native';
-import React from 'react';
-import { Text } from 'react-native';
+import styled from '@emotion/native';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { router } from 'expo-router';
+import { useEffect, useMemo, useRef } from 'react';
 
-import Screen from '@/components/common/Screen';
-import { useEmploymentContract } from '@/reactQuery/querys';
-import useRootStore from '@/zustand';
+import CustomBackdrop from '@/components/common/BottomSheetOption/CustomBackdrop';
+import CustomBackground from '@/components/common/BottomSheetOption/CustomBackgound';
 
-const Contract = Styled.View(({ theme }) => ({ gap: 10 }));
-
-const Row = Styled.View(({ theme }) => ({
-  backgroundColor: theme.color.GRAY['5'],
-  width: '100%',
-  height: 50,
-  flexDirection: 'row',
-}));
-
-const Key = Styled.View(({ theme }) => ({
-  backgroundColor: theme.color.GRAY['0'],
-  flex: 1,
-  alignItems: 'flex-start',
+const BottomSheetViewArea = styled(BottomSheetView)(({ theme }) => ({
+  flexDirection: 'column',
   justifyContent: 'center',
-  height: '100%',
+  alignItems: 'center',
 }));
 
-const Value = Styled.View(({ theme }) => ({
-  backgroundColor: theme.color.GRAY['3'],
-  flex: 1.6,
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-  height: '100%',
-}));
+const SignatureModal = () => {
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => ['40%', '40%'], []);
 
-const KeyText = Styled.Text(({ theme }) => ({
-  color: theme.color.BLACK,
-  paddingLeft: 30,
-  fontSize: 20,
-  fontWeight: 600,
-}));
+  useEffect(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
-const ValueText = Styled.Text(({ theme }) => ({
-  color: theme.color.BLACK,
-  fontSize: 20,
-  fontWeight: 400,
-}));
-
-const SignatureScreen = () => {
-  const { crewId } = useRootStore();
-  const contract = useEmploymentContract(crewId || -1);
-
-  console.log(contract);
-
-  if (contract) return null;
+  const handleDismiss = () => {
+    router.back();
+  };
 
   return (
-    <Screen>
-      <Text>대기화면</Text>
-      <Contract>
-        <Row>
-          <Key>
-            <KeyText>급여지급일</KeyText>
-          </Key>
-          <Value>
-            <ValueText>daf</ValueText>
-          </Value>
-        </Row>
-        <Row />
-        <Row />
-        <Row />
-        <Row />
-        <Row />
-        <Row />
-      </Contract>
-    </Screen>
+    <BottomSheetModal
+      onDismiss={handleDismiss}
+      ref={bottomSheetModalRef}
+      snapPoints={snapPoints}
+      backgroundComponent={CustomBackground}
+      backdropComponent={CustomBackdrop}>
+      <BottomSheetViewArea />
+    </BottomSheetModal>
   );
 };
 
-export default SignatureScreen;
+export default SignatureModal;

@@ -9,12 +9,14 @@ const UnAuthorizedLayout = () => {
     return <Redirect href="/crew/authorized" />;
   }
 
-  const initialRouteName = crewStatus === 'UNSIGNED' ? 'signature' : 'wait';
+  const initialRouteName = crewStatus === 'UNSIGNED' ? 'contract' : 'wait';
 
   return (
     <Stack initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
       <Stack.Screen name="wait" />
-      <Stack.Screen name="signature" />
+      <Stack.Screen name="contract" />
+      <Stack.Screen name="pdf" options={{ presentation: 'modal', headerShown: true }} />
+      <Stack.Screen name="signature" options={{ presentation: 'containedTransparentModal', headerShown: true }} />
     </Stack>
   );
 };
