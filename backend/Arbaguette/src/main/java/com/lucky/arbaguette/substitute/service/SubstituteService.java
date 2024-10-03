@@ -96,14 +96,13 @@ public class SubstituteService {
         Schedule schedule = scheduleRepository.findByScheduleIdAndCrewIsNot(request.scheduleId(), crew)
                 .orElseThrow(() -> new NotFoundException("해당하는 스케줄이 존재하지 않습니다."));
 
-        if (scheduleRepository.existsByCrewAndStartTime(crew, schedule.getStartTime())) {
-            throw new DuplicateException("근무일이 겹칩니다.");
-        }
+        scheduleRepository.findByCrewAndMonthAndDay(crew, schedule.getStartTime().getMonthValue(),
+                schedule.getStartTime().getDayOfMonth()).orElseThrow(() -> new DuplicateException("근무일이 겹칩니다."));
 
         Substitute substitute = substituteRepository.findByIdWithOptimisticLocking(schedule.getScheduleId())
                 .orElseThrow(() -> new BadRequestException("이미 마감된 대타입니다."));
 
         substitute.applySubstitute(crew);
     }
-    
+
 }
