@@ -63,4 +63,12 @@ export default {
   getDaySchedule: async (date: string, companyId: CompanyId) => {
     return axios.get<GetDailyScheduleResponseData>(`/api/schedule/day?companyId=${companyId}&date=${date}`);
   },
+
+  /**
+   * 대타 승인
+   * @param scheduleId 스케줄 아이디
+   */
+  agreeSubstitute: async (scheduleId: ScheduleId) => {
+    return axios.put<AgreeSubstituteResponse>('/api/substitute/agree', { scheduleId });
+  },
 };
