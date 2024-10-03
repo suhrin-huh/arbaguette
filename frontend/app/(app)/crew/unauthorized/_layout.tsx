@@ -9,10 +9,10 @@ const UnAuthorizedLayout = () => {
     return <Redirect href="/crew/authorized" />;
   }
 
-  const initialRouteName = crewStatus === 'UNSIGNED' ? 'wait' : 'signature';
+  const initialRouteName = crewStatus === 'UNSIGNED' ? 'signature' : 'wait';
 
   return (
-    <Stack initialRouteName={initialRouteName}>
+    <Stack initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
       <Stack.Screen name="wait" />
       <Stack.Screen name="signature" />
     </Stack>
