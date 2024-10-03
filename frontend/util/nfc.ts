@@ -25,4 +25,23 @@ async function* writeNfcData(data: string): AsyncGenerator<State> {
   }
 }
 
-export { writeNfcData };
+async function* readNfcData() {
+  try {
+    console.log('NFC 시작');
+    await NfcManager.start();
+    yield 'ready';
+
+    await NfcManager.requestTechnology(NfcTech.Ndef, { alertMessage: 'NFC 카드를 스마트폰 후면에 대주세요.' });
+    console.log('NFC 카드를 인식했습니다.');
+    yield 'processing';
+
+    const tag = await NfcManager.getTag();
+
+    await NfcManager.cancelTechnologyRequest();
+    yield tag;
+  } finally {
+    await NfcManager.cancelTechnologyRequest();
+  }
+}
+
+export { readNfcData, writeNfcData };
