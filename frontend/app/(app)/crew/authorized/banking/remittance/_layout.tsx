@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 
-const TransferLayout = () => {
+const RemittanceLayout = () => {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="1" />
@@ -9,4 +9,4 @@ const TransferLayout = () => {
   );
 };
 
-export default TransferLayout;
+export default RemittanceLayout;

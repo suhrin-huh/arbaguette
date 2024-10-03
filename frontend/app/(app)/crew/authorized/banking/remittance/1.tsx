@@ -8,7 +8,7 @@ import LabeledInput from '@/components/common/LabeledInput';
 import Text from '@/components/common/Text';
 import { useAccountBalance } from '@/reactQuery/querys';
 
-const GetTransferInfo = () => {
+const GetRemittanceInfo = () => {
   const { accountBalance } = useAccountBalance();
   const [accountNo, setAccountNo] = useState<string>();
   const [amount, setAmount] = useState<string>();
@@ -45,7 +45,9 @@ const GetTransferInfo = () => {
     setAmount(undefined);
   };
 
-  const goToNext = (): void => {};
+  const goToNext = (): void => {
+    router.push({ pathname: '/(app)/crew/authorized/banking/remittance/2', params: { accountNo, amount } });
+  };
 
   return (
     <Container>
@@ -102,4 +104,4 @@ const InputWrapper = Styled.View(() => ({
   marginTop: 40,
 }));
 
-export default GetTransferInfo;
+export default GetRemittanceInfo;

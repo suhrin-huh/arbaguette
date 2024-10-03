@@ -6,7 +6,7 @@ const BankingLayout = () => {
       <Stack.Screen name="index" />
       <Stack.Screen name="certification" />
       <Stack.Screen name="transaction" />
-      <Stack.Screen name="transfer" />
+      <Stack.Screen name="remittance" />
     </Stack>
   );
 };
