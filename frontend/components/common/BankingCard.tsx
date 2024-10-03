@@ -21,12 +21,12 @@ const BankingCard = () => {
       router.push('/(app)/crew/authorized/banking/transaction');
     }
   };
-  const navigateToTransfer = () => {
+  const navigateToRemittance = () => {
     if (role === 'BOSS') {
       // router.push('/(app)/boss/main/banking/transaction');
       console.log('BOSS');
     } else {
-      router.push('/(app)/crew/authorized/banking/transfer/1');
+      router.push('/(app)/crew/authorized/banking/remittance/2');
     }
   };
 
@@ -46,7 +46,7 @@ const BankingCard = () => {
           {accountBalance && formattedNumber(money)}
         </Text>
         <ButtonGroup>
-          <Button textStyle={{ fontWeight: 'bold' }} onPress={navigateToTransfer}>
+          <Button textStyle={{ fontWeight: 'bold' }} onPress={navigateToRemittance}>
             송금
           </Button>
           <Button textStyle={{ fontWeight: 'bold' }} onPress={navigateToTransaction}>

@@ -10,7 +10,7 @@ const ProgressContainer = Styled.View(({ theme }) => ({
 }));
 
 const Dot = Styled.View<{ step: number; current: number }>(({ theme, step, current }) => ({
-  backgroundColor: step <= current ? theme.color.SECONDARY : theme.color.WHITE,
+  backgroundColor: step <= current ? theme.color.SECONDARY : theme.color.GRAY['1'],
   height: 10,
   width: 10,
   borderRadius: 5,
