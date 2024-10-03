@@ -10,8 +10,26 @@ import useRootStore from '@/zustand';
 const BankingCard = () => {
   const { accountBalance } = useAccountBalance();
   const { account, money } = accountBalance;
+  const { role } = useRootStore.getState();
   const formatToAccountNo = (number: string): string => number.replace(/(\d{6})(\d{2})(\d+)/, '$1-$2-$3');
   const formattedNumber = (number: string): string => `${parseInt(number, 10).toLocaleString('ko-KR')} 원`;
+
+  const navigateToTransaction = () => {
+    if (role === 'BOSS') {
+      router.push('/(app)/boss/main/banking/transaction');
+    } else {
+      router.push('/(app)/crew/authorized/banking/transaction');
+    }
+  };
+  const navigateToTransfer = () => {
+    if (role === 'BOSS') {
+      // router.push('/(app)/boss/main/banking/transaction');
+      console.log('BOSS');
+    } else {
+      router.push('/(app)/crew/authorized/banking/transfer/1');
+    }
+  };
+
   return (
     <BankingContainer>
       <LogoBox>
@@ -28,10 +46,10 @@ const BankingCard = () => {
           {accountBalance && formattedNumber(money)}
         </Text>
         <ButtonGroup>
-          <Button textStyle={{ fontWeight: 'bold' }}>송금</Button>
-          <Button
-            textStyle={{ fontWeight: 'bold' }}
-            onPress={() => router.push('/(app)/crew/authorized/banking/transaction')}>
+          <Button textStyle={{ fontWeight: 'bold' }} onPress={navigateToTransfer}>
+            송금
+          </Button>
+          <Button textStyle={{ fontWeight: 'bold' }} onPress={navigateToTransaction}>
             조회
           </Button>
         </ButtonGroup>

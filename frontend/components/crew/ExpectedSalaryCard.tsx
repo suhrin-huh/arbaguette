@@ -27,7 +27,7 @@ const ExpectedSalaryCard = () => {
   }
 
   if (isSalaryVisible && estimatedSalary) {
-    return <SalaryToggleCard salary={estimatedSalary} />;
+    return <SalaryToggleCard salary={estimatedSalary} onPress={handlePress} />;
   }
 
   return (
