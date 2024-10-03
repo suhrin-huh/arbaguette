@@ -20,6 +20,7 @@ const keys = {
   dailySchedule: (date: string, companyId?: CompanyId) => [...keys.common(), 'dailySchedule', date, companyId],
   bankHistory: () => [...keys.bank(), 'bankHistory'],
   monthlySchedule: (month: Month, companyId?: CompanyId) => [...keys.common(), 'monthlySchedule', month, companyId],
+  checkAccountPassword: (password: Password) => [...keys.bank(), 'password', password],
 };
 
 export default keys;

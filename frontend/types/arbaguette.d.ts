@@ -81,6 +81,7 @@ type Money = number;
 interface RemittanceForm {
   account: BankAccount;
   money: Money;
+  password: Password;
 }
 
 interface LoginResponseData {
@@ -261,3 +262,4 @@ type GetExpectedPayrollResponse = ArbaguetteResponse<GetExpectedPayrollResponseD
 type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseData>;
 type GetWorkHistoryResponse = ArbaguetteResponse<GetWorkHistoryResponseData>;
 type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
+type checkAccountPasswordResponse = ArbaguetteResponse<void>;

@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { ExpectedSalaryCard } from '@/components/crew/Card/ExpectedSalaryCard';
 import keys from '@/reactQuery/keys';
 import arbaguette from '@/services/arbaguette';
 
@@ -148,6 +147,18 @@ const useGetBankHistory = () => {
 };
 
 /**
+ * 계좌 비밀번호 일치 여부 확인 쿼리 훅
+ */
+const useCheckAccountPassword = (password: string) => {
+  const queryResult = useQuery({
+    queryKey: keys.checkAccountPassword(password),
+    queryFn: () => arbaguette.checkAccountPassword(password), // This is a Promise, not a function
+    enabled: password.length === 4,
+  });
+  const isCorrect = queryResult.status === 'success';
+  return { isCorrect, ...queryResult };
+};
+/**
  * 사장님 이번달 예상지출 조회 쿼리 훅
  */
 const useGetExpectedPayroll = () => {
@@ -186,6 +197,7 @@ const useWorkHistory = (date: string) => {
 
 export {
   useAccountBalance,
+  useCheckAccountPassword,
   useCompanyList,
   useCrewMemberList,
   useCrewMemeberDetail,
