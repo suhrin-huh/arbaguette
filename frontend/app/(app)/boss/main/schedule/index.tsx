@@ -30,10 +30,10 @@ const BossScheduleScreen = () => {
           marked: dailySchedules.some((schedule) => schedule.crewId),
           dots: dailySchedules.map((schedule) => {
             if (schedule.hopeCrewId && schedule.hopeCrewName) {
-              return { key: 'substitute', color: Theme.color.SECONDARY };
+              return { key: schedule.scheduleId.toString(), color: Theme.color.SECONDARY };
             }
             if (schedule.crewId) {
-              return { key: 'crew', color: Theme.color.PRIMARY };
+              return { key: schedule.scheduleId.toString(), color: Theme.color.PRIMARY };
             }
             return {};
           }),
