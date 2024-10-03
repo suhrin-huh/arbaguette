@@ -6,12 +6,11 @@ Reactotron.setAsyncStorageHandler(AsyncStorage)
     name: 'Arbaguette',
   })
   .useReactNative({
-    asyncStorage: false, // there are more options to the async storage.
+    asyncStorage: true,
     networking: {
-      // optionally, you can turn it off with false.
       ignoreUrls: /symbolicate/,
     },
-    editor: false, // there are more options to editor
+    editor: false,
     errors: { veto: (stackFrame) => false }, // or turn it off with false
     overlay: false, // just turning off overlay
   })
