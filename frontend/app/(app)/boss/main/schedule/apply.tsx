@@ -2,7 +2,7 @@ import Styled from '@emotion/native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { Alert, Text } from 'react-native';
 import type { TimelineEventProps } from 'react-native-calendars';
 
 import Button from '@/components/common/Button';
@@ -43,6 +43,10 @@ const BossScheduleApplyScreen = () => {
       setIsApplied(true);
       setIsLoading(false);
     },
+    onError: () => {
+      setIsLoading(false);
+      Alert.alert('대타 승인 실패', '대타 승인 실패');
+    },
   });
   const applyHandler = () => {
     setIsLoading(true);
@@ -51,7 +55,7 @@ const BossScheduleApplyScreen = () => {
 
   const completeHandler = () => {
     setIsApplied(false);
-    router.back();
+    router.navigate('/boss/main/schedule');
   };
 
   return (
