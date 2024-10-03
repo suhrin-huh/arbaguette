@@ -28,4 +28,11 @@ export default {
   getMonthlySchedule: async (month: Month, companyId?: CompanyId) => {
     return axios.get<GetMonthlyScheduleResponse>('/api/schedule', { params: { month, companyId } });
   },
+  /**
+   * 근로계약서 조회
+   * @param crewId 조회할 알바생 ID
+   */
+  getEmploymentContract: async (crewId: CrewId) => {
+    return axios.get<GetEmploymentContractResponse>('/api/contract', { params: { crewId } });
+  },
 };

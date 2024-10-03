@@ -235,6 +235,28 @@ interface GetWorkHistoryResponseData {
 
 type CommuteStatus = 'NORMAL' | 'ABSENT' | 'LATE';
 
+type ContractId = number;
+
+type TaxType = 'NONE' | 'INSU' | 'INCOME';
+
+interface GetEmploymentContractResponseData {
+  contractId: ContractId;
+  companyName: CompanyName;
+  address: CompanyAddress;
+  representative: Representative;
+  crewName: CrewName;
+  tel: Tel;
+  startDate: DateString;
+  endDate: DateString;
+  workingDayInfoList: { weekday: Weekday; startTime: string; endTime: string }[];
+  salary: Money;
+  salaryDate: SalaryDate;
+  tax: TaxType;
+  bossSign: string;
+  crewSign: string;
+  url: string;
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type EmailCheckResponse = ArbaguetteResponse<void>;
@@ -254,3 +276,4 @@ type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>
 type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseData>;
 type GetWorkHistoryResponse = ArbaguetteResponse<GetWorkHistoryResponseData>;
 type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
+type GetEmploymentContractResponse = ArbaguetteResponse<GetEmploymentContractResponseData>;
