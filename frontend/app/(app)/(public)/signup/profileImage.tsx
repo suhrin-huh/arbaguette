@@ -1,8 +1,9 @@
 import Styled from '@emotion/native';
+import Icon from '@expo/vector-icons/AntDesign';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
+import { Pressable } from 'react-native';
 
-import PlusIcon from '@/assets/images/plus.png';
 import Button from '@/components/common/Button';
 import Text from '@/components/common/Text';
 import pickImageToFormData from '@/util/boss/pickImageToFormData';
@@ -20,12 +21,10 @@ const ProfileImageScreen = () => {
       const result = await pickImageToFormData();
 
       if (result) {
-        console.log(123);
-        console.log(role);
         setProfileImage(result.uri);
       }
-    } catch (error) {
-      console.log(123);
+    } catch {
+      console.log('프로필사진 선택 오류');
     }
   };
 
@@ -41,10 +40,12 @@ const ProfileImageScreen = () => {
         </Text>
         <ButtonContainer>
           {profileImage ? (
-            <Image source={{ uri: profileImage }} />
+            <Pressable onPress={handleGalleryPress}>
+              <Image source={{ uri: profileImage }} />
+            </Pressable>
           ) : (
             <CameraButton onPress={handleGalleryPress}>
-              <Icon source={PlusIcon} />
+              <Icon name="picture" size={80} color="white" />
             </CameraButton>
           )}
         </ButtonContainer>
@@ -72,22 +73,18 @@ const ContentWrapper = Styled.View(() => ({
 
 const ButtonContainer = Styled.View(({ theme }) => ({
   flex: 1,
+  justifyContent: 'center',
   alignItems: 'center',
   marginTop: 30,
 }));
 
 const CameraButton = Styled.Pressable(({ theme }) => ({
-  width: 200,
-  height: 200,
+  width: 250,
+  height: 250,
   backgroundColor: theme.color.PRIMARY,
-  borderRadius: 100,
+  borderRadius: 125,
   justifyContent: 'center',
   alignItems: 'center',
-}));
-
-const Icon = Styled.Image(() => ({
-  width: 50,
-  height: 50,
 }));
 
 const Image = Styled.Image(() => ({
