@@ -180,8 +180,6 @@ const useMonthlySchedule = (month: Month, companyId?: CompanyId) => {
   const { data } = useQuery({
     queryKey: keys.monthlySchedule(month, companyId),
     queryFn: () => arbaguette.getMonthlySchedule(month, companyId),
-    staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: true,
   });
 
   if (!data) return null;
@@ -189,8 +187,27 @@ const useMonthlySchedule = (month: Month, companyId?: CompanyId) => {
   return data.data.data.monthlyScheduleList;
 };
 
+/**
+ * 근무 내역을 가져오는 쿼리 훅
+ * @param date 조회할 날짜
+ */
 const useWorkHistory = (date: string) => {
   const { data } = useQuery({ queryKey: keys.workHistory(date), queryFn: () => arbaguette.getWorkHistory(date) });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
+/**
+ * 근로계약서를 가져오는 쿼리 훅
+ * @param crewId 조회할 알바생 ID
+ */
+const useEmploymentContract = (crewId: CrewId) => {
+  const { data } = useQuery({
+    queryKey: keys.employmentContract(crewId),
+    queryFn: () => arbaguette.getEmploymentContract(crewId),
+  });
 
   if (!data) return null;
 
@@ -205,6 +222,7 @@ export {
   useCrewMemeberDetail,
   useDailySchedule,
   useEmailCheck,
+  useEmploymentContract,
   useGetBankHistory,
   useGetExpectedPayroll,
   useMonthlyAccumulatedSalary,

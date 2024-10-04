@@ -45,7 +45,9 @@
         {
           "isBackgroundEnabled": true
         }
-      ]
+      ],
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf"
     ],
     "experiments": {
       "typedRoutes": true

@@ -41,7 +41,7 @@ const CrewManagementScreen = () => {
   if (!workHistory) return null;
 
   return (
-    <Screen viewOption={{ style: { backgroundColor: Theme.color.WHITE } }}>
+    <Screen viewOption={{ style: { backgroundColor: Theme.color.WHITE } }} type="scroll">
       <PlaceInfo>
         <PlaceInfoText>{workHistory.companyName}</PlaceInfoText>
         <ShowContractButton onPress={handleShowContract} />

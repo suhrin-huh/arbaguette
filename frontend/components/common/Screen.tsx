@@ -1,6 +1,6 @@
 import Styled from '@emotion/native';
 import type { PropsWithChildren } from 'react';
-import type { ScrollViewProps, StatusBarProps, StyleProp, ViewStyle } from 'react-native';
+import type { ScrollViewProps, StatusBarProps, StyleProp, ViewProps, ViewStyle } from 'react-native';
 
 import Theme from '@/styles/Theme';
 
@@ -13,16 +13,30 @@ const ScrollView = Styled.ScrollView(({ theme }) => ({
   backgroundColor: theme.color.BACKGROUND,
 }));
 
+const View = Styled.View(({ theme }) => ({
+  flex: 1,
+  backgroundColor: theme.color.BACKGROUND,
+  paddingVertical: Theme.layout.PADDING.VERTICAL,
+  paddingHorizontal: Theme.layout.PADDING.HORIZONTAL,
+}));
+
 const ArbaguetteStatusBar = Styled.StatusBar(({ theme }) => ({ backgroundColor: theme.color.PRIMARY }));
 
-type ScreenProps = PropsWithChildren<
-  Partial<{
-    viewOption: ScrollViewProps & { style: StyleProp<ViewStyle> };
-    statusbarOption: StatusBarProps;
-  }>
->;
+type CustomScrollViewProps = { type: 'scroll' } & Partial<{
+  viewOption: ScrollViewProps & { style: StyleProp<ViewStyle> };
+  statusbarOption: StatusBarProps;
+}>;
 
-const Screen = ({ children, viewOption, statusbarOption }: ScreenProps) => {
+type CustomViewProps = { type: 'view' } & Partial<{
+  viewOption: ViewProps & { style: StyleProp<ViewStyle> };
+  statusbarOption: StatusBarProps;
+}>;
+
+type ScreenProps = PropsWithChildren<CustomScrollViewProps | CustomViewProps>;
+
+const Screen = ({ children, type, viewOption, statusbarOption }: ScreenProps) => {
+  const ScreenComponent = type === 'view' ? View : ScrollView;
+
   return (
     <ScreenContainer>
       <ArbaguetteStatusBar
@@ -31,7 +45,7 @@ const Screen = ({ children, viewOption, statusbarOption }: ScreenProps) => {
         barStyle="light-content"
         {...statusbarOption}
       />
-      <ScrollView
+      <ScreenComponent
         {...viewOption}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
@@ -40,7 +54,7 @@ const Screen = ({ children, viewOption, statusbarOption }: ScreenProps) => {
           paddingHorizontal: Theme.layout.PADDING.HORIZONTAL,
         }}>
         {children}
-      </ScrollView>
+      </ScreenComponent>
     </ScreenContainer>
   );
 };

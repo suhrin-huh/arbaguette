@@ -1,6 +1,6 @@
 import Styled from '@emotion/native';
 import type { PressableProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import { Pressable, View } from 'react-native';
+import { Pressable } from 'react-native';
 
 type ButtonSize = 'fill' | 'hug' | number;
 type ButtonType = 'primary' | 'outlined';
@@ -62,13 +62,11 @@ const ButtonText = Styled.Text<Omit<ButtonContainerProps, 'size' | 'textStyle' |
 
 const Button = ({ children, size = 'fill', type = 'primary', buttonStyle, textStyle, ...props }: ButtonProps) => {
   return (
-    <Pressable {...props} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
+    <Pressable {...props} style={({ pressed }) => [{ opacity: pressed ? 0.7 : 1 }, buttonStyle]}>
       <ButtonContainer size={size} type={type} disabled={props.disabled} style={buttonStyle}>
-        <View>
-          <ButtonText type={type} disabled={props.disabled} style={textStyle}>
-            {children as string}
-          </ButtonText>
-        </View>
+        <ButtonText type={type} disabled={props.disabled} style={textStyle}>
+          {children as string}
+        </ButtonText>
       </ButtonContainer>
     </Pressable>
   );
