@@ -10,16 +10,17 @@ import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -151,17 +152,27 @@ public class BankService {
         String email = customUserDetails.getUsername();
         String userKey = "";
         String account = "";
+        String sender = "";
+        String receiver = "";
         if (customUserDetails.isBoss()) {
             Boss boss = bossRepository.findByEmail(email)
                     .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
             account = boss.getAccount();
             userKey = boss.getUserKey();
+            sender = boss.getName();
+            receiver = crewRepository.findByAccount(request.account())
+                    .orElseThrow(() -> new NotFoundException("해당 계좌의 회원을 찾을 수 없습니다."))
+                    .getName();
         }
         if (customUserDetails.isCrew()) {
             Crew crew = crewRepository.findByEmail(email)
                     .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
             account = crew.getAccount();
             userKey = crew.getUserKey();
+            sender = crew.getName();
+            receiver = bossRepository.findByAccount(request.account())
+                    .orElseThrow(() -> new NotFoundException("해당 계좌의 회원을 찾을 수 없습니다."))
+                    .getName();
         }
 
         //"updateDemandDepositAccountTransfer" 시작
@@ -187,10 +198,10 @@ public class BankService {
 
         accountRequestBody.put("Header", headerMap);
         accountRequestBody.put("depositAccountNo", request.account());
-        accountRequestBody.put("depositTransactionSummary", "(수시입출금) : 입금(이체)");
+        accountRequestBody.put("depositTransactionSummary", sender);
         accountRequestBody.put("transactionBalance", request.money());
         accountRequestBody.put("withdrawalAccountNo", account);
-        accountRequestBody.put("withdrawalTransactionSummary", "(수시입출금) : 출금(이체)");
+        accountRequestBody.put("withdrawalTransactionSummary", receiver);
 
         webClient.post()
                 .uri(financialApiUrl + "/v1/edu/demandDeposit/updateDemandDepositAccountTransfer")
@@ -206,6 +217,9 @@ public class BankService {
                 .orElseThrow(() -> new UnAuthorizedException("해당 권한이 없습니다."));
         String account = boss.getAccount();
         String userKey = boss.getUserKey();
+
+        Crew crew = crewRepository.findById(request.crewId())
+                .orElseThrow(() -> new NotFoundException("해당하는 알바생의 계좌가 존재하지 않습니다."));
 
         //"updateDemandDepositAccountTransfer" 시작
         Map<String, Object> accountRequestBody = new HashMap<>();
@@ -229,13 +243,11 @@ public class BankService {
         headerMap.put("userKey", userKey);
 
         accountRequestBody.put("Header", headerMap);
-        accountRequestBody.put("depositAccountNo", crewRepository.findById(request.crewId())
-                .orElseThrow(() -> new NotFoundException("해당하는 알바생의 계좌가 존재하지 않습니다."))
-                .getAccount());
-        accountRequestBody.put("depositTransactionSummary", "(수시입출금) : 입금(급여이체)");
+        accountRequestBody.put("depositAccountNo", crew.getAccount());
+        accountRequestBody.put("depositTransactionSummary", boss.getName() + " (급여)");
         accountRequestBody.put("transactionBalance", request.money());
         accountRequestBody.put("withdrawalAccountNo", account);
-        accountRequestBody.put("withdrawalTransactionSummary", "(수시입출금) : 출금(급여이체)");
+        accountRequestBody.put("withdrawalTransactionSummary", crew.getName() + " (급여)");
 
         webClient.post()
                 .uri(financialApiUrl + "/v1/edu/demandDeposit/updateDemandDepositAccountTransfer")
