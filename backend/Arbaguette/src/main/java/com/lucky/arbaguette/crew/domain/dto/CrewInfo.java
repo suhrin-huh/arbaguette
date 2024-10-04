@@ -8,7 +8,7 @@ import java.util.List;
 
 public record CrewInfo(int id,
                        String name,
-                       int profileImage,
+                       String profileImage,
                        int salary,
                        int period,
                        LocalDate endDate,

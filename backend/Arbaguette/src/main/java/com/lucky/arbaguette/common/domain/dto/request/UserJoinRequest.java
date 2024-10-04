@@ -20,31 +20,30 @@ public class UserJoinRequest {
     private String tel;
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    private int profileImage;
     private String accountPassword;
 
-    public Boss toBoss(BCryptPasswordEncoder bCryptPasswordEncoder, String account, String userKey) {
+    public Boss toBoss(BCryptPasswordEncoder bCryptPasswordEncoder, String account, String userKey, String url) {
         return Boss.builder()
                 .email(this.email)
                 .password(bCryptPasswordEncoder.encode(this.password))
                 .name(this.name)
                 .tel(this.tel)
-                .profileImage(this.profileImage)
                 .account(account)
                 .userKey(userKey)
+                .profileImage(url)
                 .accountPassword(bCryptPasswordEncoder.encode(this.accountPassword))
                 .build();
     }
 
-    public Crew toCrew(BCryptPasswordEncoder bCryptPasswordEncoder, String account, String userKey) {
+    public Crew toCrew(BCryptPasswordEncoder bCryptPasswordEncoder, String account, String userKey, String url) {
         return Crew.builder()
                 .email(this.email)
                 .password(bCryptPasswordEncoder.encode(this.password))
                 .name(this.name)
                 .tel(this.tel)
-                .profileImage(this.profileImage)
                 .account(account)
                 .userKey(userKey)
+                .profileImage(url)
                 .accountPassword(bCryptPasswordEncoder.encode(this.accountPassword))
                 .build();
     }

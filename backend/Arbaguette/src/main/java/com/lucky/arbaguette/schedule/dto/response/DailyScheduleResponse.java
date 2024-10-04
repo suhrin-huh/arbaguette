@@ -25,7 +25,7 @@ public record DailyScheduleResponse(int totalCount,
     }
 
     public record CrewScheduleInfo(String name,
-                                   int profileImage,
+                                   String profileImage,
                                    String tel,
                                    LocalDateTime startTime,
                                    LocalDateTime endTime,
