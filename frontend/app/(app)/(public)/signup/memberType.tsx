@@ -7,7 +7,7 @@ import Text from '@/components/common/Text';
 
 const MemberTypeScreen = () => {
   const handleRole = (role: string): void => {
-    router.push({ pathname: '/(app)/public/signup/profileImage', params: { role } });
+    router.push({ pathname: '/(app)/(public)/signup/profileImage', params: { role } });
   };
 
   return (

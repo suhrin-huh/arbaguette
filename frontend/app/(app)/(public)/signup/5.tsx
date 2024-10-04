@@ -1,109 +1,94 @@
 import Styled from '@emotion/native';
-import { useMutation } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
-import Button from '@/components/common/Button';
-import LabeledInput from '@/components/common/LabeledInput';
+import NumPad from '@/components/common/modal/PasswordModal/NumPad';
+import Progress from '@/components/common/modal/PasswordModal/Progress';
 import Text from '@/components/common/Text';
-import arbaguette from '@/services/arbaguette';
 
-const GetTelScreen = () => {
-  const { role, profileImage, name, email, password, accountPassword } = useLocalSearchParams<{
-    role: 'BOSS' | 'CREW';
-    [key: string]: string;
-  }>();
-  const [tel, setTel] = useState('');
-  const [isValid, setIsValid] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+interface SignupProps {
+  role: 'BOSS' | 'CREW';
+  [key: string]: string;
+}
 
-  const phoneRegex = /^010-\d{4}-\d{4}$/;
-  const { mutate: signup } = useMutation({
-    mutationFn: arbaguette.signup,
-    onSuccess: async (response) => {
-      router.dismissAll();
-      router.replace('/(public)/login');
-    },
-    onError: (error: AxiosError) => {
-      setIsValid(false);
-      if (error.status === 409) {
-        setErrorMessage('중복된 전화번호입니다.');
-      } else {
-        setErrorMessage('올바른 전화번호를 입력해주세요.');
+const GetAccountPasswordScreen = () => {
+  const { role, profileImage, name, email, password, accountPassword } = useLocalSearchParams<SignupProps>();
+  const [confirmedPW, setConfirmedPW] = useState('');
+  const [isConfirmed, setIsConfirmed] = useState(true);
+
+  const handlePasswordInput = async (value: number) => {
+    const updatePassword = confirmedPW + String(value);
+    setConfirmedPW(updatePassword);
+    await checkPasswordsMatch(updatePassword);
+  };
+
+  const handlePasswordDelete = () => {
+    setConfirmedPW((prev) => prev.slice(0, -1));
+  };
+
+  const checkPasswordsMatch = async (updatePassword: string) => {
+    const isFull = updatePassword.length === 4;
+    const isEqual = accountPassword === updatePassword;
+    if (isFull) {
+      if (isEqual) {
+        router.push({
+          pathname: '/(app)/(public)/signup/6',
+          params: { role, profileImage, name, email, password, accountPassword },
+        });
+        return;
       }
-    },
-  });
-
-  const handleTelInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
-    setTel(e.nativeEvent.text);
-    setIsValid(true);
-  };
-  const ClearTelInput = (): void => {
-    setTel('');
-    setIsValid(true);
-  };
-
-  const handleSignUp = () => {
-    if (!phoneRegex.test(tel)) {
-      setIsValid(false);
-      setErrorMessage('올바른 전화번호를 입력해주세요.');
-      return;
+      setIsConfirmed(false);
+      setConfirmedPW('');
     }
-    // const profileImage = Math.floor(Math.random() * 6) + 1;
-    const requestData = {
-      email,
-      password,
-      name,
-      tel,
-      role,
-      profileImage,
-      accountPassword,
-    };
-    signup(requestData);
   };
+
+  const renderMessage = () => {
+    if (!isConfirmed) {
+      return <MessageBox text1="일치하지 않습니다." text2="다시 입력해주세요." />;
+    }
+    return <MessageBox text1="한 번 더 입력해 주세요." />;
+  };
+
+  const MessageBox = ({ text1, text2 }: { text1: string; text2?: string }) => (
+    <TextBox>
+      <Text size="title" weight="bold">
+        {text1}
+      </Text>
+      {text2 && (
+        <Text size="title" weight="bold">
+          {text2}
+        </Text>
+      )}
+    </TextBox>
+  );
 
   return (
     <Container>
       <ContentWrapper>
-        <Text size="title" weight="bold">
-          전화번호를 입력해주세요.
-        </Text>
+        {renderMessage()}
         <InputWrapper>
-          <LabeledInput
-            label="전화번호"
-            value={tel}
-            placeholder="010-0000-0000"
-            onChange={handleTelInput}
-            handleDeleteText={ClearTelInput}
-            enableDeleteButton={true}
-            isValid={isValid}
-          />
+          <Progress progress={accountPassword.length === 4 ? confirmedPW.length : accountPassword.length} />
         </InputWrapper>
-        {errorMessage && (
-          <Text size="base" weight="bold" color="danger">
-            {errorMessage}
-          </Text>
-        )}
       </ContentWrapper>
-      <Button type="primary" disabled={!isValid} onPress={handleSignUp}>
-        회원가입 완료
-      </Button>
+      <NumPad onPress={handlePasswordInput} deletePassword={handlePasswordDelete} />
     </Container>
   );
 };
 
-const Container = Styled.View(({ theme }) => ({
+const Container = Styled.View(() => ({
   flex: 1,
   flexDirection: 'column',
   justifyContent: 'space-between',
   backgroundColor: 'white',
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  paddingVertical: theme.layout.PADDING.VERTICAL,
 }));
 
-const ContentWrapper = Styled.View(() => ({
+const ContentWrapper = Styled.View(({ theme }) => ({
+  flex: 1,
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  backgroundColor: 'white',
+  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
+  paddingVertical: theme.layout.PADDING.VERTICAL + 50,
   marginTop: 50,
 }));
 
@@ -111,4 +96,9 @@ const InputWrapper = Styled.View(() => ({
   marginTop: 40,
 }));
 
-export default GetTelScreen;
+const TextBox = Styled.View(() => ({
+  flexDirection: 'column',
+  alignItems: 'center',
+}));
+
+export default GetAccountPasswordScreen;

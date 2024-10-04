@@ -8,8 +8,13 @@ import LabeledInput from '@/components/common/LabeledInput';
 import Text from '@/components/common/Text';
 import { useEmailCheck } from '@/reactQuery/querys';
 
+interface SignupProps {
+  role: 'BOSS' | 'CREW';
+  [key: string]: string;
+}
+
 const GetEmailScreen = () => {
-  const { role, profileImage, name } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
+  const { role, profileImage, name } = useLocalSearchParams<SignupProps>();
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(true);
   const { isUnique } = useEmailCheck(email);
@@ -44,7 +49,7 @@ const GetEmailScreen = () => {
     <Container>
       <ContentWrapper>
         <Text size="title" weight="bold">
-          이메일을 입력해주세요.
+          이메일을 입력해 주세요.
         </Text>
         <InputWrapper>
           <LabeledInput

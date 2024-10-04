@@ -1,9 +1,9 @@
 import Styled from '@emotion/native';
+import ArrowIcon from '@expo/vector-icons/MaterialIcons';
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import MonthPicker from 'react-native-month-year-picker';
 
-import ArrowImage from '@/assets/images/arrow.png';
 import Text from '@/components/common/Text';
 
 interface DateSelectorProps {
@@ -28,7 +28,7 @@ const DateSelector = ({ date, setDate }: DateSelectorProps) => {
     <View>
       <DatePicker onPress={() => showPicker(true)}>
         <Text size="base">{`${date.getFullYear()}년 ${date.getMonth() + 1}월`}</Text>
-        <ArrowIcon source={ArrowImage} />
+        <ArrowIcon name="keyboard-arrow-down" size={12} color="black" />
       </DatePicker>
       {show && (
         <MonthPicker
@@ -48,13 +48,6 @@ const DatePicker = Styled.TouchableOpacity(() => ({
   alignItems: 'center',
   width: 100,
   gap: 5,
-}));
-
-const ArrowIcon = Styled.Image(() => ({
-  width: 12,
-  height: 12,
-  marginTop: 3,
-  resizeMode: 'contain',
 }));
 
 export default DateSelector;
