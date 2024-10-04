@@ -16,7 +16,7 @@ const UnAuthorizedLayout = () => {
       <Stack.Screen name="wait" />
       <Stack.Screen name="contract" />
       <Stack.Screen name="pdf" options={{ presentation: 'modal', headerShown: true }} />
-      <Stack.Screen name="signature" options={{ presentation: 'containedTransparentModal', headerShown: true }} />
+      <Stack.Screen name="signature" options={{ presentation: 'modal', headerShown: true }} />
     </Stack>
   );
 };

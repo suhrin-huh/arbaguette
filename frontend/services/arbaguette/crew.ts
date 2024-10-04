@@ -55,4 +55,20 @@ export default {
   getWorkHistory: async (date: string) => {
     return axios.get<GetWorkHistoryResponse>('/api/schedule/crew/commutes', { params: { targetDate: date } });
   },
+  /**
+   * 알바생 근로계약서 서명
+   * @param signature 서명 이미지
+   */
+  signCrewSignature: async (signature: string) => {
+    const base64Data = signature.split(',')[1];
+    const formData = new FormData();
+
+    formData.append('image', {
+      uri: `data:image/png;base64,${base64Data}`,
+      name: 'signature.png',
+      type: 'image/png',
+    } as any);
+
+    return await axios.post('/api/contract/crew', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+  },
 };
