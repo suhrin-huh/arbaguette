@@ -4,7 +4,7 @@ import { Text as RNText } from 'react-native';
 
 type TextSize = 'base' | 'sub' | 'title';
 type TextWeight = 'bold' | null;
-type TextColor = 'black' | 'gray' | 'white';
+type TextColor = 'black' | 'gray' | 'white' | 'primary' | 'danger';
 
 interface CustomProps {
   size: TextSize;
@@ -28,6 +28,8 @@ const Text = Styled(RNText)<CustomProps>(({ theme, size, weight, color }) => {
     black: theme.color.BLACK,
     gray: theme.color.GRAY[3],
     white: theme.color.WHITE,
+    primary: theme.color.PRIMARY,
+    danger: theme.color.DANGER,
   }[color];
 
   return {

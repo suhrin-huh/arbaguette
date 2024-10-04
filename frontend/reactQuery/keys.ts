@@ -16,10 +16,12 @@ const keys = {
   common: () => [...keys.all, 'common'],
   email: (email: Email) => [...keys.common(), 'email', email],
   dailySchedule: (date: string, companyId?: CompanyId) => [...keys.common(), 'dailySchedule', date, companyId],
+  bankHistory: () => [...keys.bank(), 'bankHistory'],
   monthlySchedule: (month: Month, companyId?: CompanyId) => [...keys.common(), 'monthlySchedule', month, companyId],
   employmentContract: (crewId: CrewId) => [...keys.common(), 'employmentContract', crewId],
   bank: () => [...keys.common(), 'bank'],
   balance: () => [...keys.bank(), 'balance'],
+  checkAccountPassword: (password: Password) => [...keys.bank(), 'password', password],
 };
 
 export default keys;

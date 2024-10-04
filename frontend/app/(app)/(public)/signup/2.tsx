@@ -5,38 +5,11 @@ import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-nativ
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
+import Text from '@/components/common/Text';
 import { useEmailCheck } from '@/reactQuery/querys';
 
-const Container = Styled.View(({ theme }) => ({
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  backgroundColor: 'white',
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  paddingVertical: theme.layout.PADDING.VERTICAL,
-}));
-
-const ContentWrapper = Styled.View(() => ({
-  marginTop: 50,
-}));
-
-const InputWrapper = Styled.View(() => ({
-  marginTop: 40,
-}));
-
-const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
-  fontSize: isHeader ? 24 : 16,
-  fontWeight: 'bold',
-}));
-
-const ErrorText = Styled.Text(() => ({
-  color: 'red',
-  fontSize: 16,
-  marginTop: 10,
-}));
-
 const GetEmailScreen = () => {
-  const { role, name } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
+  const { role, profileImage, name } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(true);
   const { isUnique } = useEmailCheck(email);
@@ -63,14 +36,16 @@ const GetEmailScreen = () => {
       setErrorMessage('중복된 아이디입니다.');
     } else {
       setErrorMessage(null);
-      router.push({ pathname: '/signup/3', params: { role, name, email } });
+      router.push({ pathname: '/(app)/(public)/signup/3', params: { role, profileImage, name, email } });
     }
   };
 
   return (
     <Container>
       <ContentWrapper>
-        <StyledTitle isHeader>이메일을 입력해주세요.</StyledTitle>
+        <Text size="title" weight="bold">
+          이메일을 입력해주세요.
+        </Text>
         <InputWrapper>
           <LabeledInput
             label="이메일"
@@ -82,7 +57,11 @@ const GetEmailScreen = () => {
             isValid={isValid}
           />
         </InputWrapper>
-        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
+        {errorMessage && (
+          <Text size="base" weight="bold" color="danger">
+            {errorMessage}
+          </Text>
+        )}
       </ContentWrapper>
       <Button type="primary" onPress={goToNext} disabled={!email.length}>
         다음
@@ -90,5 +69,22 @@ const GetEmailScreen = () => {
     </Container>
   );
 };
+
+const Container = Styled.View(({ theme }) => ({
+  flex: 1,
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  backgroundColor: 'white',
+  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
+  paddingVertical: theme.layout.PADDING.VERTICAL,
+}));
+
+const ContentWrapper = Styled.View(() => ({
+  marginTop: 50,
+}));
+
+const InputWrapper = Styled.View(() => ({
+  marginTop: 40,
+}));
 
 export default GetEmailScreen;

@@ -8,6 +8,12 @@ export default {
     return axios.get('/api/bank/account');
   },
   /**
+   * 계좌 비밀번호 일치 여부 확인하기
+   */
+  checkAccountPassword: async (password: Password) => {
+    return axios.get(`/api/user/checkPassword?accountPassword=${password}`);
+  },
+  /**
    * 송금하기
    * @param remittanceForm 송금 폼
    */

@@ -66,28 +66,27 @@ const useMonthlyAccumulatedSalary = () => {
  * 당월 예상 급여를 가져오는 쿼리 훅
  */
 const useMonthlyEstimatedSalary = () => {
-  const { data, ...queryData } = useQuery({
+  const queryResult = useQuery({
     queryKey: keys.estimatedSalary(),
     queryFn: () => arbaguette.getMonthlyEstimatedSalary(),
   });
 
-  const estimatedSalary = data?.data.data || 0;
+  const estimatedSalary = queryResult.data?.data.data || 0;
 
-  return { estimatedSalary, ...queryData };
+  return { estimatedSalary, ...queryResult };
 };
 
 /**
  * 계좌 잔액을 가져오는 쿼리 훅
  */
 const useAccountBalance = () => {
-  const { data, ...queryData } = useQuery({
+  const queryResult = useQuery({
     queryKey: keys.balance(),
     queryFn: () => arbaguette.getAccountBalance(),
   });
 
-  const accountBalance = data?.data.data || 0;
-
-  return { accountBalance, ...queryData };
+  const accountBalance = queryResult.data?.data.data || 0;
+  return { accountBalance, ...queryResult };
 };
 
 /**
@@ -109,14 +108,12 @@ const useNearCommuteInfo = () => {
  * @param month 조회할 달
  */
 const usePayStub = (month: Month) => {
-  const { data } = useQuery({
+  const queryResult = useQuery({
     queryKey: keys.payStub(month),
     queryFn: () => arbaguette.getPayStub(month),
   });
-
-  if (!data) return null;
-
-  return data.data.data;
+  const certification = queryResult.data?.data.data || null;
+  return { certification, ...queryResult };
 };
 
 /**
@@ -133,6 +130,45 @@ const useDailySchedule = (date: string, companyId?: CompanyId) => {
   if (!data) return null;
 
   return data.data.data;
+};
+
+/**
+ * 입출금 내역을 가져오는 쿼리 훅
+ *
+ */
+const useGetBankHistory = () => {
+  const queryResult = useQuery({
+    queryKey: keys.bankHistory(),
+    queryFn: () => arbaguette.getBankHistory(),
+  });
+
+  const bankHistory = queryResult.data?.data.data || null;
+  return { bankHistory, ...queryResult };
+};
+
+/**
+ * 계좌 비밀번호 일치 여부 확인 쿼리 훅
+ */
+const useCheckAccountPassword = (password: string) => {
+  const queryResult = useQuery({
+    queryKey: keys.checkAccountPassword(password),
+    queryFn: () => arbaguette.checkAccountPassword(password), // This is a Promise, not a function
+    enabled: password.length === 4,
+  });
+  const isCorrect = queryResult.status === 'success';
+  return { isCorrect, ...queryResult };
+};
+/**
+ * 사장님 이번달 예상지출 조회 쿼리 훅
+ */
+const useGetExpectedPayroll = () => {
+  const queryResult = useQuery({
+    queryKey: keys.bankHistory(),
+    queryFn: () => arbaguette.getExpectedPayroll(),
+  });
+
+  const expectedPayroll = queryResult.data?.data || null;
+  return { expectedPayroll, ...queryResult };
 };
 
 /**
@@ -180,12 +216,15 @@ const useEmploymentContract = (crewId: CrewId) => {
 
 export {
   useAccountBalance,
+  useCheckAccountPassword,
   useCompanyList,
   useCrewMemberList,
   useCrewMemeberDetail,
   useDailySchedule,
   useEmailCheck,
   useEmploymentContract,
+  useGetBankHistory,
+  useGetExpectedPayroll,
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,
   useMonthlySchedule,
