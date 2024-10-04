@@ -22,11 +22,11 @@ const BankingCard = () => {
     }
   };
   const navigateToRemittance = () => {
+    console.log(role);
     if (role === 'BOSS') {
-      // router.push('/(app)/boss/main/banking/transaction');
-      console.log('BOSS');
+      router.push('/(app)/boss/main/banking/remittance/1');
     } else {
-      router.push('/(app)/crew/authorized/banking/remittance/2');
+      router.push('/(app)/crew/authorized/banking/remittance/1');
     }
   };
 
