@@ -23,7 +23,7 @@ const GetNameScreen = () => {
     setName(e.nativeEvent.text);
   };
 
-  const ClearNameInput = (): void => {
+  const clearNameInput = (): void => {
     setName('');
     setIsValid(true);
     setErrorMessage(null);
@@ -50,7 +50,7 @@ const GetNameScreen = () => {
             value={name}
             placeholder="이름"
             onChange={handleNameInput}
-            handleDeleteText={ClearNameInput}
+            handleDeleteText={clearNameInput}
             enableDeleteButton={true}
             isValid={isValid}
           />

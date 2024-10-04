@@ -14,7 +14,7 @@ export default {
    */
   signup: async (signUpForm: FormData) => {
     return axios.post<FormData>('/api/user', signUpForm, {
-      headers: { 'Content-Type': 'multipartform-data' },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
   /**

@@ -10,6 +10,7 @@ const SignupLayout = () => {
       <Stack.Screen name="3" />
       <Stack.Screen name="4" />
       <Stack.Screen name="5" />
+      <Stack.Screen name="6" />
     </Stack>
   );
 };
