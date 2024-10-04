@@ -266,8 +266,14 @@ interface GetEmploymentContractResponseData {
   url: string;
 }
 
+interface ReissueResponseData {
+  accessToken: AccessToken;
+  refreshToken: RefreshToken;
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
+type ReissueResponse = ArbaguetteResponse<ReissueResponseData>;
 type EmailCheckResponse = ArbaguetteResponse<void>;
 type ImageOcrResponse = ArbaguetteResponse<ImageOcrResponseData>;
 type RegistCompanyResponse = ArbaguetteResponse<void>;

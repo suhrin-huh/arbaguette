@@ -22,4 +22,11 @@ export default {
   checkEmail: async (email: Email) => {
     return axios.get<EmailCheckResponse>('/api/user', { params: { email } });
   },
+  /**
+   * 토큰 재발급
+   * @param refreshToken 리프레시 토큰
+   */
+  reIssue: async (refreshToken: RefreshToken) => {
+    return axios.post<ReissueResponse>('/api/user/reissue', { refreshToken });
+  },
 };
