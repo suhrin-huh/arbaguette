@@ -9,7 +9,7 @@ import java.util.List;
 public record CrewDetailResponse(int id,
                                  String name,
                                  String tel,
-                                 int profileImage,
+                                 String profileImage,
                                  List<WorkingDayInfo> workingDays,
                                  int salary,
                                  int tax,

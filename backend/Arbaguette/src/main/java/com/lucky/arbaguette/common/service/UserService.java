@@ -12,6 +12,7 @@ import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.jwt.JWTUtil;
 import com.lucky.arbaguette.common.repository.TokenRedisRepository;
+import com.lucky.arbaguette.common.util.S3Util;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -21,9 +22,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +46,7 @@ public class UserService {
     private final TokenRedisRepository tokenRedisRepository;
     private final WebClient webClient; // WebClient 주입git
     private final JWTUtil jwtUtil;
+    private final S3Util s3Util;
 
     @Value("${finopenapi.url}")
     private String financialApiUrl;
@@ -80,7 +84,7 @@ public class UserService {
         }
     }
 
-    public void joinProcess(UserJoinRequest joinRequest) {
+    public void joinProcess(UserJoinRequest joinRequest, MultipartFile file) throws IOException {
 
         // 아이디 중복 확인
         checkEmail(joinRequest.getEmail());
@@ -141,13 +145,13 @@ public class UserService {
 
         // 사장님 회원가입
         if (BOSS.equals(joinRequest.getRole())) {
-            Boss boss = joinRequest.toBoss(bCryptPasswordEncoder, account, userKey);
+            Boss boss = joinRequest.toBoss(bCryptPasswordEncoder, account, userKey, s3Util.upload(file));
             bossRepository.save(boss);
         }
 
         // 알바생 회원가입
         if (CREW.equals(joinRequest.getRole())) {
-            Crew crew = joinRequest.toCrew(bCryptPasswordEncoder, account, userKey);
+            Crew crew = joinRequest.toCrew(bCryptPasswordEncoder, account, userKey, s3Util.upload(file));
             crewRepository.save(crew);
         }
     }
