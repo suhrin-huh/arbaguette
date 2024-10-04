@@ -10,10 +10,12 @@ export default {
   },
   /**
    * 회원가입
-   * @param signUpForm 회원가입 폼 데이터
+   * @returns formData
    */
-  signup: async (signUpForm: SignUpForm) => {
-    return axios.post<SignUpResponse>('/api/user', signUpForm);
+  signup: async (signUpForm: FormData) => {
+    return axios.post<FormData>('/api/user', signUpForm, {
+      headers: { 'Content-Type': 'multipartform-data' },
+    });
   },
   /**
    * 이메일 중복 체크

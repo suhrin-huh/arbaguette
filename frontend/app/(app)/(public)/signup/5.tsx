@@ -1,6 +1,7 @@
 import Styled from '@emotion/native';
 import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
+import { profile } from 'console';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
@@ -10,11 +11,13 @@ import LabeledInput from '@/components/common/LabeledInput';
 import Text from '@/components/common/Text';
 import arbaguette from '@/services/arbaguette';
 
+interface SignupProps {
+  role: 'BOSS' | 'CREW';
+  [key: string]: string;
+}
+
 const GetTelScreen = () => {
-  const { role, profileImage, name, email, password, accountPassword } = useLocalSearchParams<{
-    role: 'BOSS' | 'CREW';
-    [key: string]: string;
-  }>();
+  const { role, profileImage, name, email, password, accountPassword } = useLocalSearchParams<SignupProps>();
   const [tel, setTel] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -45,30 +48,42 @@ const GetTelScreen = () => {
     setIsValid(true);
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!phoneRegex.test(tel)) {
       setIsValid(false);
       setErrorMessage('올바른 전화번호를 입력해주세요.');
       return;
     }
-    // const profileImage = Math.floor(Math.random() * 6) + 1;
-    const requestData = {
-      email,
-      password,
-      name,
-      tel,
-      role,
-      profileImage,
-      accountPassword,
-    };
-    signup(requestData);
+    try {
+      const formData = new FormData();
+      const file = {
+        uri: profileImage,
+        name: `sign_${Date.now()}.png`,
+        type: 'image/png',
+      };
+
+      const requestBody = {
+        email,
+        password,
+        name,
+        tel,
+        role,
+      };
+
+      formData.append('body', JSON.stringify(requestBody));
+
+      formData.append('image', file as any);
+      signup(formData);
+    } catch {
+      console.log('실패!');
+    }
   };
 
   return (
     <Container>
       <ContentWrapper>
         <Text size="title" weight="bold">
-          전화번호를 입력해주세요.
+          전화번호를 입력해 주세요.
         </Text>
         <InputWrapper>
           <LabeledInput

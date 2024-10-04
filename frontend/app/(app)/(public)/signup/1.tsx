@@ -7,36 +7,13 @@ import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
 import Text from '@/components/common/Text';
 
-const Container = Styled.View(({ theme }) => ({
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  backgroundColor: 'white',
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  paddingVertical: theme.layout.PADDING.VERTICAL,
-}));
-
-const ContentWrapper = Styled.View(() => ({
-  marginTop: 50,
-}));
-
-const InputWrapper = Styled.View(() => ({
-  marginTop: 40,
-}));
-
-const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
-  fontSize: isHeader ? 24 : 16,
-  fontWeight: 'bold',
-}));
-
-const ErrorText = Styled.Text(() => ({
-  color: 'red',
-  fontSize: 16,
-  marginTop: 10,
-}));
+interface SignupProps {
+  role: 'BOSS' | 'CREW';
+  [key: string]: string;
+}
 
 const GetNameScreen = () => {
-  const { role, profileImage } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
+  const { role, profileImage } = useLocalSearchParams<SignupProps>();
   const [name, setName] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -65,7 +42,7 @@ const GetNameScreen = () => {
     <Container>
       <ContentWrapper>
         <Text size="title" weight="bold">
-          이름을 입력해주세요
+          이름을 입력해 주세요.
         </Text>
         <InputWrapper>
           <LabeledInput
@@ -90,5 +67,22 @@ const GetNameScreen = () => {
     </Container>
   );
 };
+
+const Container = Styled.View(({ theme }) => ({
+  flex: 1,
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  backgroundColor: 'white',
+  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
+  paddingVertical: theme.layout.PADDING.VERTICAL,
+}));
+
+const ContentWrapper = Styled.View(() => ({
+  marginTop: 50,
+}));
+
+const InputWrapper = Styled.View(() => ({
+  marginTop: 40,
+}));
 
 export default GetNameScreen;

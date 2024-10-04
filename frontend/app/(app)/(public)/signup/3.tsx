@@ -7,8 +7,13 @@ import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
 import Text from '@/components/common/Text';
 
+interface SignupProps {
+  role: 'BOSS' | 'CREW';
+  [key: string]: string;
+}
+
 const GetPasswordScreen = () => {
-  const { role, profileImage, name, email } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
+  const { role, profileImage, name, email } = useLocalSearchParams<SignupProps>();
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isValid, setIsValid] = useState(true);
@@ -46,7 +51,6 @@ const GetPasswordScreen = () => {
       setErrorMessage('비밀번호가 일치하지 않습니다.');
       return;
     }
-
     router.push({ pathname: '/(app)/(public)/signup/4', params: { role, profileImage, name, email, password } });
   };
 
@@ -54,7 +58,7 @@ const GetPasswordScreen = () => {
     <Container>
       <ContentWrapper>
         <Text size="title" weight="bold">
-          비밀번호를 입력해주세요.
+          비밀번호를 입력해 주세요.
         </Text>
         <InputWrapper>
           <LabeledInput

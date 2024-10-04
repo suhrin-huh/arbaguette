@@ -7,8 +7,13 @@ import Button from '@/components/common/Button';
 import Text from '@/components/common/Text';
 import pickImageToFormData from '@/util/boss/pickImageToFormData';
 
+interface SignupProps {
+  role: 'BOSS' | 'CREW';
+  [key: string]: string;
+}
+
 const ProfileImageScreen = () => {
-  const { role } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
+  const { role } = useLocalSearchParams<SignupProps>();
   const [profileImage, setProfileImage] = useState<string>('');
   const handleGalleryPress = async () => {
     try {
@@ -32,7 +37,7 @@ const ProfileImageScreen = () => {
     <Container>
       <ContentWrapper>
         <Text size="title" weight="bold">
-          프로필 사진을 업로드해주세요.
+          프로필 사진을 업로드해 주세요.
         </Text>
         <ButtonContainer>
           {profileImage ? (
