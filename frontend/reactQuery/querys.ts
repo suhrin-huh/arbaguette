@@ -180,6 +180,8 @@ const useMonthlySchedule = (month: Month, companyId?: CompanyId) => {
   const { data } = useQuery({
     queryKey: keys.monthlySchedule(month, companyId),
     queryFn: () => arbaguette.getMonthlySchedule(month, companyId),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: true,
   });
 
   if (!data) return null;

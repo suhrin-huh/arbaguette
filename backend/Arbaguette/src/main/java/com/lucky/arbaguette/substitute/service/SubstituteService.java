@@ -96,7 +96,8 @@ public class SubstituteService {
         Schedule schedule = scheduleRepository.findByScheduleIdAndCrewIsNot(request.scheduleId(), crew)
                 .orElseThrow(() -> new NotFoundException("해당하는 스케줄이 존재하지 않습니다."));
 
-        if (scheduleRepository.existsByCrewAndStartTime(crew, schedule.getStartTime())) {
+        if (scheduleRepository.findByCrewAndMonthAndDay(crew, schedule.getStartTime().getMonthValue(),
+                schedule.getStartTime().getDayOfMonth()).isPresent()) {
             throw new DuplicateException("근무일이 겹칩니다.");
         }
 
@@ -105,5 +106,5 @@ public class SubstituteService {
 
         substitute.applySubstitute(crew);
     }
-    
+
 }

@@ -70,4 +70,11 @@ export default {
   getExpectedPayroll: async () => {
     return axios.get<GetExpectedPayrollResponse>('/api/boss/expected');
   },
+  /**
+   * 대타 승인
+   * @param scheduleId 스케줄 아이디
+   */
+  agreeSubstitute: async (scheduleId: ScheduleId) => {
+    return axios.put<AgreeSubstituteResponse>('/api/substitute/agree', { scheduleId });
+  },
 };

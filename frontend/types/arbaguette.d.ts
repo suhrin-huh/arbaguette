@@ -211,6 +211,8 @@ interface DailySchedule {
   SubstituteRequest: boolean;
   startTime: StartTime;
   endTime: EndTime;
+  hopeCrewId: CrewId | null;
+  hopeCrewName: CrewName | null;
 }
 
 interface MonthlySchedule {
@@ -263,3 +265,4 @@ type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseD
 type GetWorkHistoryResponse = ArbaguetteResponse<GetWorkHistoryResponseData>;
 type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
 type checkAccountPasswordResponse = ArbaguetteResponse<void>;
+type AgreeSubstituteResponse = ArbaguetteResponse<ScheduleId>;
