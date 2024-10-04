@@ -1,114 +1,112 @@
 import Styled from '@emotion/native';
-import { useMutation } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
+import { View } from 'react-native';
 
-import Button from '@/components/common/Button';
-import LabeledInput from '@/components/common/LabeledInput';
-import arbaguette from '@/services/arbaguette';
+import NumPad from '@/components/common/modal/PasswordModal/NumPad';
+import Progress from '@/components/common/modal/PasswordModal/Progress';
+import Text from '@/components/common/Text';
 
-const Container = Styled.View(({ theme }) => ({
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  backgroundColor: 'white',
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  paddingVertical: theme.layout.PADDING.VERTICAL,
-}));
+const GetaccountPasswordScreen = () => {
+  const { role, profileImage, name, email } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
+  const [accountPassword, setAccountPassword] = useState('');
+  const [confirmedPW, setConfirmedPW] = useState('');
+  const [isConfirmed, setIsConfirmed] = useState(true);
+  const [message, setErrorMessage] = useState<string | null>(null);
 
-const ContentWrapper = Styled.View(() => ({
-  marginTop: 50,
-}));
-
-const InputWrapper = Styled.View(() => ({
-  marginTop: 40,
-}));
-
-const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
-  fontSize: isHeader ? 24 : 16,
-  fontWeight: 'bold',
-}));
-
-const ErrorText = Styled.Text(() => ({
-  color: 'red',
-  fontSize: 16,
-  marginTop: 10,
-}));
-
-const GetNumberScreen = () => {
-  const { mutate: signup } = useMutation({
-    mutationFn: arbaguette.signup,
-    onSuccess: async (response) => {
-      router.dismissAll();
-      router.replace('/public/login');
-    },
-    onError: (error: AxiosError) => {
-      setIsValid(false);
-      if (error.status === 409) {
-        setErrorMessage('중복된 전화번호입니다.');
-      } else {
-        setErrorMessage('올바른 전화번호를 입력해주세요.');
-      }
-    },
-  });
-  const { role, name, email, password } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
-  const [tel, setTel] = useState('');
-  const [isValid, setIsValid] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const phoneRegex = /^010-\d{4}-\d{4}$/;
-
-  const handleTelInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
-    setTel(e.nativeEvent.text);
-    setIsValid(true);
-  };
-  const ClearTelInput = (): void => {
-    setTel('');
-    setIsValid(true);
+  const handlePassword = (value: number) => {
+    const nextPassword = accountPassword + String(value); // 업데이트된 패스워드 값
+    setAccountPassword(nextPassword); // 상태 업데이트
   };
 
-  const handleSignUp = () => {
-    if (!phoneRegex.test(tel)) {
-      setIsValid(false);
-      setErrorMessage('올바른 전화번호를 입력해주세요.');
+  const handleConfirmedPW = (value: number) => {
+    setAccountPassword('');
+    setConfirmedPW('');
+    const nextConfirmedPW = confirmedPW + String(value); // 업데이트된 패스워드 값
+    setConfirmedPW(nextConfirmedPW); // 상태 업데이트
+  };
+
+  const goToNext = (): void => {
+    if (accountPassword !== confirmedPW) {
+      setIsConfirmed(false);
+      setErrorMessage('비밀번호가 일치하지 않습니다.');
       return;
     }
-    const profileImage = Math.floor(Math.random() * 6) + 1;
-    const requestData = {
-      email,
-      password,
-      name,
-      tel,
-      role,
-      profileImage,
-    };
-    signup(requestData);
+
+    router.push({ pathname: '/(app)/(public)/signup/5', params: { role, profileImage, name, email, accountPassword } });
   };
 
-  return (
-    <Container>
-      <ContentWrapper>
-        <StyledTitle isHeader>전화번호를 입력해주세요.</StyledTitle>
-        <InputWrapper>
-          <LabeledInput
-            label="전화번호"
-            value={tel}
-            placeholder="010-0000-0000"
-            onChange={handleTelInput}
-            handleDeleteText={ClearTelInput}
-            enableDeleteButton={true}
-            isValid={isValid}
-          />
-        </InputWrapper>
-        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
-      </ContentWrapper>
-      <Button type="primary" disabled={!isValid} onPress={handleSignUp}>
-        회원가입 완료
-      </Button>
-    </Container>
-  );
+  const Message = () => {
+    if (accountPassword.length !== 4) {
+      return (
+        <TextBox>
+          <Text size="title" weight="bold">
+            은행서비스 이용시에 사용할
+          </Text>
+          <Text size="title" weight="bold">
+            비밀번호를 설정해주세요.
+          </Text>
+        </TextBox>
+      );
+    }
+  };
+
+  const NumpadBox = () => {
+    if (accountPassword.length !== 4) {
+      <NumPad onPress={handlePassword} />;
+      return;
+    }
+    if (confirmedPW) {
+      setTimeout(() => {
+        <NumPad onPress={handleConfirmedPW} />;
+      }, 200);
+    }
+
+    return (
+      <Container>
+        <ContentWrapper>
+          <Message />
+          <InputWrapper>
+            {accountPassword.length === 4 ? (
+              <Progress progress={confirmedPW.length} />
+            ) : (
+              <Progress progress={accountPassword.length} />
+            )}
+          </InputWrapper>
+        </ContentWrapper>
+        <NumpadBox />
+        {/* {accountPassword.length === 4 ? <NumPad onPress={handleConfirmedPW} /> : <NumPad onPress={handlePassword} />} */}
+      </Container>
+    );
+  };
+
+  const Container = Styled.View(({ theme }) => ({
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+  }));
+
+  const ContentWrapper = Styled.View(({ theme }) => ({
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    gap: 30,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
+    paddingVertical: theme.layout.PADDING.VERTICAL + 50,
+    marginTop: 50,
+  }));
+
+  const InputWrapper = Styled.View(() => ({
+    marginTop: 40,
+  }));
+
+  const TextBox = Styled.View(() => ({
+    flexDirection: 'column',
+    alignItems: 'center',
+  }));
 };
 
-export default GetNumberScreen;
+export default GetaccountPasswordScreen;

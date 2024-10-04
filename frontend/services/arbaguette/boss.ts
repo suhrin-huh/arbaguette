@@ -65,6 +65,12 @@ export default {
   },
 
   /**
+   * 이번달 예상 지출 조회
+   */
+  getExpectedPayroll: async () => {
+    return axios.get<GetExpectedPayrollResponse>('/api/boss/expected');
+  },
+  /**
    * 대타 승인
    * @param scheduleId 스케줄 아이디
    */

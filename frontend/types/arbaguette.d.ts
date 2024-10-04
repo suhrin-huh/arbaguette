@@ -81,6 +81,7 @@ type Money = number;
 interface RemittanceForm {
   account: BankAccount;
   money: Money;
+  password: Password;
 }
 
 interface LoginResponseData {
@@ -197,6 +198,12 @@ interface GetDailyScheduleResponseData {
   crews: CrewSchedule[];
 }
 
+interface GetExpectedPayrollResponseData {
+  originSalary: OriginSalary;
+  tax: Tax;
+  allowance: Allowance;
+}
+
 interface DailySchedule {
   crewId: CrewId;
   name: CrewName;
@@ -253,7 +260,9 @@ type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
 type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
 type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;
+type GetExpectedPayrollResponse = ArbaguetteResponse<GetExpectedPayrollResponseData>;
 type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseData>;
 type GetWorkHistoryResponse = ArbaguetteResponse<GetWorkHistoryResponseData>;
 type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
+type checkAccountPasswordResponse = ArbaguetteResponse<void>;
 type AgreeSubstituteResponse = ArbaguetteResponse<ScheduleId>;
