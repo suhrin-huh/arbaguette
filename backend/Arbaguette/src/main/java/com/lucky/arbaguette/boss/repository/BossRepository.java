@@ -13,4 +13,6 @@ public interface BossRepository extends JpaRepository<Boss, Integer> {
 
     boolean existsByTel(String tel);
 
+    Optional<Boss> findByAccount(String account);
+
 }
