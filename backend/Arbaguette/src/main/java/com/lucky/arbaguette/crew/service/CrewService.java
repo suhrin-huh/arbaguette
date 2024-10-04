@@ -1,8 +1,5 @@
 package com.lucky.arbaguette.crew.service;
 
-import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
-import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
-
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
@@ -14,13 +11,17 @@ import com.lucky.arbaguette.receipt.domain.dto.response.ReceiptDetailsResponse;
 import com.lucky.arbaguette.receipt.repository.ReceiptRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
 
 @Service
 @RequiredArgsConstructor
@@ -104,8 +105,11 @@ public class CrewService {
         Contract contract = contractRepository.findByCrew(crew)
                 .orElseThrow(() -> new NotFoundException("해당하는 근로계약서가 존재하지않습니다."));
         Receipt receipt = receiptRepository.findByMonthAndContract(month, contract)
-                .orElseThrow(() -> new NotFoundException("해당하는 급여명세서가 존재하지않습니다."));
+                .orElse(null);
 
+        if (receipt == null) {
+            return null;
+        }
         return ReceiptDetailsResponse.from(receipt, contract);
 
     }
