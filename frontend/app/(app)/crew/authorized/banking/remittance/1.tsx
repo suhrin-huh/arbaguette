@@ -1,5 +1,5 @@
 import Styled from '@emotion/native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 

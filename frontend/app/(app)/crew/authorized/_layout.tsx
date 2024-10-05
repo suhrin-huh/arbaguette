@@ -1,13 +1,14 @@
 import { Foundation } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { router, Tabs, useGlobalSearchParams } from 'expo-router';
+import { router, Tabs, useGlobalSearchParams, useSegments } from 'expo-router';
 
 import BellButton from '@/components/crew/BellButton';
 import CalendarButton from '@/components/crew/CalendarButton';
 import Theme from '@/styles/Theme';
 
 const CrewMainLayout = () => {
+  const segments = useSegments();
   const { year, month } = useGlobalSearchParams<Partial<{ year: string; month: string }>>();
 
   return (
@@ -90,6 +91,8 @@ const CrewMainLayout = () => {
               color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']}
             />
           ),
+          tabBarStyle: { display: segments[4] === 'remittance' && segments[5] === '2' ? 'none' : 'flex' },
+          headerShown: segments[4] === 'remittance' && segments[5] === '2' ? false : true,
         }}
       />
     </Tabs>
