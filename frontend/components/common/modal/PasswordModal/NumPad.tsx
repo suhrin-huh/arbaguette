@@ -1,11 +1,15 @@
 import Styled from '@emotion/native';
 import { useState } from 'react';
 
+import DeleteButton from '@/components/common/modal/PasswordModal/DeleteButton';
 import NumberButton from '@/components/common/modal/PasswordModal/NumberButton';
 import random from '@/util/random';
 
+import PasswordModal from './../../../../app/(app)/crew/authorized/password';
+
 interface NumPadProps {
   onPress?: (value: number) => void;
+  deletePassword: () => void;
 }
 
 const Container = Styled.View(({ theme }) => ({ backgroundColor: theme.color.WHITE }));
@@ -14,7 +18,7 @@ const Row = Styled.View(({ theme }) => ({
   flexDirection: 'row',
 }));
 
-const NumPad = ({ onPress }: NumPadProps) => {
+const NumPad = ({ onPress, deletePassword }: NumPadProps) => {
   const [fakeNumber, setFakeNumber] = useState(-1);
 
   const handlePress = (value: string) => {
@@ -111,7 +115,7 @@ const NumPad = ({ onPress }: NumPadProps) => {
           pressed={fakeNumber === 0}>
           0
         </NumberButton>
-        <NumberButton />
+        <DeleteButton deletePassword={deletePassword} />
       </Row>
     </Container>
   );

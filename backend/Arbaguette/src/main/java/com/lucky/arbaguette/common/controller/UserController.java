@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/user")
@@ -28,9 +31,9 @@ public class UserController {
         return ApiResponse.success();
     }
 
-    @PostMapping
-    public ApiResponse<Void> joinProcess(@RequestBody UserJoinRequest joinRequest) {
-        userService.joinProcess(joinRequest);
+    @PostMapping(consumes = "multipart/form-data")
+    public ApiResponse<Void> joinProcess(@RequestPart("body") UserJoinRequest joinRequest, @RequestPart("image") MultipartFile file) throws IOException {
+        userService.joinProcess(joinRequest, file);
         return ApiResponse.success();
     }
 

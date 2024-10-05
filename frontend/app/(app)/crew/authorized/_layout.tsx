@@ -1,13 +1,14 @@
 import { Foundation } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { router, Tabs, useGlobalSearchParams } from 'expo-router';
+import { router, Tabs, useGlobalSearchParams, useSegments } from 'expo-router';
 
 import BellButton from '@/components/crew/BellButton';
 import CalendarButton from '@/components/crew/CalendarButton';
 import Theme from '@/styles/Theme';
 
 const CrewMainLayout = () => {
+  const segments = useSegments();
   const { year, month } = useGlobalSearchParams<Partial<{ year: string; month: string }>>();
 
   return (
@@ -37,6 +38,7 @@ const CrewMainLayout = () => {
         name="main"
         options={{
           title: '홈',
+          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <Foundation name="home" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -46,6 +48,7 @@ const CrewMainLayout = () => {
         name="schedule"
         options={{
           title: '스케줄',
+          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <FontAwesome5 name="calendar" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -80,6 +83,7 @@ const CrewMainLayout = () => {
         name="banking"
         options={{
           title: '뱅킹',
+          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <MaterialCommunityIcons
               name="bank"
@@ -87,9 +91,10 @@ const CrewMainLayout = () => {
               color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']}
             />
           ),
+          tabBarStyle: { display: segments[4] === 'remittance' && segments[5] === '2' ? 'none' : 'flex' },
+          headerShown: segments[4] === 'remittance' && segments[5] === '2' ? false : true,
         }}
       />
-      <Tabs.Screen name="password" />
     </Tabs>
   );
 };

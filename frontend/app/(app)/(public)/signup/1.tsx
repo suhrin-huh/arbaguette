@@ -5,6 +5,68 @@ import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-nativ
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
+import Text from '@/components/common/Text';
+
+interface SignupProps {
+  role: 'BOSS' | 'CREW';
+  [key: string]: string;
+}
+
+const GetNameScreen = () => {
+  const { role, profileImage } = useLocalSearchParams<SignupProps>();
+  const [name, setName] = useState('');
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const hanGulRegex = /^[가-힣]+$/;
+
+  const handleNameInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
+    setName(e.nativeEvent.text);
+  };
+
+  const clearNameInput = (): void => {
+    setName('');
+    setIsValid(true);
+    setErrorMessage(null);
+  };
+
+  const goToNext = (): void => {
+    if (!name.length || !hanGulRegex.test(name)) {
+      setIsValid(false);
+      setErrorMessage('이름을 다시 입력해주세요.');
+      return;
+    }
+    router.push({ pathname: '/(app)/(public)/signup/2', params: { role, profileImage, name } });
+  };
+
+  return (
+    <Container>
+      <ContentWrapper>
+        <Text size="title" weight="bold">
+          이름을 입력해 주세요.
+        </Text>
+        <InputWrapper>
+          <LabeledInput
+            label="이름"
+            value={name}
+            placeholder="이름"
+            onChange={handleNameInput}
+            handleDeleteText={clearNameInput}
+            enableDeleteButton={true}
+            isValid={isValid}
+          />
+        </InputWrapper>
+        {errorMessage && (
+          <Text size="base" weight="bold" color="danger">
+            {errorMessage}
+          </Text>
+        )}
+      </ContentWrapper>
+      <Button type="primary" onPress={goToNext}>
+        다음
+      </Button>
+    </Container>
+  );
+};
 
 const Container = Styled.View(({ theme }) => ({
   flex: 1,
@@ -22,66 +84,5 @@ const ContentWrapper = Styled.View(() => ({
 const InputWrapper = Styled.View(() => ({
   marginTop: 40,
 }));
-
-const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
-  fontSize: isHeader ? 24 : 16,
-  fontWeight: 'bold',
-}));
-
-const ErrorText = Styled.Text(() => ({
-  color: 'red',
-  fontSize: 16,
-  marginTop: 10,
-}));
-
-const GetNameScreen = () => {
-  const { role } = useLocalSearchParams<{ role: 'BOSS' | 'CREW' }>();
-  const [name, setName] = useState('');
-  const [isValid, setIsValid] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const hanGulRegex = /^[가-힣]+$/;
-
-  const handleNameInput = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
-    setName(e.nativeEvent.text);
-  };
-
-  const ClearNameInput = (): void => {
-    setName('');
-    setIsValid(true);
-    setErrorMessage(null);
-  };
-
-  const goToNext = (): void => {
-    if (!name.length || !hanGulRegex.test(name)) {
-      setIsValid(false);
-      setErrorMessage('이름을 다시 입력해주세요.');
-      return;
-    }
-    router.push({ pathname: '/(app)/public/signup/2', params: { role: role, name: name } });
-  };
-
-  return (
-    <Container>
-      <ContentWrapper>
-        <StyledTitle isHeader>이름을 입력해주세요</StyledTitle>
-        <InputWrapper>
-          <LabeledInput
-            label="이름"
-            value={name}
-            placeholder="이름"
-            onChange={handleNameInput}
-            handleDeleteText={ClearNameInput}
-            enableDeleteButton={true}
-            isValid={isValid}
-          />
-        </InputWrapper>
-        {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
-      </ContentWrapper>
-      <Button type="primary" onPress={goToNext}>
-        다음
-      </Button>
-    </Container>
-  );
-};
 
 export default GetNameScreen;

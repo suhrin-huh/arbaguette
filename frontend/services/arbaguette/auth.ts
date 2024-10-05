@@ -10,10 +10,12 @@ export default {
   },
   /**
    * 회원가입
-   * @param signUpForm 회원가입 폼 데이터
+   * @returns formData
    */
-  signup: async (signUpForm: SignUpForm) => {
-    return axios.post<SignUpResponse>('/api/user', signUpForm);
+  signup: async (signUpForm: FormData) => {
+    return axios.post<FormData>('/api/user', signUpForm, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   },
   /**
    * 이메일 중복 체크
@@ -21,5 +23,12 @@ export default {
    */
   checkEmail: async (email: Email) => {
     return axios.get<EmailCheckResponse>('/api/user', { params: { email } });
+  },
+  /**
+   * 토큰 재발급
+   * @param refreshToken 리프레시 토큰
+   */
+  reIssue: async (refreshToken: RefreshToken) => {
+    return axios.post<ReissueResponse>('/api/user/reissue', { refreshToken });
   },
 };

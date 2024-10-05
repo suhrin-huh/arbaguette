@@ -35,7 +35,7 @@ public class Crew {
 
     private String userKey;
 
-    private int profileImage;
+    private String profileImage;
 
     private String accountPassword;
 
@@ -44,7 +44,7 @@ public class Crew {
 
     @Builder
     public Crew(String name, String email, String password, String tel, String account, String userKey,
-                int profileImage, String accountPassword) {
+                String profileImage, String accountPassword) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -68,7 +68,7 @@ public class Crew {
         this.crewStatus = SIGNED;
     }
 
-    public void cancelCompany(){
+    public void cancelCompany() {
         this.company = null;
         this.crewStatus = UNREGISTERED;
     }

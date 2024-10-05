@@ -4,7 +4,7 @@
     "slug": "arbagett",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/white-logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -17,8 +17,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/white-logo.png",
+        "backgroundColor": "#8071FC"
       },
       "package": "com.ssafy.c101.arbaguette",
       "permissions": [
@@ -45,7 +45,9 @@
         {
           "isBackgroundEnabled": true
         }
-      ]
+      ],
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf"
     ],
     "experiments": {
       "typedRoutes": true

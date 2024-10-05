@@ -81,6 +81,7 @@ type Money = number;
 interface RemittanceForm {
   account: BankAccount;
   money: Money;
+  password: Password;
 }
 
 interface LoginResponseData {
@@ -200,6 +201,12 @@ interface GetDailyScheduleResponseData {
   crewScheduleInfos: CrewSchedule[];
 }
 
+interface GetExpectedPayrollResponseData {
+  originSalary: OriginSalary;
+  tax: Tax;
+  allowance: Allowance;
+}
+
 interface DailySchedule {
   crewId: CrewId;
   name: CrewName;
@@ -255,8 +262,36 @@ interface SendSalaryReceiptResponseData {
 
 type CommuteStatus = 'NORMAL' | 'ABSENT' | 'LATE';
 
+type ContractId = number;
+
+type TaxType = 'NONE' | 'INSU' | 'INCOME';
+
+interface GetEmploymentContractResponseData {
+  contractId: ContractId;
+  companyName: CompanyName;
+  address: CompanyAddress;
+  representative: Representative;
+  crewName: CrewName;
+  tel: Tel;
+  startDate: DateString;
+  endDate: DateString;
+  workingDayInfoList: { weekday: Weekday; startTime: string; endTime: string }[];
+  salary: Money;
+  salaryDate: SalaryDate;
+  tax: TaxType;
+  bossSign: string;
+  crewSign: string;
+  url: string;
+}
+
+interface ReissueResponseData {
+  accessToken: AccessToken;
+  refreshToken: RefreshToken;
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
+type ReissueResponse = ArbaguetteResponse<ReissueResponseData>;
 type EmailCheckResponse = ArbaguetteResponse<void>;
 type ImageOcrResponse = ArbaguetteResponse<ImageOcrResponseData>;
 type RegistCompanyResponse = ArbaguetteResponse<void>;
@@ -271,9 +306,12 @@ type CommuteCheckResponse = ArbaguetteResponse<CommuteCheckResponseData>;
 type GetNearCommuteInfoResponse = ArbaguetteResponse<NearCommuteInfoResponseData>;
 type GetPayStubResponse = ArbaguetteResponse<GetPayStubResponseData>;
 type GetDailyScheduleResponse = ArbaguetteResponse<GetDailyScheduleResponseData>;
+type GetExpectedPayrollResponse = ArbaguetteResponse<GetExpectedPayrollResponseData>;
 type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseData>;
 type GetWorkHistoryResponse = ArbaguetteResponse<GetWorkHistoryResponseData>;
 type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
+type GetEmploymentContractResponse = ArbaguetteResponse<GetEmploymentContractResponseData>;
+type checkAccountPasswordResponse = ArbaguetteResponse<void>;
 type AgreeSubstituteResponse = ArbaguetteResponse<ScheduleId>;
 type GetExpectedExpensesResponse = ArbaguetteResponse<GetExpectedExpensesResponseData>;
 type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseData>;

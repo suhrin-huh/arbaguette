@@ -5,9 +5,10 @@ import Screen from '@/components/common/Screen';
 import ShowContractButton from '@/components/crew/ShowContractButton';
 import WorkDaysTable from '@/components/crew/Table/WorkDaysTable';
 import WorkStatusTable from '@/components/crew/Table/WorkStatusTable';
-import { useWorkHistory } from '@/reactQuery/querys';
+import { useEmploymentContract, useWorkHistory } from '@/reactQuery/querys';
 import Theme from '@/styles/Theme';
 import format from '@/util/format';
+import useRootStore from '@/zustand';
 
 const PlaceInfo = Styled.View({
   flexDirection: 'row',
@@ -28,20 +29,22 @@ const MonthText = Styled.Text({
 
 const CrewManagementScreen = () => {
   const { year, month } = useLocalSearchParams<Partial<{ year: string; month: string }>>();
+  const { crewId } = useRootStore();
   const now = new Date();
   const currentYear = Number(year) || now.getFullYear();
   const currentMonth = (Number(month) || now.getMonth()) + 1;
   const workHistory = useWorkHistory(format.dateToString(new Date(currentYear, currentMonth - 1, 1)));
+  const contract = useEmploymentContract(crewId || -1);
 
   const handleShowContract = () => {
-    router.navigate({ pathname: '/crew/authorized/management/contract' });
+    router.navigate({ pathname: '/crew/authorized/management/contract', params: { url: contract?.url } });
   };
 
   console.log(workHistory);
   if (!workHistory) return null;
 
   return (
-    <Screen viewOption={{ style: { backgroundColor: Theme.color.WHITE } }}>
+    <Screen viewOption={{ style: { backgroundColor: Theme.color.WHITE } }} type="scroll">
       <PlaceInfo>
         <PlaceInfoText>{workHistory.companyName}</PlaceInfoText>
         <ShowContractButton onPress={handleShowContract} />

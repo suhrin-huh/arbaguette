@@ -29,7 +29,7 @@ const CrewMainScreen = () => {
   const LogoutButton = withPressable(CardContainer);
 
   return (
-    <Screen viewOption={{ style: { gap: 10 } }}>
+    <Screen viewOption={{ style: { gap: 10 } }} type="scroll">
       {nearCommuteInfo && <TimeCard {...nearCommuteInfo} />}
       <NfcCard onPress={handlePressNfcCard} />
       {dailySchedule && <AttendanceStatusCard dayScheduleData={dailySchedule.crews} />}

@@ -5,37 +5,15 @@ import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-nativ
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
+import Text from '@/components/common/Text';
 
-const Container = Styled.View(({ theme }) => ({
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  backgroundColor: 'white',
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  paddingVertical: theme.layout.PADDING.VERTICAL,
-}));
-
-const ContentWrapper = Styled.View(() => ({
-  marginTop: 50,
-}));
-
-const InputWrapper = Styled.View(() => ({
-  marginTop: 40,
-}));
-
-const StyledTitle = Styled.Text<{ isHeader?: boolean }>(({ isHeader }) => ({
-  fontSize: isHeader ? 24 : 16,
-  fontWeight: 'bold',
-}));
-
-const ErrorText = Styled.Text(() => ({
-  color: 'red',
-  fontSize: 16,
-  marginTop: 10,
-}));
+interface SignupProps {
+  role: 'BOSS' | 'CREW';
+  [key: string]: string;
+}
 
 const GetPasswordScreen = () => {
-  const { role, name, email } = useLocalSearchParams<{ role: 'BOSS' | 'CREW'; [key: string]: string }>();
+  const { role, profileImage, name, email } = useLocalSearchParams<SignupProps>();
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isValid, setIsValid] = useState(true);
@@ -73,14 +51,15 @@ const GetPasswordScreen = () => {
       setErrorMessage('비밀번호가 일치하지 않습니다.');
       return;
     }
-
-    router.push({ pathname: '/(app)/public/signup/4', params: { role, name, email, password } });
+    router.push({ pathname: '/(app)/(public)/signup/4', params: { role, profileImage, name, email, password } });
   };
 
   return (
     <Container>
       <ContentWrapper>
-        <StyledTitle isHeader>비밀번호를 입력해주세요.</StyledTitle>
+        <Text size="title" weight="bold">
+          비밀번호를 입력해 주세요.
+        </Text>
         <InputWrapper>
           <LabeledInput
             label="비밀번호"
@@ -93,7 +72,11 @@ const GetPasswordScreen = () => {
             secureTextEntry={true}
           />
         </InputWrapper>
-        {!isValid && <ErrorText>{errorMessage}</ErrorText>}
+        {!isValid && (
+          <Text size="base" weight="bold" color="gray">
+            {errorMessage}
+          </Text>
+        )}
         <InputWrapper>
           <LabeledInput
             label="비밀번호 확인"
@@ -106,7 +89,11 @@ const GetPasswordScreen = () => {
             secureTextEntry={true}
           />
         </InputWrapper>
-        {!isConfirmed && <ErrorText>{errorMessage}</ErrorText>}
+        {!isConfirmed && (
+          <Text size="base" weight="bold" color="danger">
+            {errorMessage}
+          </Text>
+        )}
       </ContentWrapper>
       <Button type="primary" onPress={goToNext}>
         다음
@@ -114,5 +101,22 @@ const GetPasswordScreen = () => {
     </Container>
   );
 };
+
+const Container = Styled.View(({ theme }) => ({
+  flex: 1,
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  backgroundColor: 'white',
+  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
+  paddingVertical: theme.layout.PADDING.VERTICAL,
+}));
+
+const ContentWrapper = Styled.View(() => ({
+  marginTop: 50,
+}));
+
+const InputWrapper = Styled.View(() => ({
+  marginTop: 40,
+}));
 
 export default GetPasswordScreen;

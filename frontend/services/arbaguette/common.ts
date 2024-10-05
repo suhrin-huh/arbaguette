@@ -8,6 +8,12 @@ export default {
     return axios.get('/api/bank/account');
   },
   /**
+   * 계좌 비밀번호 일치 여부 확인하기
+   */
+  checkAccountPassword: async (password: Password) => {
+    return axios.get(`/api/user/checkPassword?accountPassword=${password}`);
+  },
+  /**
    * 송금하기
    * @param remittanceForm 송금 폼
    */
@@ -27,5 +33,12 @@ export default {
    */
   getMonthlySchedule: async (month: Month, companyId?: CompanyId) => {
     return axios.get<GetMonthlyScheduleResponse>('/api/schedule', { params: { month, companyId } });
+  },
+  /**
+   * 근로계약서 조회
+   * @param crewId 조회할 알바생 ID
+   */
+  getEmploymentContract: async (crewId: CrewId) => {
+    return axios.get<GetEmploymentContractResponse>('/api/contract', { params: { crewId } });
   },
 };
