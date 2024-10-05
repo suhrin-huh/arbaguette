@@ -6,12 +6,13 @@ import FireworkImage from '@/assets/images/firework.png';
 import PayrollImage from '@/assets/images/payroll.png';
 import BankingCard from '@/components/common/BankingCard';
 import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
+import Screen from '@/components/common/Screen';
 import Text from '@/components/common/Text';
 import ExpectedSalaryCard from '@/components/crew/ExpectedSalaryCard';
 
 const CrewBankingScreen = () => {
   return (
-    <ScreenContainer>
+    <Screen type="scroll">
       <CenterHeaderbar left="none" title="빵Pay" right="bell" />
       <BankingCard />
       <ActionButtonGroup>
@@ -33,22 +34,11 @@ const CrewBankingScreen = () => {
         </ActionButton>
       </ActionButtonGroup>
       <ExpectedSalaryCard />
-    </ScreenContainer>
+    </Screen>
   );
 };
 
 export default CrewBankingScreen;
-
-const ScreenContainer = Styled.View(({ theme }) => ({
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'white',
-  gap: 30,
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  paddingVertical: theme.layout.PADDING.VERTICAL,
-}));
 
 const ActionButtonGroup = Styled.View(() => ({
   width: '100%',
