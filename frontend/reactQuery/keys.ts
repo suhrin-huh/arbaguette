@@ -21,8 +21,6 @@ const keys = {
   employmentContract: (crewId: CrewId) => [...keys.common(), 'employmentContract', crewId],
   bank: () => [...keys.common(), 'bank'],
   balance: () => [...keys.bank(), 'balance'],
-  dailySchedule: (date: string, companyId?: CompanyId) => [...keys.common(), 'dailySchedule', date, companyId],
-  monthlySchedule: (month: Month, companyId?: CompanyId) => [...keys.common(), 'monthlySchedule', month, companyId],
   expectedExpenses: (companyId: CompanyId) => [...keys.common(), 'expectedExpenses', companyId],
   checkAccountPassword: (password: Password) => [...keys.bank(), 'password', password],
 };
