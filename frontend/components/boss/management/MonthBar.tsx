@@ -26,18 +26,36 @@ const MonthText = styled.Text(({ theme }) => ({
 interface MonthBarProps {
   year: Year;
   month: Month;
+  onPressLeft?: () => void;
+  onPressRight?: () => void;
 }
 
-const MonthBar = ({ year, month }: MonthBarProps) => {
+const MonthBar = ({ year, month, onPressLeft, onPressRight }: MonthBarProps) => {
   return (
     <MonthBarContainer>
-      <Pressable onPress={() => console.log('left')}>
+      <Pressable
+        onPress={onPressLeft}
+        style={{
+          width: 30,
+          height: 30,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 15,
+        }}>
         <FontAwesome5 name="chevron-left" size={24} color={Colors.PRIMARY} />
       </Pressable>
       <MonthText>
         {year}년 {month}월
       </MonthText>
-      <Pressable onPress={() => console.log('right')}>
+      <Pressable
+        onPress={onPressRight}
+        style={{
+          width: 30,
+          height: 30,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 15,
+        }}>
         <FontAwesome5 name="chevron-right" size={24} color={Colors.PRIMARY} />
       </Pressable>
     </MonthBarContainer>

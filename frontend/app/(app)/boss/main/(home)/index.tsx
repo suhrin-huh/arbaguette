@@ -10,7 +10,7 @@ import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import TitleDropdown from '@/components/common/Header/TitleDropdown';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
 import ContainerView from '@/components/common/ScreenContainer';
-import { useDailySchedule } from '@/reactQuery/querys';
+import { useDailySchedule, useExpectedExpenses } from '@/reactQuery/querys';
 import useRootStore from '@/zustand';
 
 const InnerContainer = styled(ScrollView)(({ theme }) => ({
@@ -31,7 +31,12 @@ const MainScreen = () => {
   const { id, name, address } = useLocalSearchParams<{ id: string; name: string; address: string }>();
   const { selectedCompanyId, selectedCompanyName, setSelectedCompany } = useRootStore();
   const daySchedule = useDailySchedule(todayFormatter(), Number(id));
-  const crewScheduleInfos = daySchedule?.crews;
+  // const daySchedule = useDailySchedule('2024-10-10', Number(id));
+  const crewScheduleInfos = daySchedule?.crewScheduleInfos;
+  const expectedExpenses = useExpectedExpenses(Number(id));
+  const { originSalary, tax, allowance } = expectedExpenses || {};
+
+  console.log(crewScheduleInfos);
 
   useEffect(() => {
     setSelectedCompany({
@@ -74,7 +79,12 @@ const MainScreen = () => {
         ) : (
           <NoneCard title="금일 출근 예정 직원이 없습니다." fontSize={16} />
         )}
-        <SalaryChartCard title="이번달 예상 지출" originSalary={0} tax={0} allowance={0} />
+        <SalaryChartCard
+          title="이번달 예상 지출"
+          originSalary={originSalary || 0}
+          tax={tax || 0}
+          allowance={allowance || 0}
+        />
       </ContainerView>
     </InnerContainer>
   );
