@@ -36,10 +36,11 @@ async function* readNfcData(): AsyncGenerator<{ state: State; data: TagEvent | n
     console.log('NFC 카드를 인식했습니다.');
     yield { state: 'processing', data: null };
 
-    const tag = await NfcManager.getTag();
+    const tag = await NfcManager.ndefHandler.getNdefMessage();
+    const data = tag?.ndefMessage[0].payload[0];
 
     await NfcManager.cancelTechnologyRequest();
-    yield { state: 'finish', data: tag };
+    yield { state: 'finish', data };
   } finally {
     await NfcManager.cancelTechnologyRequest();
   }

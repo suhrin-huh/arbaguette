@@ -37,6 +37,7 @@ const CrewMainLayout = () => {
         name="main"
         options={{
           title: '홈',
+          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <Foundation name="home" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -46,6 +47,7 @@ const CrewMainLayout = () => {
         name="schedule"
         options={{
           title: '스케줄',
+          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <FontAwesome5 name="calendar" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -80,6 +82,7 @@ const CrewMainLayout = () => {
         name="banking"
         options={{
           title: '뱅킹',
+          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <MaterialCommunityIcons
               name="bank"
