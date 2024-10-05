@@ -3,6 +3,7 @@ import { BottomSheetModal, BottomSheetView, useBottomSheetModal } from '@gorhom/
 import { router, useLocalSearchParams } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import NfcManager from 'react-native-nfc-manager';
 
 import LoadingAnimation from '@/assets/lottie/loading.json';
 import ReadyAnimation from '@/assets/lottie/nfc_ready.json';
@@ -97,6 +98,10 @@ const NfcModal = () => {
       });
       await timer(1500, dismiss);
     })();
+
+    return () => {
+      (async () => await NfcManager.cancelTechnologyRequest())();
+    };
   }, [companyId, dismiss]);
 
   const handleDismiss = () => {
