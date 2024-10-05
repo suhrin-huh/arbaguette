@@ -29,8 +29,11 @@ const useCompanyList = () => {
 /**
  * 알바생 리스트를 가져오는 쿼리 훅
  */
-const useCrewMemberList = () => {
-  const { data } = useQuery({ queryKey: keys.crewList(), queryFn: () => arbaguette.getCrewMemberList() });
+const useCrewMemberList = (companyId: CompanyId) => {
+  const { data } = useQuery({
+    queryKey: keys.crewList(companyId),
+    queryFn: () => arbaguette.getCrewMemberList(companyId),
+  });
 
   const crewList = data?.data.data.crews || [];
 
@@ -161,6 +164,21 @@ const useWorkHistory = (date: string) => {
   return data.data.data;
 };
 
+/**
+ * 이번달 예상 지출을 가져오는 쿼리 훅(사장님)
+ * @param companyId 사업장 ID
+ */
+const useExpectedExpenses = (companyId: CompanyId) => {
+  const { data } = useQuery({
+    queryKey: keys.expectedExpenses(companyId),
+    queryFn: () => arbaguette.getExpectedExpenses(companyId),
+  });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
 export {
   useAccountBalance,
   useCompanyList,
@@ -168,6 +186,7 @@ export {
   useCrewMemeberDetail,
   useDailySchedule,
   useEmailCheck,
+  useExpectedExpenses,
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,
   useMonthlySchedule,
