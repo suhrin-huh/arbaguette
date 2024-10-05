@@ -1,8 +1,9 @@
 import styled from '@emotion/native';
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetView, useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import NfcManager from 'react-native-nfc-manager';
 
 import LoadingAnimation from '@/assets/lottie/loading.json';
 import ReadyAnimation from '@/assets/lottie/nfc_ready.json';
@@ -74,6 +75,7 @@ const NFC = {
 };
 
 const Modal = () => {
+  const { dismiss } = useBottomSheetModal();
   const [state, setState] = useState<State>('ready');
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ['40%', '40%'], []);
@@ -93,10 +95,16 @@ const Modal = () => {
       setState(initialState.state);
       const { value: processingState } = await stateGenerator.next();
       setState(processingState.state);
-      const { value: finishState } = await timer(2000, stateGenerator.next);
-      setState(finishState.state);
-      console.log(finishState.data);
+      await timer(2000, async () => {
+        const { value: finishState } = await stateGenerator.next();
+        setState(finishState.state);
+      });
+      await timer(1500, dismiss);
     })();
+
+    return () => {
+      (async () => await NfcManager.cancelTechnologyRequest())();
+    };
   }, []);
 
   return (
