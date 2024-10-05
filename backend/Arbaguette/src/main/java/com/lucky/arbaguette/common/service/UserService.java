@@ -80,7 +80,7 @@ public class UserService {
 
     public void checkTel(String tel) {
         if (bossRepository.existsByTel(tel) || crewRepository.existsByTel(tel)) {
-            throw new DuplicateException("전화번혹가 중복되었습니다.");
+            throw new DuplicateException("전화번호가 중복되었습니다.");
         }
     }
 
