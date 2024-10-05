@@ -20,7 +20,7 @@ type Email = string;
 type Password = string;
 type UserName = string;
 type Tel = string;
-type ProfileImage = number;
+type ProfileImage = string;
 
 type Year = number;
 type Month = number;
@@ -129,6 +129,7 @@ interface GetCrewMemberListResponseData {
 interface GetCrewMemberDetailResponseData {
   id: CrewId;
   name: CrewName;
+  tel: Tel;
   profileImage: ProfileImage;
   salary: Money;
   workingDays: WorkingDay[];
@@ -140,8 +141,10 @@ interface GetCrewMemberDetailResponseData {
 
 interface Receipt {
   month: Month;
-  originSalary: Money;
+  salary: Money;
   totalTime: WorkHours;
+  tax: Money;
+  allowance: Money;
 }
 
 type WorkStatus = string;
@@ -195,7 +198,7 @@ interface GetDailyScheduleResponseData {
   normalCount: NormalCount;
   absentCount: AbsentCount;
   yetCount: YetCount;
-  crews: CrewSchedule[];
+  crewScheduleInfos: CrewSchedule[];
 }
 
 interface GetExpectedPayrollResponseData {
@@ -240,6 +243,21 @@ interface GetWorkHistoryResponseData {
   late: number;
   earlyLeave: number;
   commutes: { date: string; inTime: string; outTime: string; commuteStatus: CommuteStatus }[];
+}
+
+interface GetExpectedExpensesResponseData {
+  originSalary: Money;
+  tax: Money;
+  allowance: Money;
+}
+
+interface SendSalaryReceiptResponseData {
+  crewId: CrewId;
+  month: Month;
+  originSalary: Money;
+  tax: Money;
+  allowance: Money;
+  totalTime: TotalTime;
 }
 
 type CommuteStatus = 'NORMAL' | 'ABSENT' | 'LATE';
@@ -295,3 +313,5 @@ type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteRes
 type GetEmploymentContractResponse = ArbaguetteResponse<GetEmploymentContractResponseData>;
 type checkAccountPasswordResponse = ArbaguetteResponse<void>;
 type AgreeSubstituteResponse = ArbaguetteResponse<ScheduleId>;
+type GetExpectedExpensesResponse = ArbaguetteResponse<GetExpectedExpensesResponseData>;
+type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseData>;

@@ -39,7 +39,8 @@ const ProfileCard = ({ startTime, endTime, status, name, tel, source }: ProfileC
       <Profile name={name} status={status} source={source} />
       <TimeContainer>
         <Text>
-          {startTime} - {endTime}
+          {startTime.split('T')[1].split(':').slice(0, 2).join(':')} -{' '}
+          {endTime.split('T')[1].split(':').slice(0, 2).join(':')}
         </Text>
       </TimeContainer>
       <StatusContainer>

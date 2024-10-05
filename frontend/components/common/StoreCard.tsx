@@ -67,6 +67,7 @@ const LeftContainer = styled.View(({ theme }) => ({
   alignItems: 'flex-start',
   justifyContent: 'center',
   gap: 18,
+  width: '80%',
 }));
 
 // AddContainer의 요소들을 수직 중앙 정렬
@@ -92,8 +93,10 @@ const StoreName = styled.Text(({ theme }) => ({
 }));
 
 const StoreAddress = styled.Text(({ theme }) => ({
+  width: '70%',
   fontSize: 14,
   color: theme.color.GRAY?.[3],
+  flexWrap: 'wrap',
 }));
 
 const IconContainer = styled.Pressable(({ theme }) => ({

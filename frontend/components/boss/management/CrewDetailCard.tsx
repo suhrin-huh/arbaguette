@@ -66,7 +66,10 @@ const CrewDetailCard = ({ crewData }: CrewDetailCardProps) => {
   return (
     <InfoContainer>
       <ProfileContainer>
-        <Image source={unknownPerson} style={{ width: 70, height: 70, borderRadius: 50 }} />
+        <Image
+          source={crewData.profileImage ? { uri: crewData.profileImage } : unknownPerson}
+          style={{ width: 70, height: 70, borderRadius: 50 }}
+        />
         <ProfileRightContainer>
           <CrewInfoName>{crewData.name}</CrewInfoName>
           <CrewInfoIconContainer>

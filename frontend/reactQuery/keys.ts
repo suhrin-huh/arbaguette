@@ -4,7 +4,7 @@ const keys = {
   company: () => [...keys.boss(), 'company'],
   daySchedule: (date: string, companyId: CompanyId) => [...keys.company(), 'schedule', date, companyId],
   companyList: () => [...keys.company(), 'list'],
-  crewList: () => [...keys.boss(), 'crews'],
+  crewList: (companyId: CompanyId) => [...keys.boss(), 'crews', companyId],
   crew: () => [...keys.all, 'crew'],
   crewDetail: (crewId: CrewId) => [...keys.crew(), 'detail', crewId],
   nearCommuteInfo: () => [...keys.crew(), 'nearCommuteInfo'],
@@ -21,6 +21,9 @@ const keys = {
   employmentContract: (crewId: CrewId) => [...keys.common(), 'employmentContract', crewId],
   bank: () => [...keys.common(), 'bank'],
   balance: () => [...keys.bank(), 'balance'],
+  dailySchedule: (date: string, companyId?: CompanyId) => [...keys.common(), 'dailySchedule', date, companyId],
+  monthlySchedule: (month: Month, companyId?: CompanyId) => [...keys.common(), 'monthlySchedule', month, companyId],
+  expectedExpenses: (companyId: CompanyId) => [...keys.common(), 'expectedExpenses', companyId],
   checkAccountPassword: (password: Password) => [...keys.bank(), 'password', password],
 };
 
