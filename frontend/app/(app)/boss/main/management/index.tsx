@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { ScrollView, StatusBar } from 'react-native';
 
 import CrewCard from '@/components/boss/management/CrewCard';
-import MonthBar from '@/components/boss/management/MonthBar';
 import NoneCard from '@/components/boss/management/NoneScheduleCard';
 import Button from '@/components/common/Button';
 import LeftHeaderbar from '@/components/common/Header/LeftHeaderBar';
@@ -60,7 +59,7 @@ const MonthText = styled.Text(({ theme }) => ({
 }));
 
 const BossManagementScreen = () => {
-  const { selectedCompanyName, selectedCompanyId, registCompanyId, setRegistCompanyId } = useRootStore();
+  const { selectedCompanyName, selectedCompanyId, setRegistCompanyId } = useRootStore();
   const { crewList } = useCrewMemberList(selectedCompanyId);
   const router = useRouter();
   const pushRouteHandler = (crewId: number) => {

@@ -1,9 +1,7 @@
 import { router } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Animated, ScrollView, Text, View } from 'react-native';
+import { Animated, ScrollView } from 'react-native';
 
-import ContractContainerBox from '@/components/boss/management/ContractContainerBox';
-import ContractScheduleBox from '@/components/boss/management/ContractScheduleBox';
 import InfoContainer from '@/components/boss/management/InfoContainer';
 import InsuContractBox from '@/components/boss/management/InsuContractBox';
 import SalaryContractBox from '@/components/boss/management/SalaryContractBox';

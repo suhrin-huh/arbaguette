@@ -1,7 +1,4 @@
 import styled from '@emotion/native';
-import { FontAwesome } from '@expo/vector-icons';
-
-import Colors from '@/constants/Colors';
 
 const DropdownContainer = styled.Pressable({
   flexDirection: 'row',

@@ -1,6 +1,6 @@
 import styled from '@emotion/native';
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import useRootStore from '@/zustand';

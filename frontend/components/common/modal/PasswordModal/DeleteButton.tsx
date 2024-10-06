@@ -1,6 +1,5 @@
 import Styled from '@emotion/native';
 import Delete from '@expo/vector-icons/Feather';
-import { useState } from 'react';
 
 interface DeleteProps {
   deletePassword: () => void;

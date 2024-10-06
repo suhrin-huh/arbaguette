@@ -1,7 +1,6 @@
 import styled from '@emotion/native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import React from 'react';
-import { Text, View } from 'react-native';
 
 import Button from '@/components/common/Button';
 import DayCircle from '@/components/common/DayCircle';

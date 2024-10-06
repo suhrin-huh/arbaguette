@@ -29,7 +29,7 @@ function todayFormatter() {
 
 const MainScreen = () => {
   const { id, name, address } = useLocalSearchParams<{ id: string; name: string; address: string }>();
-  const { selectedCompanyId, selectedCompanyName, setSelectedCompany } = useRootStore();
+  const { setSelectedCompany } = useRootStore();
   const daySchedule = useDailySchedule(todayFormatter(), Number(id));
   // const daySchedule = useDailySchedule('2024-10-10', Number(id));
   const crewScheduleInfos = daySchedule?.crewScheduleInfos;
