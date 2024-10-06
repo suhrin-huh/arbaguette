@@ -60,23 +60,10 @@ const InfoTitle = styled.Text(({ theme }) => ({
   color: theme.color.BLACK,
 }));
 
-interface SendObject {
-  companyId: CompanyId;
-  crewId: CrewId;
-  startDate: DateString;
-  endDate: DateString;
-  workingDayInfoList: WorkingDay[];
-  salary: Money;
-  salaryDate: SalaryDate;
-}
-
 const SignContractBox = ({ pathRoute }: { pathRoute: (to: 'back' | 'next') => void }) => {
-  // const queryClient = useQueryClient();
   const { mutate: signContract } = useMutation({
     mutationFn: arbaguette.signContract,
     onSuccess: async (data) => {
-      // await queryClient.invalidateQueries({ queryKey: keys.common(), refetchType: 'all' });
-      // router.back();
       pathRoute('next');
     },
     onError: (error) => {
@@ -96,8 +83,6 @@ const SignContractBox = ({ pathRoute }: { pathRoute: (to: 'back' | 'next') => vo
     registSalaryDate,
     registTaxType,
   } = useRootStore();
-
-  const [isLoading, setIsLoading] = useState(false);
 
   // 서명이 완료되었을 때 호출되는 콜백
   const handleOK = async (signature: string) => {

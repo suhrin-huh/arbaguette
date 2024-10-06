@@ -1,7 +1,7 @@
 import styled from '@emotion/native';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Alert } from 'react-native';
 
 import Button from '@/components/common/Button';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';

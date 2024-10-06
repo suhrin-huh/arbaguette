@@ -210,9 +210,13 @@ const useExpectedExpenses = (companyId: CompanyId) => {
   const { data } = useQuery({
     queryKey: keys.expectedExpenses(companyId),
     queryFn: () => arbaguette.getExpectedExpenses(companyId),
- * 근로계약서를 가져오는 쿼리 훅
- * @param crewId 조회할 알바생 ID
- */
+  });
+
+  if (!data) return null;
+
+  return data.data.data;
+};
+
 const useEmploymentContract = (crewId: CrewId) => {
   const { data } = useQuery({
     queryKey: keys.employmentContract(crewId),
@@ -232,8 +236,8 @@ export {
   useCrewMemeberDetail,
   useDailySchedule,
   useEmailCheck,
-  useExpectedExpenses,
   useEmploymentContract,
+  useExpectedExpenses,
   useGetBankHistory,
   useGetExpectedPayroll,
   useMonthlyAccumulatedSalary,

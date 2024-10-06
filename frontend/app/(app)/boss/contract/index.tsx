@@ -1,4 +1,3 @@
-import { useRoute } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, ScrollView } from 'react-native';
@@ -11,10 +10,6 @@ import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import ContainerView from '@/components/common/ScreenContainer';
 import Colors from '@/constants/Colors';
 import useRootStore from '@/zustand';
-
-export interface WorkingDayInfo extends WorkingDay {
-  id: number;
-}
 
 const ManagementRegisterScreen1 = () => {
   const {

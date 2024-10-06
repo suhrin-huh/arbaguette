@@ -1,7 +1,6 @@
-import styled from '@emotion/native';
-import { router, useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { BackHandler, Image, Modal, ScrollView, StatusBar, Text, View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import React from 'react';
+import { Modal, ScrollView, StatusBar, Text } from 'react-native';
 
 import CrewDetailCard from '@/components/boss/management/CrewDetailCard';
 import SalaryReciptCard from '@/components/boss/management/SalaryReciptCard';

@@ -1,5 +1,4 @@
 import Styled from '@emotion/native';
-import { router } from 'expo-router';
 import { Image } from 'react-native';
 
 import FireworkImage from '@/assets/images/firework.png';

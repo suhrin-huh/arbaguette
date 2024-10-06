@@ -1,7 +1,7 @@
 import styled from '@emotion/native';
 import { FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, TouchableOpacity } from 'react-native';
 
 import unknownPerson from '@/assets/images/unknown_person.jpg';
 import Colors from '@/constants/Colors';

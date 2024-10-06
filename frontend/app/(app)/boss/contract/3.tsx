@@ -1,12 +1,11 @@
 import { router } from 'expo-router';
-import React, { useEffect } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import React from 'react';
+import { ScrollView } from 'react-native';
 
 import SignContractBox from '@/components/boss/management/SignContractBox';
 import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import ContainerView from '@/components/common/ScreenContainer';
 import Colors from '@/constants/Colors';
-import useRootStore from '@/zustand';
 
 const ManagementRegisterScreen3 = () => {
   const pathRoute = (to: 'back' | 'next') => {

@@ -1,9 +1,9 @@
 import styled from '@emotion/native';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import React, { useState } from 'react';
-import { Alert, Modal, Text, View } from 'react-native';
+import { Alert, Modal, Text } from 'react-native';
 
 import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
