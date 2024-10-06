@@ -1,7 +1,6 @@
 import Styled from '@emotion/native';
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
-import { View } from 'react-native';
 
 import SuccessAnimation from '@/assets/lottie/remittance_success.json';
 import Button from '@/components/common/Button';
@@ -16,13 +15,13 @@ const SuccessScreen = () => {
       <ContentBox>
         <LottieView
           autoPlay
-          speed={2}
+          speed={1.5}
           style={{
             width: 200,
             height: 200,
           }}
           resizeMode="cover"
-          duration={1000}
+          duration={2000}
           source={SuccessAnimation}
         />
         <Text size="title" weight="bold">

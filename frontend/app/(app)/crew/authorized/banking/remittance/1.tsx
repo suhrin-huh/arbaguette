@@ -47,6 +47,7 @@ const GetRemittanceInfo = () => {
   };
 
   const goToNext = (): void => {
+    // 이부분 수정 필요!
     const name = '김사사';
     router.push({ pathname: '/(app)/crew/authorized/banking/remittance/2', params: { accountNo, amount, name } });
   };
@@ -82,7 +83,7 @@ const GetRemittanceInfo = () => {
           />
         </InputWrapper>
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext}>
+      <Button type="primary" onPress={goToNext} disabled={!accountNo || !amount}>
         다음
       </Button>
     </Container>

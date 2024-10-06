@@ -42,7 +42,7 @@ const GetPasswordInfo = () => {
     }
   };
 
-  const handlePasswordDelete = (value: number) => {
+  const handlePasswordDelete = () => {
     setPassword((prev) => prev.slice(0, -1));
   };
 
@@ -66,7 +66,7 @@ const GetPasswordInfo = () => {
   );
 };
 
-const Container = Styled.View(({ theme }) => ({
+const Container = Styled.View(() => ({
   flex: 1,
   position: 'relative',
   flexDirection: 'column',
