@@ -264,8 +264,6 @@ type CommuteStatus = 'NORMAL' | 'ABSENT' | 'LATE';
 
 type ContractId = number;
 
-type TaxType = 'NONE' | 'INSU' | 'INCOME';
-
 interface GetEmploymentContractResponseData {
   contractId: ContractId;
   companyName: CompanyName;
