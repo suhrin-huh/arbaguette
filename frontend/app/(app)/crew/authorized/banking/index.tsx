@@ -5,18 +5,16 @@ import { Image, View } from 'react-native';
 import FireworkImage from '@/assets/images/firework.png';
 import PayrollImage from '@/assets/images/payroll.png';
 import BankingCard from '@/components/common/BankingCard';
-import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import Screen from '@/components/common/Screen';
 import Text from '@/components/common/Text';
 import ExpectedSalaryCard from '@/components/crew/ExpectedSalaryCard';
 
 const CrewBankingScreen = () => {
   return (
-    <Screen type="scroll">
-      <CenterHeaderbar left="none" title="빵Pay" right="bell" />
+    <Screen type="scroll" viewOption={{ style: { backgroundColor: 'white' } }}>
       <BankingCard />
       <ActionButtonGroup>
-        <ActionButton onPress={() => router.push('/crew/authorized/banking/certification')}>
+        <ActionButton onPress={() => router.push('/crew/authorized/banking/payStub')}>
           <View>
             <Text size="sub" weight="bold">
               {'급여명세서\n확인하기'}

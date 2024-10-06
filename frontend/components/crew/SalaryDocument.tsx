@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import Text from '@/components/common/Text';
 import Colors from '@/constants/Colors';
 
-interface Certification {
+interface PayStub {
   companyName: string;
   originSalary: number;
   tax: number;
@@ -13,34 +13,28 @@ interface Certification {
   salaryDate: number;
 }
 
-interface CertificationDocProps {
-  certification: Certification;
+interface PayStubDocProps {
+  payStub: PayStub;
 }
 
-const SalaryDocument = ({ certification }: CertificationDocProps) => {
+const SalaryDocument = ({ payStub }: PayStubDocProps) => {
   const formattedNumber = (number: number): string => `${number.toLocaleString('ko-KR')} 원`;
-  const { companyName, originSalary, tax, allowance, totalTime } = certification;
+  const { companyName, originSalary, tax, allowance, totalTime } = payStub;
   return (
     <View>
-      <CertificationBox>
+      <PayStubBox>
         <Text
           size="sub"
           weight="bold"
           textStyle={{ paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: Colors.GRAY['1'] }}>
-          직원정보
+          기업정보
         </Text>
         <TextBox>
           <Text size="base">회사명</Text>
           <Text size="base">{companyName}</Text>
         </TextBox>
-        <TextBox>
-          <Text size="base">이름</Text>
-          <Text size="base" color="danger">
-            {companyName}
-          </Text>
-        </TextBox>
-      </CertificationBox>
-      <CertificationBox>
+      </PayStubBox>
+      <PayStubBox>
         <Text
           size="sub"
           weight="bold"
@@ -69,12 +63,12 @@ const SalaryDocument = ({ certification }: CertificationDocProps) => {
           <Text size="base">세금</Text>
           <Text size="base">{formattedNumber(tax)}</Text>
         </TextBox>
-      </CertificationBox>
+      </PayStubBox>
     </View>
   );
 };
 
-const CertificationBox = Styled.View(() => ({
+const PayStubBox = Styled.View(() => ({
   marginTop: 30,
 }));
 
