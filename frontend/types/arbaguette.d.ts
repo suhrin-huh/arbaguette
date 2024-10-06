@@ -80,7 +80,7 @@ type Money = number;
 
 interface RemittanceForm {
   account: BankAccount;
-  money: Money;
+  money: string;
   password: Password;
 }
 
@@ -246,8 +246,6 @@ type CommuteStatus = 'NORMAL' | 'ABSENT' | 'LATE';
 
 type ContractId = number;
 
-type TaxType = 'NONE' | 'INSU' | 'INCOME';
-
 interface GetEmploymentContractResponseData {
   contractId: ContractId;
   companyName: CompanyName;
@@ -269,6 +267,28 @@ interface GetEmploymentContractResponseData {
 interface ReissueResponseData {
   accessToken: AccessToken;
   refreshToken: RefreshToken;
+}
+interface Transaction {
+  transactionUniqueNo: string;
+  transactionDate: string;
+  transactionTime: string;
+  transactionType: string;
+  transactionTypeName: string;
+  transactionAccountNo: string;
+  transactionBalance: string;
+  transactionAfterBalance: string;
+  transactionSummary: string;
+  transactionMemo: string;
+}
+
+interface GetBankHistoryResponseData {
+  totalCount: string;
+  list: Transaction[] | [];
+}
+
+interface GetAccountBalanceResponseData {
+  account: BankAccount;
+  money: string;
 }
 
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
@@ -295,3 +315,6 @@ type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteRes
 type GetEmploymentContractResponse = ArbaguetteResponse<GetEmploymentContractResponseData>;
 type checkAccountPasswordResponse = ArbaguetteResponse<void>;
 type AgreeSubstituteResponse = ArbaguetteResponse<ScheduleId>;
+type GetBankHistoryResponse = ArbaguetteResponse<GetBankHistoryResponseData>;
+type GetAccountBalanceResponse = ArbaguetteResponse<GetAccountBalanceResponseData>;
+type RemittanceResponse = ArbaguetteResponse<void>;
