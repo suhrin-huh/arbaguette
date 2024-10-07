@@ -38,6 +38,8 @@ public class ClickConsumer {
         ObjectMapper mapper = new ObjectMapper();
         try{
             KafkaMsg kafkaMsg = mapper.readValue(msg, KafkaMsg.class);
+            log.info("Flag value: {}", kafkaMsg.flag());
+
             Click click = clickRepository.findByBonusIdAndAccountNo(kafkaMsg.bonusId(), kafkaMsg.accountNo())
                     .orElseGet(() -> clickRepository.save(
                             Click.builder()
@@ -48,6 +50,7 @@ public class ClickConsumer {
                     ));
             click.increaseClickCnt();
             if (kafkaMsg.flag()) {
+                log.info("flag is true, processing...");
                 for (Click clicked : clickRepository.findAllByBonusId(kafkaMsg.bonusId())) {
 
                     Map<String, Object> accountRequestBody = new HashMap<>();
@@ -94,6 +97,7 @@ public class ClickConsumer {
 
             }
         }catch (Exception e){
+            log.error("Error in listener", e);
         }
 
 
