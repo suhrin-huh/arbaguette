@@ -34,8 +34,11 @@ public class Boss {
 
     private String accountPassword;
 
+    private String bluetoothToken;
+
     @Builder
-    private Boss(String email, String password, String name, String tel, String account, String userKey, String profileImage, String accountPassword) {
+    private Boss(String email, String password, String name, String tel, String account, String userKey,
+                 String profileImage, String accountPassword) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -46,4 +49,7 @@ public class Boss {
         this.accountPassword = accountPassword;
     }
 
+    public void saveBluetoothId(String bluetoothToken) {
+        this.bluetoothToken = bluetoothToken;
+    }
 }
