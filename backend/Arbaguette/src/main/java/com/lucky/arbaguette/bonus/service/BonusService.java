@@ -13,9 +13,11 @@ import com.lucky.arbaguette.common.service.BankService;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BonusService {
@@ -56,6 +58,7 @@ public class BonusService {
         }
 
         KafkaMsg kafkaMsg = new KafkaMsg(bonusId, crew.getAccount(), crew.getUserKey(), isEnd);
+        log.info("카프카 들어감");
         kafkaTemplate.send(TOPIC_NAME, kafkaMsg);
     }
 }

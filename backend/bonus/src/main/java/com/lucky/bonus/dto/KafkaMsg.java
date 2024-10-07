@@ -1,4 +1,4 @@
-package com.lucky.bonus;
+package com.lucky.bonus.dto;
 
 public record KafkaMsg(int bonusId,
                        String accountNo,
