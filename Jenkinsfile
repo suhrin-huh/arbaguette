@@ -67,10 +67,10 @@ sed -i 's/\${SSAFY_BANK_KEY}/${SSAFY_BANK_KEY}/' ./src/main/resources/applicatio
 
 
                         // Check if any container is named "backend"
-def containerNamedBackend = sh(script: "docker ps -a --filter 'name=backend' --format '{{.ID}}'", returnStdout: true).trim()
+def containerNamedBackend = sh(script: "docker ps -a --filter 'name=bonus' --format '{{.ID}}'", returnStdout: true).trim()
 
 if (containerNamedBackend) {
-    // Stop and remove the container named "backend"
+    // Stop and remove the container named "bonus"
     sh "docker stop ${containerNamedBackend}"
     sh "docker rm ${containerNamedBackend}"
 }
@@ -82,15 +82,14 @@ docker build \
   --build-arg DB_NAME=${MARIA_NAME} \
   --build-arg DB_PASSWORD=${MARIA_PASSWORD} \
   --build-arg SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
-  -t backend .
+  -t bonus .
 """
                         sh """
-                            docker run --name backend -d -p 8080:8080 \
--v /home/ubuntu/api_key/cloudvision-434807-1bea29b95286.json:/app/config/cloudvision.json \
+                            docker run --name bonus -d -p 8088:8088 \
 -e DB_NAME=${MARIA_NAME} \
 -e DB_PASSWORD=${MARIA_PASSWORD} \
 -e SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
-backend
+bonus
                         """
                     }
                 }
