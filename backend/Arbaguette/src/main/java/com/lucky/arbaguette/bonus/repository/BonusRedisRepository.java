@@ -16,7 +16,7 @@ public class BonusRedisRepository {
     private final RedisTemplate<String, Integer> redisTemplate;
 
     public void save(int bonusId, int clickCnt) {
-        redisTemplate.opsForList().rightPush(String.valueOf(bonusId), clickCnt);
+        redisTemplate.opsForValue().set(String.valueOf(bonusId), clickCnt);
         redisTemplate.expire(String.valueOf(bonusId), eventExpiredTime, TimeUnit.MILLISECONDS);
     }
 
