@@ -33,14 +33,14 @@ const CrewMainScreen = () => {
       {nearCommuteInfo && <TimeCard {...nearCommuteInfo} />}
       <NfcCard onPress={handlePressNfcCard} />
       {dailySchedule && <AttendanceStatusCard dayScheduleData={dailySchedule.crewScheduleInfos} />}
-      {/* {prevMonthPayCheck && (
+      {prevMonthPayCheck && (
         <SalaryChartCard
           title="저번달 받은 임금"
           originSalary={prevMonthPayCheck.originSalary}
           tax={prevMonthPayCheck.tax}
           allowance={prevMonthPayCheck.allowance}
         />
-      )} */}
+      )}
       {!!accumulatedSalary && <SalaryCard salary={accumulatedSalary} />}
       <LogoutButton onPress={() => logout()}>
         <Text>로그아웃</Text>

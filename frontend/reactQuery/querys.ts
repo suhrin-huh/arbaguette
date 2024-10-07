@@ -115,8 +115,7 @@ const usePayStub = (month: Month) => {
     queryKey: keys.payStub(month),
     queryFn: () => arbaguette.getPayStub(month),
   });
-  const payStub = queryResult.data?.data.data || null;
-  return { payStub, ...queryResult };
+  return queryResult.data?.data.data || null;
 };
 
 /**
