@@ -10,7 +10,6 @@ import Text from '@/components/common/Text';
 const BossBankingScreen = () => {
   return (
     <ScreenContainer>
-      <CenterHeaderbar left="none" title="빵Pay" right="bell" />
       <BankingCard />
       <ActionButton>
         <Text size="title" weight="bold">

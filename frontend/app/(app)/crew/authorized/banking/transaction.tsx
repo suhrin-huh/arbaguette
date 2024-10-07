@@ -1,16 +1,10 @@
 import Styled from '@emotion/native';
-import { router } from 'expo-router';
 
-import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import TransactionList from '@/components/common/TransactionList';
 
 const Transaction = () => {
-  const navigateBack = () => {
-    router.push('/crew/authorized/banking');
-  };
   return (
     <TransactionContainer>
-      <CenterHeaderbar title="빵Pay" right="bell" onPressLeft={navigateBack} />
       <TransactionList />
     </TransactionContainer>
   );

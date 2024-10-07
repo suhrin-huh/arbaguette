@@ -83,9 +83,7 @@ const BossManagementScreen = () => {
         justifyContent: 'flex-start',
         paddingBottom: 60,
       }}>
-      <StatusBar barStyle="light-content" backgroundColor={Colors.BLACK} />
       <ContainerView>
-        <LeftHeaderbar title={selectedCompanyName} right="bell" bgColor="background" />
         <MonthButtonArea>
           <MonthBarContainer>
             <MonthText>직원 {crewList.length}명</MonthText>
