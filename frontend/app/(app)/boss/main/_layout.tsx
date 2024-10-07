@@ -1,7 +1,7 @@
 import { Foundation } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { router, Tabs, useGlobalSearchParams, useSegments } from 'expo-router';
+import { router, Tabs, useSegments } from 'expo-router';
 import React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
@@ -45,7 +45,7 @@ const BossMainLayout = () => {
         name="(home)"
         options={{
           title: '홈',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           headerLeft: () => <StoreButton onPress={() => router.navigate('/boss/config/')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <Foundation name="home" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
@@ -56,7 +56,7 @@ const BossMainLayout = () => {
         name="schedule"
         options={{
           title: '스케쥴',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <FontAwesome5 name="calendar" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -66,7 +66,7 @@ const BossMainLayout = () => {
         name="management"
         options={{
           title: '직원 관리',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <MaterialCommunityIcons
               name="view-list"
