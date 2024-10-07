@@ -13,7 +13,7 @@ const GetRemittanceInfo = () => {
   const [accountNo, setAccountNo] = useState<string>();
   const [amount, setAmount] = useState<string>();
   const [isValid, setIsValid] = useState(true);
-  const balance = accountBalance.money;
+  const balance = accountBalance?.money;
 
   const handleAccountNo = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setAccountNo(e.nativeEvent.text);
@@ -23,13 +23,14 @@ const GetRemittanceInfo = () => {
     const text = e.nativeEvent.text;
     const numericValue = text.replace(/[^0-9]/g, '');
     let amountNumber = parseInt(numericValue, 10);
+    const balanceNumber = balance ? parseInt(balance, 10) : 0;
 
     if (isNaN(amountNumber)) {
       amountNumber = 0;
     }
 
-    if (amountNumber > balance) {
-      setAmount(balance.toString());
+    if (amountNumber > balanceNumber) {
+      setAmount(balance);
       setIsValid(false);
     } else {
       setAmount(numericValue);
@@ -46,7 +47,9 @@ const GetRemittanceInfo = () => {
   };
 
   const goToNext = (): void => {
-    router.push({ pathname: '/(app)/crew/authorized/banking/remittance/2', params: { accountNo, amount } });
+    // 이부분 수정 필요!
+    const name = '김사사';
+    router.push({ pathname: '/(app)/crew/authorized/banking/remittance/2', params: { accountNo, amount, name } });
   };
 
   return (
@@ -80,7 +83,7 @@ const GetRemittanceInfo = () => {
           />
         </InputWrapper>
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext}>
+      <Button type="primary" onPress={goToNext} disabled={!accountNo || !amount}>
         다음
       </Button>
     </Container>

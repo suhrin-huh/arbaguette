@@ -5,7 +5,7 @@ import NoContent from '@/components/common/NoContent';
 import Text from '@/components/common/Text';
 import { useGetBankHistory } from '@/reactQuery/querys';
 
-interface TransactionItem {
+interface Transaction {
   transactionUniqueNo: string;
   transactionDate: string;
   transactionTime: string;
@@ -18,10 +18,9 @@ interface TransactionItem {
   transactionMemo: string;
 }
 
-interface TransactionItemProp {
-  item: TransactionItem;
+interface TransactionProps {
+  item: Transaction;
 }
-
 const formatDateTime = (dateTimeString: string): string => {
   const year = dateTimeString.substring(0, 4);
   const month = dateTimeString.substring(4, 6);
@@ -34,14 +33,14 @@ const formatDateTime = (dateTimeString: string): string => {
 
 const formattedNumber = (number: string): string => `${parseInt(number, 10).toLocaleString('ko-KR')} 원`;
 
-const TransactionItem = ({ item }: TransactionItemProp) => {
+const TransactionItem = ({ item }: TransactionProps) => {
   return (
     <TransactionBox>
       <Text size="base" color="gray">
         {formatDateTime(item.transactionDate + item.transactionDate)}
       </Text>
       <Text size="sub" weight="bold">
-        {item.transactionMemo ? item.transactionMemo : '거래한사람'}
+        {item.transactionSummary}
       </Text>
       <BalanceBox>
         <Text size="sub" color={item.transactionType === '1' ? 'primary' : 'danger'}>
@@ -58,7 +57,7 @@ const TransactionItem = ({ item }: TransactionItemProp) => {
 
 const TransactionList = () => {
   const { bankHistory } = useGetBankHistory();
-  if (bankHistory) {
+  if (bankHistory?.list?.length) {
     return (
       <View>
         <Container

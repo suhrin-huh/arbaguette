@@ -3,24 +3,24 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import NoContent from '@/components/common/NoContent';
-import CertificationChart from '@/components/crew/CertificationChart';
 import DateSelector from '@/components/crew/DateSelector';
+import PayStubChart from '@/components/crew/PayStubChart';
 import SalaryDocument from '@/components/crew/SalaryDocument';
 import { usePayStub } from '@/reactQuery/querys';
 
-const Certification = () => {
+const PayStub = () => {
   const [date, setDate] = useState(new Date());
-  const { certification } = usePayStub(date.getMonth() + 1);
+  const { payStub } = usePayStub(date.getMonth() + 1);
   return (
     <Container>
       <DateSelector date={date} setDate={setDate} />
-      {certification ? (
+      {payStub ? (
         <View>
-          <CertificationChart certification={certification} />
-          <SalaryDocument certification={certification} />
+          <PayStubChart payStub={payStub} />
+          <SalaryDocument payStub={payStub} />
         </View>
       ) : (
-        <NoContent message="해당 월의 급여명세서가 존재하지 않습니다." />
+        <NoContent />
       )}
     </Container>
   );
@@ -33,4 +33,4 @@ const Container = Styled.View(({ theme }) => ({
   paddingVertical: theme.layout.PADDING.VERTICAL,
 }));
 
-export default Certification;
+export default PayStub;

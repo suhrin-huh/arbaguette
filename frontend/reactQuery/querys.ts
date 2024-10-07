@@ -88,7 +88,7 @@ const useAccountBalance = () => {
     queryFn: () => arbaguette.getAccountBalance(),
   });
 
-  const accountBalance = queryResult.data?.data.data || 0;
+  const accountBalance = queryResult.data?.data.data || null;
   return { accountBalance, ...queryResult };
 };
 
@@ -115,8 +115,8 @@ const usePayStub = (month: Month) => {
     queryKey: keys.payStub(month),
     queryFn: () => arbaguette.getPayStub(month),
   });
-  const certification = queryResult.data?.data.data || null;
-  return { certification, ...queryResult };
+  const payStub = queryResult.data?.data.data || null;
+  return { payStub, ...queryResult };
 };
 
 /**
@@ -137,7 +137,6 @@ const useDailySchedule = (date: string, companyId?: CompanyId) => {
 
 /**
  * 입출금 내역을 가져오는 쿼리 훅
- *
  */
 const useGetBankHistory = () => {
   const queryResult = useQuery({
@@ -155,7 +154,7 @@ const useGetBankHistory = () => {
 const useCheckAccountPassword = (password: string) => {
   const queryResult = useQuery({
     queryKey: keys.checkAccountPassword(password),
-    queryFn: () => arbaguette.checkAccountPassword(password), // This is a Promise, not a function
+    queryFn: () => arbaguette.checkAccountPassword(password),
     enabled: password.length === 4,
   });
   const isCorrect = queryResult.status === 'success';

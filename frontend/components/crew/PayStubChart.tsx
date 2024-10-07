@@ -11,7 +11,7 @@ const ChartContainer = Styled.View(() => ({
   gap: 10,
 }));
 
-interface Certification {
+interface PayStub {
   companyName: string;
   originSalary: number;
   tax: number;
@@ -20,23 +20,36 @@ interface Certification {
   salaryDate: number;
 }
 
-interface CertificationDocProps {
-  certification: Certification;
+interface PayStubDocProps {
+  payStub: PayStub;
 }
 
 const COLOR_SCALE = [Theme.color.PRIMARY, Theme.color.SECONDARY, Theme.color.GRAY['1']];
 
-const CertificationChart = ({ certification }: CertificationDocProps) => {
+const PayStubChart = ({ payStub }: PayStubDocProps) => {
   const formattedNumber = (number: number): string => number.toLocaleString('ko-KR');
-  const { originSalary, tax, allowance } = certification;
+  const { originSalary, tax, allowance } = payStub;
 
   const calculateRatio = (amount: number, total: number) => {
     return Math.floor(amount - (amount / total) * tax);
   };
-
+  const originData = [
+    {
+      label: '기본급',
+      amount: originSalary,
+    },
+    {
+      label: '수당',
+      amount: allowance,
+    },
+    {
+      label: '세금',
+      amount: tax,
+    },
+  ];
   const totalSalary = originSalary + allowance;
 
-  const data = [
+  const modifiedData = [
     { x: '기본급', y: calculateRatio(originSalary, totalSalary) },
     { x: '수당', y: calculateRatio(allowance, totalSalary) },
     { x: '세금', y: tax },
@@ -45,7 +58,7 @@ const CertificationChart = ({ certification }: CertificationDocProps) => {
     <CardContainer style={{ alignItems: 'center', gap: 30 }}>
       <ChartContainer>
         <VictoryPie
-          data={data}
+          data={modifiedData}
           innerRadius={10}
           labels={() => null}
           padAngle={1}
@@ -58,8 +71,8 @@ const CertificationChart = ({ certification }: CertificationDocProps) => {
         />
         <VictoryLegend
           padding={0}
-          data={data.map((item) => ({
-            name: `${item.x}\t\t${formattedNumber(item.y)}원`,
+          data={originData.map((item) => ({
+            name: `${item.label}\t\t${formattedNumber(item.amount)}원`,
           }))}
           colorScale={COLOR_SCALE}
           width={140}
@@ -70,4 +83,4 @@ const CertificationChart = ({ certification }: CertificationDocProps) => {
   );
 };
 
-export default CertificationChart;
+export default PayStubChart;

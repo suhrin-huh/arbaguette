@@ -9,7 +9,8 @@ import useRootStore from '@/zustand';
 
 const BankingCard = () => {
   const { accountBalance } = useAccountBalance();
-  const { account, money } = accountBalance;
+  const account = accountBalance?.account || '';
+  const money = accountBalance?.money || '';
   const { role } = useRootStore.getState();
   const formatToAccountNo = (number: string): string => number.replace(/(\d{6})(\d{2})(\d+)/, '$1-$2-$3');
   const formattedNumber = (number: string): string => `${parseInt(number, 10).toLocaleString('ko-KR')} 원`;

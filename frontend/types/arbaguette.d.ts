@@ -80,7 +80,7 @@ type Money = number;
 
 interface RemittanceForm {
   account: BankAccount;
-  money: Money;
+  money: string;
   password: Password;
 }
 
@@ -286,6 +286,28 @@ interface ReissueResponseData {
   accessToken: AccessToken;
   refreshToken: RefreshToken;
 }
+interface Transaction {
+  transactionUniqueNo: string;
+  transactionDate: string;
+  transactionTime: string;
+  transactionType: string;
+  transactionTypeName: string;
+  transactionAccountNo: string;
+  transactionBalance: string;
+  transactionAfterBalance: string;
+  transactionSummary: string;
+  transactionMemo: string;
+}
+
+interface GetBankHistoryResponseData {
+  totalCount: string;
+  list: Transaction[] | [];
+}
+
+interface GetAccountBalanceResponseData {
+  account: BankAccount;
+  money: string;
+}
 
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
@@ -311,5 +333,8 @@ type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteRes
 type GetEmploymentContractResponse = ArbaguetteResponse<GetEmploymentContractResponseData>;
 type checkAccountPasswordResponse = ArbaguetteResponse<void>;
 type AgreeSubstituteResponse = ArbaguetteResponse<ScheduleId>;
+type GetBankHistoryResponse = ArbaguetteResponse<GetBankHistoryResponseData>;
+type GetAccountBalanceResponse = ArbaguetteResponse<GetAccountBalanceResponseData>;
+type RemittanceResponse = ArbaguetteResponse<void>;
 type GetExpectedExpensesResponse = ArbaguetteResponse<GetExpectedExpensesResponseData>;
 type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseData>;

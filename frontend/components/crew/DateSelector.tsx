@@ -2,6 +2,7 @@ import Styled from '@emotion/native';
 import ArrowIcon from '@expo/vector-icons/MaterialIcons';
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
+import type { EventTypes } from 'react-native-month-year-picker';
 import MonthPicker from 'react-native-month-year-picker';
 
 import Text from '@/components/common/Text';
@@ -13,13 +14,13 @@ interface DateSelectorProps {
 
 const DateSelector = ({ date, setDate }: DateSelectorProps) => {
   const [show, setShow] = useState(false);
-  const showPicker = useCallback((value: boolean): void => setShow(value), []);
-
-  const onValueChange = useCallback(
-    (event, newDate) => {
+  const showPicker = useCallback((value: boolean) => setShow(value), []);
+  const handleDateChange = useCallback(
+    (_: EventTypes, newDate: Date) => {
       const selectedDate = newDate || date;
-      setDate(selectedDate);
+
       showPicker(false);
+      setDate(selectedDate);
     },
     [date, setDate, showPicker],
   );
@@ -32,9 +33,9 @@ const DateSelector = ({ date, setDate }: DateSelectorProps) => {
       </DatePicker>
       {show && (
         <MonthPicker
-          onChange={onValueChange}
           value={date}
-          minimumDate={new Date(2000, 1)}
+          onChange={handleDateChange}
+          minimumDate={new Date(1970, 1)}
           maximumDate={new Date()}
           locale="ko"
         />
