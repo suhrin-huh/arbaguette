@@ -85,6 +85,9 @@ public class ClickConsumer {
                             .block();
 
 
+                    Thread.sleep(1000);
+
+
                 }
 
             }
