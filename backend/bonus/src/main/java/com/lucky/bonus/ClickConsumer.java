@@ -60,13 +60,15 @@ public class ClickConsumer {
                     SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmmss");
                     String formattedTime = timeFormatter.format(today);
 
+                    int noise = 100000;
+
                     headerMap.put("apiName", "updateDemandDepositAccountDeposit");
                     headerMap.put("transmissionDate", formattedDate);
                     headerMap.put("transmissionTime", formattedTime);
                     headerMap.put("institutionCode", "00100");
                     headerMap.put("fintechAppNo", "001");
                     headerMap.put("apiServiceCode", "updateDemandDepositAccountDeposit");
-                    headerMap.put("institutionTransactionUniqueNo", formattedDate + formattedTime + "000000");
+                    headerMap.put("institutionTransactionUniqueNo", formattedDate + formattedTime + noise++);
                     headerMap.put("apiKey", financialApiKey);
                     headerMap.put("userKey", clicked.getUserKey());
 
@@ -87,7 +89,6 @@ public class ClickConsumer {
 
             }
         }catch (Exception e){
-
         }
 
 
