@@ -6,7 +6,6 @@ import TransactionList from '@/components/common/TransactionList';
 const Transaction = () => {
   return (
     <TransactionContainer>
-      <CenterHeaderbar left="" title="빵Pay" right="bell" />
       <TransactionList />
     </TransactionContainer>
   );
