@@ -1,15 +1,11 @@
-import { router, Stack } from 'expo-router';
-
-import BellButton from '@/components/crew/BellButton';
+import { Stack } from 'expo-router';
 
 const BankingLayout = () => {
   return (
     <Stack
       initialRouteName="banking"
       screenOptions={{
-        headerTitleAlign: 'center',
-        headerShadowVisible: false,
-        headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
+        headerShown: false,
       }}>
       <Stack.Screen name="index" options={{ headerTitle: '뱅킹' }} />
       <Stack.Screen name="payStub" options={{ headerTitle: '' }} />

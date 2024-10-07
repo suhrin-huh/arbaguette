@@ -2,6 +2,7 @@ import { Foundation } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router, Tabs, useGlobalSearchParams, useSegments } from 'expo-router';
+import React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import BellButton from '@/components/crew/BellButton';
@@ -87,7 +88,8 @@ const CrewMainLayout = () => {
       <Tabs.Screen
         name="banking"
         options={{
-          title: '뱅킹',
+          title: '빵Pay',
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <MaterialCommunityIcons
               name="bank"
@@ -100,7 +102,6 @@ const CrewMainLayout = () => {
             display:
               segments[4] === 'remittance' && (segments[5] === '3' || segments[5] === 'success') ? 'none' : 'flex',
           },
-          headerShown: false,
         }}
       />
     </Tabs>

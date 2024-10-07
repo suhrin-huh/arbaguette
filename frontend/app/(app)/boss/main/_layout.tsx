@@ -79,7 +79,8 @@ const BossMainLayout = () => {
       <Tabs.Screen
         name="banking"
         options={{
-          title: '뱅킹',
+          title: '빵Pay',
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <MaterialCommunityIcons
               name="bank"
@@ -91,7 +92,6 @@ const BossMainLayout = () => {
             ...TABBAR_STYLE,
             display: segments[4] === 'remittance' && segments[5] === '2' ? 'none' : 'flex',
           },
-          headerShown: false,
         }}
       />
     </Tabs>
