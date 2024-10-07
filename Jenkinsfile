@@ -49,6 +49,7 @@ docker build \
 -e DB_NAME=${DB_NAME} \
 -e DB_PASSWORD=${DB_PASSWORD} \
 -e SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
+-e TZ=Asiz/Seoul \
 backend
                         """
                     }
@@ -89,6 +90,7 @@ docker build \
 -e DB_NAME=${MARIA_NAME} \
 -e DB_PASSWORD=${MARIA_PASSWORD} \
 -e SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
+-e TZ=Asiz/Seoul \
 bonus
                         """
                     }
