@@ -54,22 +54,6 @@ const MainScreen = () => {
         paddingBottom: 60,
       }}>
       <ContainerView>
-        <CenterHeaderbar
-          bgColor="background"
-          left="store"
-          title={
-            <TitleDropdown
-              title={name}
-              onPress={() => {
-                console.log('press');
-              }}
-            />
-          }
-          onPressLeft={() => {
-            router.push('/boss/config/');
-          }}
-          right="bell"
-        />
         <DateStatusCard dayScheduleData={daySchedule} />
         {crewScheduleInfos && crewScheduleInfos.length > 0 ? (
           <AttendanceStatusCard dayScheduleData={crewScheduleInfos} />
