@@ -16,12 +16,15 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/white-logo.png",
         "backgroundColor": "#8071FC"
       },
       "package": "com.ssafy.c101.arbaguette",
-      "permissions": ["android.permission.NFC"]
+      "permissions": [
+        "android.permission.NFC"
+      ]
     },
     "web": {
       "bundler": "metro",
