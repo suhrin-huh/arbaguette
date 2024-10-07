@@ -75,7 +75,7 @@ public class ClickConsumer {
 
                     accountRequestBody.put("Header", headerMap);
                     accountRequestBody.put("accountNo", clicked.getAccountNo());
-                    accountRequestBody.put("transactionBalance", clicked.getCnt()*100);
+                    accountRequestBody.put("transactionBalance", String.valueOf(clicked.getCnt()*100));
                     accountRequestBody.put("transactionSummary", "빵뿌리기 보너스 입금");
 
                     webClient.post()
