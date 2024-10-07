@@ -4,7 +4,7 @@
     "slug": "arbagett",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/white-logo.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -18,8 +18,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/white-logo.png",
-        "backgroundColor": "#8071FC"
+        "foregroundImage": "./assets/images/adaptive-icon.png"
       },
       "package": "com.ssafy.c101.arbaguette",
       "permissions": [
