@@ -6,6 +6,8 @@ import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.SendMoneyRequest;
 import com.lucky.arbaguette.common.domain.dto.request.SendSalaryRequest;
 import com.lucky.arbaguette.common.domain.dto.response.AccountResponse;
+import com.lucky.arbaguette.common.domain.dto.response.SendDetailResponse;
+import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.crew.domain.Crew;
@@ -13,6 +15,7 @@ import com.lucky.arbaguette.crew.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,6 +33,8 @@ public class BankService {
     private final BossRepository bossRepository;
     private final CrewRepository crewRepository;
     private final WebClient webClient;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Value("${finopenapi.url}")
     private String financialApiUrl;
@@ -148,6 +153,19 @@ public class BankService {
 
     }
 
+    public SendDetailResponse getSendDetails(String account) {
+        if (bossRepository.existsByAccount(account)) {
+            return new SendDetailResponse(bossRepository.findByAccount(account)
+                    .orElseThrow(() -> new NotFoundException("해당계좌의 회원이 없습니다."))
+                    .getName());
+        } else {
+            return new SendDetailResponse(crewRepository.findByAccount(account)
+                    .orElseThrow(() -> new NotFoundException("해당계좌의 회원이 없습니다."))
+                    .getName());
+        }
+
+    }
+
     public void sendMoney(CustomUserDetails customUserDetails, SendMoneyRequest request) {
         String email = customUserDetails.getUsername();
         String userKey = "";
@@ -157,6 +175,9 @@ public class BankService {
         if (customUserDetails.isBoss()) {
             Boss boss = bossRepository.findByEmail(email)
                     .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
+            if (!bCryptPasswordEncoder.matches(request.password(), boss.getAccountPassword())) {
+                throw new BadRequestException("계좌 비밀번호가 틀렸습니다.");
+            }
             account = boss.getAccount();
             userKey = boss.getUserKey();
             sender = boss.getName();
@@ -167,6 +188,9 @@ public class BankService {
         if (customUserDetails.isCrew()) {
             Crew crew = crewRepository.findByEmail(email)
                     .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
+            if (!bCryptPasswordEncoder.matches(request.password(), crew.getAccountPassword())) {
+                throw new BadRequestException("계좌 비밀번호가 틀렸습니다.");
+            }
             account = crew.getAccount();
             userKey = crew.getUserKey();
             sender = crew.getName();

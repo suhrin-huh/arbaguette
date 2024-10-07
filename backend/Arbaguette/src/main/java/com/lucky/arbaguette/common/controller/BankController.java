@@ -2,19 +2,18 @@ package com.lucky.arbaguette.common.controller;
 
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.dto.request.SendDetailRequest;
 import com.lucky.arbaguette.common.domain.dto.request.SendMoneyRequest;
 import com.lucky.arbaguette.common.domain.dto.request.SendSalaryRequest;
 import com.lucky.arbaguette.common.domain.dto.response.AccountResponse;
+import com.lucky.arbaguette.common.domain.dto.response.SendDetailResponse;
 import com.lucky.arbaguette.common.service.BankService;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bank")
@@ -32,6 +31,12 @@ public class BankController {
     @GetMapping("/history")
     public ApiResponse<Map<String, Object>> getHistory(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ApiResponse.success(bankService.getHistory(customUserDetails));
+    }
+
+    @GetMapping("/remittance")
+    public ApiResponse<SendDetailResponse> sendMoney(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                     @RequestBody SendDetailRequest request) {
+        return ApiResponse.success(bankService.getSendDetails(request.account()));
     }
 
     @PostMapping("/remittance")
