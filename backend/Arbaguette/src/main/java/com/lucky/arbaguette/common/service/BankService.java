@@ -12,6 +12,10 @@ import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -275,6 +274,41 @@ public class BankService {
 
         webClient.post()
                 .uri(financialApiUrl + "/v1/edu/demandDeposit/updateDemandDepositAccountTransfer")
+                .body(BodyInserters.fromValue(accountRequestBody))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .block();
+
+    }
+
+    public void depositAccountWithdraw(Boss boss, int money) {
+        Map<String, Object> accountRequestBody = new HashMap<>();
+        Map<String, String> headerMap = new HashMap<>();
+
+        Date today = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        String formattedDate = formatter.format(today);
+
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmmss");
+        String formattedTime = timeFormatter.format(today);
+
+        headerMap.put("apiName", "updateDemandDepositAccountWithdrawal");
+        headerMap.put("transmissionDate", formattedDate);
+        headerMap.put("transmissionTime", formattedTime);
+        headerMap.put("institutionCode", "00100");
+        headerMap.put("fintechAppNo", "001");
+        headerMap.put("apiServiceCode", "updateDemandDepositAccountWithdrawal");
+        headerMap.put("institutionTransactionUniqueNo", formattedDate + formattedTime + "000000");
+        headerMap.put("apiKey", financialApiKey);
+        headerMap.put("userKey", boss.getUserKey());
+
+        accountRequestBody.put("Header", headerMap);
+        accountRequestBody.put("accountNo", boss.getAccount());
+        accountRequestBody.put("transactionBalance", String.valueOf(money));
+        accountRequestBody.put("transactionSummary", "보너스 지급");
+
+        webClient.post()
+                .uri(financialApiUrl + "/v1/edu/demandDeposit/updateDemandDepositAccountWithdrawal")
                 .body(BodyInserters.fromValue(accountRequestBody))
                 .retrieve()
                 .bodyToMono(Map.class)
