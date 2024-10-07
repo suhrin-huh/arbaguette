@@ -21,9 +21,7 @@
         "backgroundColor": "#8071FC"
       },
       "package": "com.ssafy.c101.arbaguette",
-      "permissions": [
-        "android.permission.NFC"
-      ]
+      "permissions": ["android.permission.NFC"]
     },
     "web": {
       "bundler": "metro",
@@ -57,7 +55,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "939f0dca-7ada-4f13-bb45-9d5b11097936"
+        "projectId": "6d44bbb7-144b-4931-9d56-c6537ce7be4d"
       }
     }
   }

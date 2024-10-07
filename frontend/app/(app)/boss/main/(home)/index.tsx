@@ -68,9 +68,6 @@ const MainScreen = () => {
           onPressLeft={() => {
             router.push('/boss/config/');
           }}
-          onPressRight={() => {
-            console.log('right');
-          }}
           right="bell"
         />
         <DateStatusCard dayScheduleData={daySchedule} />
