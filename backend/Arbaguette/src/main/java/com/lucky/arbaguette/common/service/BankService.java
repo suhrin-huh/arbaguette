@@ -6,6 +6,7 @@ import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.SendMoneyRequest;
 import com.lucky.arbaguette.common.domain.dto.request.SendSalaryRequest;
 import com.lucky.arbaguette.common.domain.dto.response.AccountResponse;
+import com.lucky.arbaguette.common.domain.dto.response.SendDetailResponse;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.crew.domain.Crew;
@@ -145,6 +146,19 @@ public class BankService {
                 .block();
 
         return accountResponseBody.get("REC");
+
+    }
+
+    public SendDetailResponse getSendDetails(String account) {
+        if (bossRepository.existsByAccount(account)) {
+            return new SendDetailResponse(bossRepository.findByAccount(account)
+                    .orElseThrow(() -> new NotFoundException("해당계좌의 회원이 없습니다."))
+                    .getName());
+        } else {
+            return new SendDetailResponse(crewRepository.findByAccount(account)
+                    .orElseThrow(() -> new NotFoundException("해당계좌의 회원이 없습니다."))
+                    .getName());
+        }
 
     }
 
