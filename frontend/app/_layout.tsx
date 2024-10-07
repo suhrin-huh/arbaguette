@@ -7,12 +7,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { Button, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { sendPushNotification } from '@/configs/notification';
+import { NotificationProvider } from '@/context/NotificationContext';
 import usePretendardFonts from '@/hooks/usePretendardFonts';
-import usePushNotification from '@/hooks/usePushNotification';
 import Theme from '@/styles/Theme';
 
 export {
@@ -35,7 +33,6 @@ const queryClient = new QueryClient();
 
 export default function Root() {
   const [loaded, error] = usePretendardFonts();
-  const { expoPushToken, notification } = usePushNotification();
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -55,13 +52,15 @@ export default function Root() {
   return (
     <ThemeProvider theme={Theme}>
       <QueryClientProvider client={queryClient}>
-        <RootLayout>
-          <GestureHandlerRootView>
-            <BottomSheetModalProvider>
-              <Slot />
-            </BottomSheetModalProvider>
-          </GestureHandlerRootView>
-        </RootLayout>
+        <NotificationProvider>
+          <RootLayout>
+            <GestureHandlerRootView>
+              <BottomSheetModalProvider>
+                <Slot />
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
+          </RootLayout>
+        </NotificationProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
