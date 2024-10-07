@@ -88,7 +88,7 @@ public class ClickConsumer {
                     log.info(clicked.getAccountNo()+"송금완료");
 
 
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
 
 
                 }
