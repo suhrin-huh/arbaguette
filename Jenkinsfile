@@ -52,6 +52,47 @@ docker build \
 backend
                         """
                     }
+
+                    dir('backend/bonus') {
+                        sh 'chmod +x ./gradlew'
+                        
+                        sh './gradlew clean build -x test'
+
+                        sh """
+sed -i 's/\${DB_NAME}/${MARIA_NAME}/' ./src/main/resources/application.properties
+sed -i 's/\${DB_PASSWORD}/${MARIA_PASSWORD}/' ./src/main/resources/application.properties 
+sed -i 's/\${SSAFY_BANK_KEY}/${SSAFY_BANK_KEY}/' ./src/main/resources/application.properties
+"""
+
+
+
+                        // Check if any container is named "backend"
+def containerNamedBackend = sh(script: "docker ps -a --filter 'name=backend' --format '{{.ID}}'", returnStdout: true).trim()
+
+if (containerNamedBackend) {
+    // Stop and remove the container named "backend"
+    sh "docker stop ${containerNamedBackend}"
+    sh "docker rm ${containerNamedBackend}"
+}
+
+
+                        // Build and run the new backend container
+                        sh """
+docker build \
+  --build-arg DB_NAME=${MARIA_NAME} \
+  --build-arg DB_PASSWORD=${MARIA_PASSWORD} \
+  --build-arg SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
+  -t backend .
+"""
+                        sh """
+                            docker run --name backend -d -p 8080:8080 \
+-v /home/ubuntu/api_key/cloudvision-434807-1bea29b95286.json:/app/config/cloudvision.json \
+-e DB_NAME=${MARIA_NAME} \
+-e DB_PASSWORD=${MARIA_PASSWORD} \
+-e SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
+backend
+                        """
+                    }
                 }
             }
         }
