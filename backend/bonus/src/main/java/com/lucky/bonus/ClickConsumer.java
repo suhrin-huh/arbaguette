@@ -84,6 +84,8 @@ public class ClickConsumer {
                             .bodyToMono(Map.class)
                             .block();
 
+                    log.info(clicked.getAccountNo()+"송금완료");
+
 
                     Thread.sleep(1000);
 
