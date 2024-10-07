@@ -1,12 +1,14 @@
 import styled from '@emotion/native';
-import { router } from 'expo-router';
+import { useMutation } from '@tanstack/react-query';
+import { router, useLocalSearchParams } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import React, { useState } from 'react';
-import { Modal, Text, View } from 'react-native';
+import { Alert, Modal, Text } from 'react-native';
 
 import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
 import ContainerView from '@/components/common/ScreenContainer';
+import arbaguette from '@/services/arbaguette';
 
 import sendComplete from '../../../../../../assets/lottie/check.json';
 
@@ -65,20 +67,48 @@ const SendButton = styled(Button)(({ theme }) => ({
 }));
 
 const SendModal = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSended, setIsSended] = useState(false);
-
-  const sendReceipt = async () => {
-    setIsLoading(true);
-    setIsSended(false);
-    setTimeout(() => {
+  const { mutate: sendSalaryReceipt } = useMutation({
+    mutationFn: arbaguette.sendSalaryReceipt,
+    onSuccess: () => {
       setIsLoading(false);
       setIsSended(true);
       setTimeout(() => {
         router.back();
         setIsSended(false);
-      }, 2000);
-    }, 2000);
+      }, 1200);
+    },
+    onError: (error: any) => {
+      setIsLoading(false);
+      setIsSended(false);
+      if (error.response.data && error.response.status === 409) {
+        Alert.alert('이미 발송된 명세서입니다.');
+        router.back();
+        return;
+      }
+      Alert.alert('급여명세서 발송 실패');
+      router.back();
+    },
+  });
+
+  const { crewId, month, originSalary, tax, allowance, totalTime } = useLocalSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSended, setIsSended] = useState(false);
+
+  console.log(crewId, month, originSalary, tax, allowance, totalTime);
+
+  const sendReceipt = async () => {
+    // 급여명세서 발송 api 연동
+
+    setIsLoading(true);
+    setIsSended(false);
+    sendSalaryReceipt({
+      crewId: Number(crewId),
+      month: Number(month),
+      originSalary: Number(originSalary),
+      tax: Number(tax),
+      allowance: Number(allowance),
+      totalTime: Number(totalTime),
+    });
   };
 
   return (
@@ -102,9 +132,15 @@ const SendModal = () => {
                 <SendButton size={100} onPress={() => router.back()} type="outlined">
                   취소
                 </SendButton>
-                <SendButton size={100} onPress={sendReceipt}>
-                  {isLoading ? <Loading size={24} color="secondary" /> : '전송'}
-                </SendButton>
+                {!isLoading ? (
+                  <SendButton size={100} onPress={sendReceipt}>
+                    전송
+                  </SendButton>
+                ) : (
+                  <SendButton size={100}>
+                    <Loading size={24} color="secondary" />
+                  </SendButton>
+                )}
               </SendButtonContainer>
             </SendContainer>
           ) : (

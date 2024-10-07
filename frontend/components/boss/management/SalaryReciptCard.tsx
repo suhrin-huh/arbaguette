@@ -1,6 +1,7 @@
 import styled from '@emotion/native';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
+import { Alert } from 'react-native';
 
 import Button from '@/components/common/Button';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
@@ -69,41 +70,94 @@ const SalaryDuedateText = styled.Text(({ theme }) => ({
 }));
 
 interface SalaryReciptCardProps {
-  receiptData: Receipt;
-  crewId: CrewId;
+  crewData: GetCrewMemberDetailResponseData;
 }
 
-const SalaryReciptCard = ({ receiptData, crewId }: SalaryReciptCardProps) => {
+const SalaryReciptCard = ({ crewData }: SalaryReciptCardProps) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const nowMonth = new Date().getMonth() + 1;
+  const [monthVar, setMonthVar] = useState(nowMonth);
+  const { receipts, id, salary, tax, allowance, workHours } = crewData;
+  const receiptData: Receipt[] = [...receipts, { month: nowMonth, tax, allowance, salary, totalTime: workHours }];
+
+  const receiptObj: { [key: number]: Receipt | {} } = {};
+  for (let i = nowMonth; i > 0; i--) {
+    receiptData.forEach((receipt) => {
+      if (receipt.month === i) {
+        receiptObj[i] = receipt;
+      } else {
+        receiptObj[i] = {};
+      }
+    });
+  }
+
+  console.log(receiptObj);
+
   const sendHandler = () => {
+    console.log(receiptObj[monthVar]);
+    if (Object.keys(receiptObj[monthVar]).length === 0) {
+      Alert.alert('해당 월의 급여가 없습니다.');
+      return;
+    }
+
     setModalVisible(true);
     router.push({
       pathname: './sendModal',
       params: {
-        crewId,
+        crewId: id,
+        month: monthVar,
+        originSalary: receiptObj[monthVar] && 'salary' in receiptObj[monthVar] ? receiptObj[monthVar].salary : 0,
+        tax: receiptObj[monthVar] && 'tax' in receiptObj[monthVar] ? receiptObj[monthVar].tax : 0,
+        allowance: receiptObj[monthVar] && 'allowance' in receiptObj[monthVar] ? receiptObj[monthVar].allowance : 0,
+        totalTime: receiptObj[monthVar] && 'totalTime' in receiptObj[monthVar] ? receiptObj[monthVar].totalTime : 0,
       },
     });
+  };
+
+  const onPressLeft = () => {
+    if (monthVar === 1) return;
+    setMonthVar(monthVar - 1);
+  };
+
+  const onPressRight = () => {
+    if (monthVar === nowMonth) {
+      Alert.alert('최신 급여명세서만 조회할 수 있습니다.');
+      return;
+    }
+    setMonthVar(monthVar + 1);
   };
 
   return (
     <SalaryContainer>
       <SalaryTitle>급여명세서</SalaryTitle>
       <MonthBarContainer>
-        <MonthBar year={2222} month={receiptData.month} />
+        <MonthBar year={2024} month={monthVar} onPressLeft={onPressLeft} onPressRight={onPressRight} />
       </MonthBarContainer>
-      <SalaryChartCard title="none" />
       <AllSalaryContainer>
+        <SalaryChartCard
+          originSalary={receiptObj[monthVar] && 'salary' in receiptObj[monthVar] ? receiptObj[monthVar].salary : 0}
+          tax={receiptObj[monthVar] && 'tax' in receiptObj[monthVar] ? receiptObj[monthVar].tax : 0}
+          allowance={receiptObj[monthVar] && 'allowance' in receiptObj[monthVar] ? receiptObj[monthVar].allowance : 0}
+        />
+
         <SalaryTotalContainer>
           <SalaryTotalText>총 근무시간</SalaryTotalText>
-          <SalaryTotalText>{receiptData.totalTime}시간</SalaryTotalText>
+          <SalaryTotalText>
+            {receiptObj[monthVar] && 'totalTime' in receiptObj[monthVar] ? receiptObj[monthVar].totalTime : 0}시간
+          </SalaryTotalText>
         </SalaryTotalContainer>
         <SalaryTotalContainer>
           <SalaryTotalText>총 급여</SalaryTotalText>
-          <SalaryTotalText>{receiptData.originSalary.toLocaleString()}원</SalaryTotalText>
+          <SalaryTotalText>
+            {receiptObj[monthVar] && 'salary' in receiptObj[monthVar]
+              ? receiptObj[monthVar].salary.toLocaleString()
+              : 0}
+            원
+          </SalaryTotalText>
         </SalaryTotalContainer>
         <SalaryDuedateContainer>
           <SalaryDuedateText>급여지급일</SalaryDuedateText>
-          <SalaryDuedateText>2024.09.30이거 수정</SalaryDuedateText>
+          <SalaryDuedateText>매달 15일</SalaryDuedateText>
         </SalaryDuedateContainer>
         <Button size="hug" type="primary" buttonStyle={{ height: 40, marginTop: 10 }} onPress={sendHandler}>
           발송

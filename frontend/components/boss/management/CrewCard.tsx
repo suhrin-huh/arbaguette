@@ -16,6 +16,7 @@ interface CrewCardProps {
   type: CrewCardType;
   name?: string;
   salary?: number;
+  profileImage?: string;
   pressHandler?: () => void;
 }
 
@@ -45,7 +46,7 @@ const ProfileContainer = styled.View(({ theme }) => ({
 
 const NameTitleContainer = styled.View(({ theme }) => ({
   gap: 13,
-  alignItems: 'center',
+  alignItems: 'flex-start',
   paddingBottom: 2,
 }));
 
@@ -97,24 +98,23 @@ const HowWorkTitle = styled.Text(({ theme }) => ({
   color: Colors.GRAY[3],
 }));
 
-const CrewCard = ({ id, name, salary, day, pressHandler, ...props }: CrewCardProps) => {
+const CrewCard = ({ id, name, salary, day, pressHandler, profileImage, ...props }: CrewCardProps) => {
   return (
     <Pressable onPress={pressHandler}>
       <StyledCardContainer>
         <InnerContainer>
           <ProfileContainer>
-            <Image source={unknownPerson} style={{ width: 55, height: 55, borderRadius: 50 }} />
+            <Image
+              source={profileImage ? { uri: profileImage } : unknownPerson}
+              style={{ width: 55, height: 55, borderRadius: 50 }}
+            />
             <NameTitleContainer>
               <CrewNameTitle>{name}</CrewNameTitle>
               <ContractRemainText>24년 12월까지</ContractRemainText>
             </NameTitleContainer>
           </ProfileContainer>
           <MiddleContainer>
-            <DayContainer>
-              {day.map((day) => (
-                <DayCircle day={day} key={day} />
-              ))}
-            </DayContainer>
+            <DayContainer>{day && day.map((day) => <DayCircle day={day} key={day} />)}</DayContainer>
             <HowWorkContainer>
               <HowWorkTitle>근무</HowWorkTitle>
               <HowWorkMonth>2</HowWorkMonth>

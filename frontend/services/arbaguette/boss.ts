@@ -45,15 +45,15 @@ export default {
   /**
    * 알바생 전체 목록 조회
    */
-  getCrewMemberList: async () => {
-    return axios.get<GetCrewMemberListResponse>('/api/boss/crews');
+  getCrewMemberList: async (companyId: CompanyId) => {
+    return axios.get<GetCrewMemberListResponse>(`/api/boss/crews?companyId=${companyId}`);
   },
   /**
    * 알바생 상세 조회
    * @param crewId 조회할 알바생 아이디
    */
   getCrewMemberDetail: async (crewId: CrewId) => {
-    return axios.get<GetCrewMemberDetailResponse>(`/api/boss/crew/${crewId}`);
+    return axios.get<GetCrewMemberDetailResponse>(`/api/boss/crew?crewId=${crewId}`);
   },
   /**
    * 일별 사업장 스케쥴 조회
@@ -76,5 +76,26 @@ export default {
    */
   agreeSubstitute: async (scheduleId: ScheduleId) => {
     return axios.put<AgreeSubstituteResponse>('/api/substitute/agree', { scheduleId });
+  },
+
+  /**
+   * 이번달 예상 지출 조회
+   * @param companyId 사업장 아이디
+   */
+  getExpectedExpenses: async (companyId: CompanyId) => {
+    return axios.get<GetExpectedExpensesResponse>(`/api/boss/expected?companyId=${companyId}`);
+  },
+
+  /**
+   * 급여 명세서 전송
+   * @param crewId 알바생 아이디
+   * @param month 월
+   * @param originSalary 원급여
+   * @param tax 세액
+   * @param allowance 수당
+   * @param totalTime 총 근무 시간
+   */
+  sendSalaryReceipt: async (sendSalaryData: SendSalaryReceiptResponseData) => {
+    return axios.post<SendSalaryReceiptResponse>('/api/boss/receipt', sendSalaryData);
   },
 };

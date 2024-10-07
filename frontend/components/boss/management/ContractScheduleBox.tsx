@@ -1,14 +1,11 @@
 import styled from '@emotion/native';
 import Entypo from '@expo/vector-icons/Entypo';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import Modal from 'react-native-modal';
+import React from 'react';
 
 import Button from '@/components/common/Button';
 import useRootStore from '@/zustand';
 
-import DayBottomSheet from './DayBottomSheet';
 import ScheduleAddCard from './ScheduleAddCard';
 
 const ContractContainer = styled.View(({ theme }) => ({

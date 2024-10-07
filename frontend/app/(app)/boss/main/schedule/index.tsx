@@ -1,4 +1,4 @@
-import { router, useFocusEffect } from 'expo-router';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import type { DateData, TimelineEventProps } from 'react-native-calendars';

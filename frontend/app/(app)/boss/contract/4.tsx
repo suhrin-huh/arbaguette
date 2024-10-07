@@ -2,11 +2,10 @@ import styled from '@emotion/native';
 import { router } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import checkAnim from '@/assets/lottie/check.json';
 import Button from '@/components/common/Button';
-import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import ContainerView from '@/components/common/ScreenContainer';
 import Colors from '@/constants/Colors';
 import useRootStore from '@/zustand';

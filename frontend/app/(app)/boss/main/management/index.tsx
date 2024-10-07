@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { ScrollView, StatusBar } from 'react-native';
 
 import CrewCard from '@/components/boss/management/CrewCard';
-import MonthBar from '@/components/boss/management/MonthBar';
 import NoneCard from '@/components/boss/management/NoneScheduleCard';
 import Button from '@/components/common/Button';
 import LeftHeaderbar from '@/components/common/Header/LeftHeaderBar';
@@ -41,9 +40,27 @@ const CrewCardArea = styled.View(({ theme }) => ({
   paddingBottom: 260,
 }));
 
+const MonthBarContainer = styled.View(({ theme }) => ({
+  flex: 10,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: theme.color.WHITE,
+  borderRadius: 18,
+  gap: 10,
+  height: 56,
+  width: '100%',
+}));
+
+const MonthText = styled.Text(({ theme }) => ({
+  fontSize: 18,
+  fontWeight: 'bold',
+  paddingBottom: 5,
+}));
+
 const BossManagementScreen = () => {
-  const { selectedCompanyName, selectedCompanyId, registCompanyId, setRegistCompanyId } = useRootStore();
-  const { crewList } = useCrewMemberList();
+  const { selectedCompanyName, selectedCompanyId, setRegistCompanyId } = useRootStore();
+  const { crewList } = useCrewMemberList(selectedCompanyId);
   const router = useRouter();
   const pushRouteHandler = (crewId: number) => {
     router.push(`/boss/main/management/detail/${crewId}`);
@@ -55,7 +72,8 @@ const BossManagementScreen = () => {
   };
 
   useEffect(() => {
-    router.replace('/boss/main/management');
+    // router.replace('/boss/main/management');
+    // console.log(crewList);
   }, []);
 
   return (
@@ -69,7 +87,9 @@ const BossManagementScreen = () => {
       <ContainerView>
         <LeftHeaderbar title={selectedCompanyName} right="bell" bgColor="background" />
         <MonthButtonArea>
-          <MonthBar year={2222} month={8} />
+          <MonthBarContainer>
+            <MonthText>직원 {crewList.length}명</MonthText>
+          </MonthBarContainer>
           <Button
             onPress={addCrewHandler}
             size="hug"
@@ -81,11 +101,12 @@ const BossManagementScreen = () => {
         {/* 직원 카드 리스트 */}
         <CrewCardArea>
           {crewList.length > 0 ? (
-            crewList.map(({ id, name, salary, weekdays }) => (
+            crewList.map(({ id, name, salary, weekdays, profileImage }) => (
               <CrewCard
                 type="crew"
                 id={id}
                 name={name}
+                profileImage={profileImage}
                 salary={salary}
                 key={id}
                 day={weekdays}

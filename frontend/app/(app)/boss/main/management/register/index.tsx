@@ -1,14 +1,13 @@
 import styled from '@emotion/native';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { router } from 'expo-router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Alert, Modal, Text } from 'react-native';
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
 import ContainerView from '@/components/common/ScreenContainer';
-import keys from '@/reactQuery/keys';
 import arbaguette from '@/services/arbaguette';
 import useRootStore from '@/zustand';
 

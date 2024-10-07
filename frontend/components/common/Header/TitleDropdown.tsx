@@ -1,7 +1,4 @@
 import styled from '@emotion/native';
-import { FontAwesome } from '@expo/vector-icons';
-
-import Colors from '@/constants/Colors';
 
 const DropdownContainer = styled.Pressable({
   flexDirection: 'row',
@@ -18,7 +15,8 @@ const TitleDropdown = ({ title, onPress }: { title: string; onPress: () => void 
   return (
     <DropdownContainer onPress={onPress}>
       <Title>{title}</Title>
-      <FontAwesome name="chevron-down" size={16} color={Colors.GRAY[3]} />
+      {/* 스토어 버튼 생겨서 굳이 안넣어도 됨 */}
+      {/* <FontAwesome name="chevron-down" size={16} color={Colors.GRAY[3]} /> */}
     </DropdownContainer>
   );
 };

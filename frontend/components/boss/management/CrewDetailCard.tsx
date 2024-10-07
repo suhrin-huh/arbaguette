@@ -1,7 +1,7 @@
 import styled from '@emotion/native';
 import { FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, TouchableOpacity } from 'react-native';
 
 import unknownPerson from '@/assets/images/unknown_person.jpg';
 import Colors from '@/constants/Colors';
@@ -66,7 +66,10 @@ const CrewDetailCard = ({ crewData }: CrewDetailCardProps) => {
   return (
     <InfoContainer>
       <ProfileContainer>
-        <Image source={unknownPerson} style={{ width: 70, height: 70, borderRadius: 50 }} />
+        <Image
+          source={crewData.profileImage ? { uri: crewData.profileImage } : unknownPerson}
+          style={{ width: 70, height: 70, borderRadius: 50 }}
+        />
         <ProfileRightContainer>
           <CrewInfoName>{crewData.name}</CrewInfoName>
           <CrewInfoIconContainer>
