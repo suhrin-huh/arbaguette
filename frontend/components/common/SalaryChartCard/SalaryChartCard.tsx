@@ -25,6 +25,10 @@ interface SalaryChartCardProps {
 }
 
 const SalaryChartCard = ({ title, originSalary, tax, allowance }: SalaryChartCardProps) => {
+  console.log(originSalary);
+  console.log(tax);
+  console.log(allowance);
+
   const data = [
     { x: '기본급', y: originSalary },
     { x: '수당', y: allowance },
@@ -50,9 +54,9 @@ const SalaryChartCard = ({ title, originSalary, tax, allowance }: SalaryChartCar
         <VictoryLegend
           padding={0}
           data={[
-            { name: `총합 ${originSalary.toLocaleString()}원` },
-            { name: `수당 ${allowance.toLocaleString()}원` },
-            { name: `세금 ${tax.toLocaleString()}원` },
+            { name: `총합 ${originSalary.toLocaleString() || 0}원` },
+            { name: `수당 ${allowance.toLocaleString() || 0}원` },
+            { name: `세금 ${tax.toLocaleString() || 0}원` },
           ]}
           colorScale={COLOR_SCALE}
           width={140}
