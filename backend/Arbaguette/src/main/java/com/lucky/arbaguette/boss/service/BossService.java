@@ -252,7 +252,8 @@ public class BossService {
         notificationService.sendNotification(
                 expoPushToken,
                 "급여 명세서 도착",
-                receiptSendRequest.month() + "월 급여 명세서가 도착했습니다!"
+                receiptSendRequest.month() + "월 급여 명세서가 도착했습니다!",
+                "arbaguette://crew/authorized/banking/payStub"
         );
     }
 

@@ -16,7 +16,7 @@ public class NotificationService {
             .build();
 
 
-    public void sendNotification(String expoPushToken, String title, String message) {
+    public void sendNotification(String expoPushToken, String title, String message, String url) {
         if (expoPushToken == null || expoPushToken.isEmpty()) {
             throw new IllegalArgumentException("expoPushToken is null or empty");
         }
@@ -25,7 +25,8 @@ public class NotificationService {
                 .bodyValue(Map.of(
                         "to", expoPushToken,
                         "title", title,
-                        "body", message
+                        "body", message,
+                        "data", Map.of("url", url)
                 ))
                 .retrieve()
                 .bodyToMono(String.class)
