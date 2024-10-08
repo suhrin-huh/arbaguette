@@ -41,4 +41,8 @@ export default {
 
     return { hours, minutes, seconds };
   },
+  timeToDecimalHours: (time: string) => {
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    return hours + minutes / 60 + seconds / 3600;
+  },
 };
