@@ -48,7 +48,7 @@ const LoginScreen = () => {
   const { mutate: login } = useMutation({
     mutationFn: arbaguette.login,
     onSuccess: async (response) => {
-      await arbaguette.storeExpoToken(expoPushToken);
+      await arbaguette.storeExpoToken(expoPushToken, response.data.data.accessToken);
       storeAuth(response.data.data);
     },
     onError: async (error: AxiosError) => {

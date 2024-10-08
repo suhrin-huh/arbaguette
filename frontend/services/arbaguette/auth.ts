@@ -34,8 +34,9 @@ export default {
   /**
    * Expo 알림 토큰 저장
    * @param expoPushToken Expo 알림 토큰
+   * @param accessToken 엑세스 토큰
    */
-  storeExpoToken: async (expoPushToken: string) => {
-    return axios.put('/api/user/expotoken', { expoPushToken });
+  storeExpoToken: async (expoPushToken: string, accessToken: string) => {
+    return axios.put('/api/user/expotoken', { expoPushToken }, { headers: { Authorization: `Bearer ${accessToken}` } });
   },
 };
