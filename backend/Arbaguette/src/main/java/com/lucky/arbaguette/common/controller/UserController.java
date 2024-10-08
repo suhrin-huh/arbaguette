@@ -38,7 +38,7 @@ public class UserController {
         return ApiResponse.success();
     }
 
-    @PostMapping("/expoToken")
+    @PutMapping("/expotoken")
     public ApiResponse<Void> saveExpoToken(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody ExpoTokenRequest request) {
         userService.saveExpoToken(userDetails, request.expoPushToken());
         return ApiResponse.success();
