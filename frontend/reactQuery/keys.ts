@@ -23,6 +23,7 @@ const keys = {
   balance: () => [...keys.bank(), 'balance'],
   expectedExpenses: (companyId: CompanyId) => [...keys.common(), 'expectedExpenses', companyId],
   checkAccountPassword: (password: Password) => [...keys.bank(), 'password', password],
+  takeSubstitute: (scheduleId: ScheduleId) => [...keys.common(), 'takeSubstitute', scheduleId],
 };
 
 export default keys;

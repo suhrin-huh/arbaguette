@@ -211,7 +211,7 @@ interface DailySchedule {
   crewId: CrewId;
   name: CrewName;
   scheduleId: number;
-  SubstituteRequest: boolean;
+  substituteRequest: boolean;
   startTime: StartTime;
   endTime: EndTime;
   hopeCrewId: CrewId | null;
@@ -331,10 +331,11 @@ type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseD
 type GetWorkHistoryResponse = ArbaguetteResponse<GetWorkHistoryResponseData>;
 type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
 type GetEmploymentContractResponse = ArbaguetteResponse<GetEmploymentContractResponseData>;
-type checkAccountPasswordResponse = ArbaguetteResponse<void>;
+type CheckAccountPasswordResponse = ArbaguetteResponse<void>;
 type AgreeSubstituteResponse = ArbaguetteResponse<ScheduleId>;
 type GetBankHistoryResponse = ArbaguetteResponse<GetBankHistoryResponseData>;
 type GetAccountBalanceResponse = ArbaguetteResponse<GetAccountBalanceResponseData>;
 type RemittanceResponse = ArbaguetteResponse<void>;
 type GetExpectedExpensesResponse = ArbaguetteResponse<GetExpectedExpensesResponseData>;
 type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseData>;
+type TakeSubstituteResponse = ArbaguetteResponse<void>;

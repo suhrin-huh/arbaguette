@@ -12,7 +12,7 @@ export default {
    * @param password 비밀번호
    */
   checkAccountPassword: async (password: Password) => {
-    return axios.get<checkAccountPasswordResponse>(`/api/user/checkPassword?accountPassword=${password}`);
+    return axios.get<CheckAccountPasswordResponse>(`/api/user/checkPassword?accountPassword=${password}`);
   },
   /**
    * 송금하기
