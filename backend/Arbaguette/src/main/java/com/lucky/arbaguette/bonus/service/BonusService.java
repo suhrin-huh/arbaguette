@@ -10,6 +10,8 @@ import com.lucky.arbaguette.common.domain.dto.KafkaMsg;
 import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.service.BankService;
+import com.lucky.arbaguette.common.service.NotificationService;
+import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +32,10 @@ public class BonusService {
     private final BankService bankService;
     private final CrewRepository crewRepository;
     private final KafkaTemplate<String, KafkaMsg> kafkaTemplate;
+    private final NotificationService notificationService;
+    private final CompanyRepository companyRepository;
 
-    public void spreadBonus(CustomUserDetails customUserDetails, int money) {
+    public void spreadBonus(CustomUserDetails customUserDetails, int money, int companyId) {
         Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("사장님을 찾을 수 없습니다."));
 
@@ -43,6 +47,15 @@ public class BonusService {
                 .build());
 
         bonusRedisRepository.save(bonus.getBonusId(), money / 100);
+
+        for (Crew crew : crewRepository.findByCompany(companyRepository.findByCompanyIdAndBoss(companyId, boss).get())) {
+            notificationService.sendNotification(
+                    crew.getExpoPushToken(),
+                    "빵뿌리기 시작",
+                    "빵뿌리기가 시작되었습니다! 최대한 빨리 클릭하여 빵을 먹어봐요!",
+                    "arbaguette://crew/authorized/banking/transaction" //빵줍기 url 변경해야함 !!!!!!
+            );
+        }
     }
 
     public void getBonus(CustomUserDetails customUserDetails, int bonusId) {
@@ -57,7 +70,7 @@ public class BonusService {
             throw new BadRequestException("종료된 이벤트입니다.");
         }
 
-        KafkaMsg kafkaMsg = new KafkaMsg(bonusId, crew.getAccount(), crew.getUserKey(), isEnd);
+        KafkaMsg kafkaMsg = new KafkaMsg(bonusId, crew.getExpoPushToken(), crew.getAccount(), crew.getUserKey(), isEnd);
         log.info("카프카 들어감");
         kafkaTemplate.send(TOPIC_NAME, kafkaMsg);
     }

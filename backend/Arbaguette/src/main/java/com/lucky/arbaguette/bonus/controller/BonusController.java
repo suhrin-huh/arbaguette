@@ -22,7 +22,7 @@ public class BonusController {
     @PostMapping
     public ApiResponse<Void> spreadBonus(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                          @RequestBody BonusSaveRequest request) {
-        bonusService.spreadBonus(customUserDetails, request.money());
+        bonusService.spreadBonus(customUserDetails, request.money(), request.companyId());
         return ApiResponse.success();
     }
 

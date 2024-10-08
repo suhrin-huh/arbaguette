@@ -5,6 +5,7 @@ import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
+import com.lucky.arbaguette.common.service.NotificationService;
 import com.lucky.arbaguette.common.util.S3Util;
 import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
@@ -35,6 +36,7 @@ public class ContractService {
     private final ContractRepository contractRepository;
     private final ContractWorkingDayRepository contractWorkingDayRepository;
     private final S3Util s3Util;
+    private final NotificationService notificationService;
     private final PdfUtil pdfUtil;
 
     @Transactional
@@ -55,6 +57,14 @@ public class ContractService {
             ContractWorkingDay contractWorkingDay = createContractWorkingDay(contract, workingDayInfo);
             contractWorkingDayRepository.save(contractWorkingDay);
         });
+
+        //알림 전송
+        notificationService.sendNotification(
+                crew.getExpoPushToken(),
+                "근로계약서",
+                crew.getName() + "님, 근로계약서가 도착했어요 ! 확인 후 서명해주세요.",
+                "arbaguette://crew/unauthorized/contract"
+        );
     }
 
     private ContractWorkingDay createContractWorkingDay(Contract contract, WorkingDayInfo workingDayInfo) {

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -156,6 +157,7 @@ public class UserService {
         }
     }
 
+
     public LoginTokenResponse reissue(String refreshToken) {
         try {
             jwtUtil.isExpired(refreshToken);
@@ -223,5 +225,14 @@ public class UserService {
         }
         Crew crew = crewRepository.findByEmail(customUserDetails.getUsername()).orElseThrow(() -> new NotFoundException("회원정보를 찾을 수 없습니다."));
         return bCryptPasswordEncoder.matches(accountPassword, crew.getAccountPassword());
+    }
+
+    @Transactional
+    public void saveExpoToken(CustomUserDetails userDetails, String expoPushToken) {
+        if (userDetails.isBoss()) {
+            bossRepository.findByEmail(userDetails.getUsername()).get().saveExpoPushToken(expoPushToken);
+        } else {
+            crewRepository.findByEmail(userDetails.getUsername()).get().saveExpoPushToken(expoPushToken);
+        }
     }
 }
