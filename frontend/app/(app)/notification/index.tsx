@@ -27,7 +27,7 @@ const NotificationScreen = () => {
           type="scroll"
           viewOption={{
             style: { backgroundColor: Theme.color.WHITE },
-            contentContainerStyle: { paddingHorizontal: 0, paddingVertical: 0, gap: 10 },
+            contentContainerStyle: { paddingHorizontal: 0, paddingVertical: 0, gap: 20 },
           }}>
           {!!notifications.length &&
             notifications
