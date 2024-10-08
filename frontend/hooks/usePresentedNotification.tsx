@@ -9,7 +9,7 @@ const usePresentedNotification = () => {
   const { data } = useQuery({
     queryKey: [keys.all, 'notification'],
     queryFn: getPresentedNotificationsAsync,
-    refetchInterval: MINUTE * 3,
+    refetchInterval: MINUTE * 2,
   });
 
   return data || [];
