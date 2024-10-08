@@ -10,7 +10,7 @@ import { usePayStub } from '@/reactQuery/querys';
 
 const PayStub = () => {
   const [date, setDate] = useState(new Date());
-  const { payStub } = usePayStub(date.getMonth() + 1);
+  const payStub = usePayStub(date.getMonth() + 1);
   return (
     <Container>
       <DateSelector date={date} setDate={setDate} />

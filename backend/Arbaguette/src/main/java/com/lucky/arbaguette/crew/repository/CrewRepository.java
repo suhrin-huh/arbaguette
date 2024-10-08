@@ -24,4 +24,11 @@ public interface CrewRepository extends JpaRepository<Crew, Integer> {
     Optional<Crew> findByCompany_CompanyIdAndNameAndTel(int companyId, String name, String tel);
 
     Optional<Crew> findByAccount(String account);
+
+    boolean existsByAccount(String account);
+
+    Optional<Crew> findByBluetoothToken(String bluetoothToken);
+
+    boolean existsByExpoPushToken(String expoPushToken);
+
 }

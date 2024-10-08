@@ -4,7 +4,7 @@
     "slug": "arbagett",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/white-logo.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -16,9 +16,9 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/white-logo.png",
-        "backgroundColor": "#8071FC"
+        "foregroundImage": "./assets/images/adaptive-icon.png"
       },
       "package": "com.ssafy.c101.arbaguette",
       "permissions": [
@@ -57,7 +57,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "939f0dca-7ada-4f13-bb45-9d5b11097936"
+        "projectId": "6d44bbb7-144b-4931-9d56-c6537ce7be4d"
       }
     }
   }

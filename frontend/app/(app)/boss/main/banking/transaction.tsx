@@ -1,12 +1,19 @@
 import Styled from '@emotion/native';
+import { useFocusEffect, useNavigation } from 'expo-router';
 
-import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import TransactionList from '@/components/common/TransactionList';
 
 const Transaction = () => {
+  const { getParent } = useNavigation();
+
+  useFocusEffect(() => {
+    getParent()?.setOptions({
+      title: '송금 목록',
+    });
+  });
+
   return (
     <TransactionContainer>
-      <CenterHeaderbar left="" title="빵Pay" right="bell" />
       <TransactionList />
     </TransactionContainer>
   );

@@ -2,10 +2,20 @@ import { Foundation } from '@expo/vector-icons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router, Tabs, useGlobalSearchParams, useSegments } from 'expo-router';
+import React from 'react';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 import BellButton from '@/components/crew/BellButton';
 import CalendarButton from '@/components/crew/CalendarButton';
 import Theme from '@/styles/Theme';
+
+const TABBAR_STYLE: StyleProp<ViewStyle> = {
+  borderTopRightRadius: 20,
+  borderTopLeftRadius: 20,
+  borderWidth: 0,
+  elevation: 0,
+  height: 60,
+};
 
 const CrewMainLayout = () => {
   const segments = useSegments();
@@ -24,11 +34,7 @@ const CrewMainLayout = () => {
         headerRightContainerStyle: { paddingHorizontal: Theme.layout.PADDING.HORIZONTAL },
         tabBarHideOnKeyboard: true,
         tabBarStyle: {
-          borderTopRightRadius: 20,
-          borderTopLeftRadius: 20,
-          borderWidth: 0,
-          elevation: 0,
-          height: 60,
+          ...TABBAR_STYLE,
         },
         tabBarLabelStyle: {
           paddingBottom: 10,
@@ -38,7 +44,7 @@ const CrewMainLayout = () => {
         name="main"
         options={{
           title: '홈',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <Foundation name="home" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -48,7 +54,7 @@ const CrewMainLayout = () => {
         name="schedule"
         options={{
           title: '스케줄',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <FontAwesome5 name="calendar" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -59,7 +65,7 @@ const CrewMainLayout = () => {
         options={{
           title: '근무 내역',
           headerTitle: '근무 내역 조회',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           headerLeft: () => (
             <CalendarButton
               onPress={() =>
@@ -82,8 +88,8 @@ const CrewMainLayout = () => {
       <Tabs.Screen
         name="banking"
         options={{
-          title: '뱅킹',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          title: '빵Pay',
+          headerRight: () => <BellButton onPress={() => router.navigate('/notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <MaterialCommunityIcons
               name="bank"
@@ -91,8 +97,11 @@ const CrewMainLayout = () => {
               color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']}
             />
           ),
-          tabBarStyle: { display: segments[4] === 'remittance' && segments[5] === '2' ? 'none' : 'flex' },
-          headerShown: segments[4] === 'remittance' && segments[5] === '2' ? false : true,
+          tabBarStyle: {
+            ...TABBAR_STYLE,
+            display:
+              segments[4] === 'remittance' && (segments[5] === '3' || segments[5] === 'success') ? 'none' : 'flex',
+          },
         }}
       />
     </Tabs>

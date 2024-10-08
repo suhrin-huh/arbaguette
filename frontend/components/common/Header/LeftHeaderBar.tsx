@@ -1,7 +1,8 @@
 import styled from '@emotion/native';
 import Fontisto from '@expo/vector-icons/Fontisto';
+import { router } from 'expo-router';
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 
 import Colors from '@/constants/Colors';
 
@@ -56,26 +57,24 @@ interface CenterHeaderbarProps {
   title: HeaderTitle;
   right: HeaderRight;
   bgColor?: HeaderBgColor;
-  onPressTitle?: () => void;
 }
 
-const LeftHeaderbar = ({ title, right = 'bell', bgColor = 'white', onPressTitle }: CenterHeaderbarProps) => {
-  const pushNoticePage = () => {
-    // router.push()
-    console.log('알림 페이지로 이동');
+const LeftHeaderbar = ({ title, right = 'bell', bgColor = 'white' }: CenterHeaderbarProps) => {
+  const onPressRight = () => {
+    router.push('/notification');
   };
 
   return (
     <HeaderContainer style={{ backgroundColor: `${bgColor === 'background' ? Colors.BACKGROUND : bgColor}` }}>
       <ContentContainer>
         <TitleContainer>
-          <TouchableOpacity onPress={onPressTitle}>
+          <View>
             <Title>{title}</Title>
-          </TouchableOpacity>
+          </View>
         </TitleContainer>
         <RightContainer>
           {right === 'bell' ? (
-            <TouchableOpacity onPress={pushNoticePage}>
+            <TouchableOpacity onPress={onPressRight}>
               <Fontisto name="bell-alt" size={24} color={Colors.SECONDARY} />
             </TouchableOpacity>
           ) : (

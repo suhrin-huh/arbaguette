@@ -9,6 +9,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { NotificationProvider } from '@/context/NotificationContext';
 import usePretendardFonts from '@/hooks/usePretendardFonts';
 import Theme from '@/styles/Theme';
 
@@ -51,13 +52,15 @@ export default function Root() {
   return (
     <ThemeProvider theme={Theme}>
       <QueryClientProvider client={queryClient}>
-        <RootLayout>
-          <GestureHandlerRootView>
-            <BottomSheetModalProvider>
-              <Slot />
-            </BottomSheetModalProvider>
-          </GestureHandlerRootView>
-        </RootLayout>
+        <NotificationProvider>
+          <RootLayout>
+            <GestureHandlerRootView>
+              <BottomSheetModalProvider>
+                <Slot />
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
+          </RootLayout>
+        </NotificationProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );

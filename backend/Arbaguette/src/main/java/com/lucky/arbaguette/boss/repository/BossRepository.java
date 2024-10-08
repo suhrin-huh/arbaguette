@@ -15,4 +15,10 @@ public interface BossRepository extends JpaRepository<Boss, Integer> {
 
     Optional<Boss> findByAccount(String account);
 
+    boolean existsByAccount(String account);
+
+    Optional<Boss> findByBluetoothToken(String bluetoothToken);
+
+    boolean existsByExpoPushToken(String expoPushToken);
+
 }

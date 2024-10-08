@@ -49,7 +49,49 @@ docker build \
 -e DB_NAME=${DB_NAME} \
 -e DB_PASSWORD=${DB_PASSWORD} \
 -e SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
+-e TZ=Asiz/Seoul \
 backend
+                        """
+                    }
+
+                    dir('backend/bonus') {
+                        sh 'chmod +x ./gradlew'
+                        
+                        sh './gradlew clean build -x test'
+
+                        sh """
+sed -i 's/\${DB_NAME}/${MARIA_NAME}/' ./src/main/resources/application.properties
+sed -i 's/\${DB_PASSWORD}/${MARIA_PASSWORD}/' ./src/main/resources/application.properties 
+sed -i 's/\${SSAFY_BANK_KEY}/${SSAFY_BANK_KEY}/' ./src/main/resources/application.properties
+"""
+
+
+
+                        // Check if any container is named "backend"
+def containerNamedBackend = sh(script: "docker ps -a --filter 'name=bonus' --format '{{.ID}}'", returnStdout: true).trim()
+
+if (containerNamedBackend) {
+    // Stop and remove the container named "bonus"
+    sh "docker stop ${containerNamedBackend}"
+    sh "docker rm ${containerNamedBackend}"
+}
+
+
+                        // Build and run the new backend container
+                        sh """
+docker build \
+  --build-arg DB_NAME=${MARIA_NAME} \
+  --build-arg DB_PASSWORD=${MARIA_PASSWORD} \
+  --build-arg SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
+  -t bonus .
+"""
+                        sh """
+                            docker run --name bonus -d -p 8088:8088 \
+-e DB_NAME=${MARIA_NAME} \
+-e DB_PASSWORD=${MARIA_PASSWORD} \
+-e SSAFY_BANK_KEY=${SSAFY_BANK_KEY} \
+-e TZ=Asiz/Seoul \
+bonus
                         """
                     }
                 }

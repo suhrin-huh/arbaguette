@@ -2,6 +2,7 @@ import styled from '@emotion/native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { router } from 'expo-router';
 import React from 'react';
 import { StatusBar, TouchableOpacity } from 'react-native';
 
@@ -19,7 +20,6 @@ interface CenterHeaderbarProps {
   bgColor?: HeaderBgColor;
   onPressLeft?: () => void;
   onPressTitle?: () => void;
-  onPressRight?: () => void;
 }
 
 const HeaderContainer = styled.View(({ theme }) => ({
@@ -92,8 +92,11 @@ const CenterHeaderbar = ({
   bgColor = 'white',
   onPressLeft,
   onPressTitle,
-  onPressRight,
 }: CenterHeaderbarProps) => {
+  const onPressRight = () => {
+    router.push('/notification');
+  };
+
   return (
     <HeaderContainer style={{ backgroundColor: `${bgColor === 'background' ? Colors.BACKGROUND : bgColor}` }}>
       <ContentContainer>

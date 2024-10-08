@@ -46,7 +46,7 @@ const GetRemittanceInfo = () => {
   };
 
   const goToNext = (): void => {
-    router.push({ pathname: '/(app)/crew/authorized/banking/remittance/2', params: { accountNo, amount } });
+    router.push({ pathname: '/boss/main/banking/remittance/2', params: { accountNo, amount } });
   };
 
   return (

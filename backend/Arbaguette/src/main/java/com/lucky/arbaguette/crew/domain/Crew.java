@@ -39,6 +39,10 @@ public class Crew {
 
     private String accountPassword;
 
+    private String bluetoothToken;
+
+    private String expoPushToken;
+
     @Enumerated(EnumType.STRING)
     private CrewStatus crewStatus = UNREGISTERED;
 
@@ -73,4 +77,11 @@ public class Crew {
         this.crewStatus = UNREGISTERED;
     }
 
+    public void saveBluetoothId(String bluetoothToken) {
+        this.bluetoothToken = bluetoothToken;
+    }
+
+    public void saveExpoPushToken(String expoPushToken) {
+        this.expoPushToken = expoPushToken;
+    }
 }

@@ -6,6 +6,7 @@ const AppLayout = () => {
       <Stack.Screen name="(public)" />
       <Stack.Screen name="boss" />
       <Stack.Screen name="crew" />
+      <Stack.Screen name="notification" />
     </Stack>
   );
 };

@@ -99,8 +99,6 @@ const BossScheduleScreen = () => {
 
   return (
     <ContainerView style={{ paddingVertical: Layout.PADDING.VERTICAL, backgroundColor: Colors.WHITE }}>
-      <StatusBar />
-      <CenterHeaderbar title="일정 관리하기" left="none" right="bell" bgColor="white" />
       <Calendar
         theme={{ arrowColor: Theme.color.PRIMARY }}
         initialDate={format.dateToString(today)}
