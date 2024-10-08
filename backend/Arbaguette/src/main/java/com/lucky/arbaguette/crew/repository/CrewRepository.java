@@ -2,9 +2,10 @@ package com.lucky.arbaguette.crew.repository;
 
 import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.crew.domain.Crew;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CrewRepository extends JpaRepository<Crew, Integer> {
 
@@ -27,5 +28,7 @@ public interface CrewRepository extends JpaRepository<Crew, Integer> {
     boolean existsByAccount(String account);
 
     Optional<Crew> findByBluetoothToken(String bluetoothToken);
+
+    boolean existsByExpoPushToken(String expoPushToken);
 
 }

@@ -4,9 +4,11 @@ import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
 import com.lucky.arbaguette.common.domain.dto.request.BluetoothSaveRequest;
 import com.lucky.arbaguette.common.domain.dto.request.BluetoothSendMoneyRequest;
+import com.lucky.arbaguette.common.domain.dto.response.BluetoothInfosResponse;
 import com.lucky.arbaguette.common.service.BluetoothService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,5 +33,11 @@ public class BluetoothController {
                                                     @RequestBody BluetoothSendMoneyRequest request) {
         bluetoothService.sendMoneyWithBluetooth(customUserDetails, request);
         return ApiResponse.success();
+    }
+
+    @GetMapping
+    public ApiResponse<BluetoothInfosResponse> getBluetoothInfos(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ApiResponse.success(bluetoothService.getBluetoothInfos(customUserDetails));
     }
 }

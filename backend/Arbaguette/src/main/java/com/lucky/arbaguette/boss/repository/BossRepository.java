@@ -1,8 +1,9 @@
 package com.lucky.arbaguette.boss.repository;
 
 import com.lucky.arbaguette.boss.domain.Boss;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 public interface BossRepository extends JpaRepository<Boss, Integer> {
 
@@ -17,5 +18,7 @@ public interface BossRepository extends JpaRepository<Boss, Integer> {
     boolean existsByAccount(String account);
 
     Optional<Boss> findByBluetoothToken(String bluetoothToken);
-    
+
+    boolean existsByExpoPushToken(String expoPushToken);
+
 }
