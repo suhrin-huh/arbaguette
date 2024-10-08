@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { registerForPushNotificationsAsync } from '@/configs/notification';
 
 function redirect(notification: Notifications.Notification) {
-  const { url } = notification.request.content.data;
+  const { url } = JSON.parse(notification.request.content.data.body);
   console.log(url);
   if (url) {
     router.push(url);
