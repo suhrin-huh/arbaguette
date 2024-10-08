@@ -70,7 +70,7 @@ public class BonusService {
             throw new BadRequestException("종료된 이벤트입니다.");
         }
 
-        KafkaMsg kafkaMsg = new KafkaMsg(bonusId, crew.getAccount(), crew.getUserKey(), isEnd);
+        KafkaMsg kafkaMsg = new KafkaMsg(bonusId, crew.getExpoPushToken(), crew.getAccount(), crew.getUserKey(), isEnd);
         log.info("카프카 들어감");
         kafkaTemplate.send(TOPIC_NAME, kafkaMsg);
     }
