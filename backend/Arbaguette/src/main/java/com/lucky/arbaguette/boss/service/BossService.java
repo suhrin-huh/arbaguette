@@ -1,8 +1,5 @@
 package com.lucky.arbaguette.boss.service;
 
-import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
-import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
-
 import com.lucky.arbaguette.boss.domain.Boss;
 import com.lucky.arbaguette.boss.dto.request.CrewSaveRequest;
 import com.lucky.arbaguette.boss.dto.request.ReceiptSendRequest;
@@ -14,6 +11,7 @@ import com.lucky.arbaguette.common.exception.BadRequestException;
 import com.lucky.arbaguette.common.exception.DuplicateException;
 import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
+import com.lucky.arbaguette.common.service.NotificationService;
 import com.lucky.arbaguette.company.domain.Company;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.contract.Repository.ContractRepository;
@@ -31,16 +29,20 @@ import com.lucky.arbaguette.receipt.domain.dto.ReceiptInfo;
 import com.lucky.arbaguette.receipt.repository.ReceiptRepository;
 import com.lucky.arbaguette.schedule.domain.Schedule;
 import com.lucky.arbaguette.schedule.repository.ScheduleRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import static com.lucky.arbaguette.contract.domain.TaxType.INCOME;
+import static com.lucky.arbaguette.contract.domain.TaxType.INSU;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +59,7 @@ public class BossService {
     private final BossRepository bossRepository;
     private final ContractWorkingDayRepository contractWorkingDayRepository;
     private final ReceiptRepository receiptRepository;
+    private final NotificationService notificationService;
 
     public ExpectedCostResponse getExpectedCost(CustomUserDetails customUserDetails, int companyId) {
         Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
@@ -242,6 +245,15 @@ public class BossService {
         }
 
         receiptRepository.save(receiptSendRequest.toReceipt(contract));
+
+        String expoPushToken = crewRepository.findById(receiptSendRequest.crewId())
+                .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."))
+                .getExpoPushToken();
+        notificationService.sendNotification(
+                expoPushToken,
+                "급여 명세서 도착",
+                receiptSendRequest.month() + "월 급여 명세서가 도착했습니다!"
+        );
     }
 
     public void deleteCrew(CrewSaveRequest crewSaveRequest) {

@@ -36,6 +36,8 @@ public class Boss {
 
     private String bluetoothToken;
 
+    private String expoPushToken;
+
     @Builder
     private Boss(String email, String password, String name, String tel, String account, String userKey,
                  String profileImage, String accountPassword) {
