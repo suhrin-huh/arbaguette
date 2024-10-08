@@ -3,6 +3,7 @@ package com.lucky.arbaguette.common.controller;
 
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
+import com.lucky.arbaguette.common.domain.dto.request.ExpoTokenRequest;
 import com.lucky.arbaguette.common.domain.dto.request.UserJoinRequest;
 import com.lucky.arbaguette.common.domain.dto.request.UserReissueRequest;
 import com.lucky.arbaguette.common.domain.dto.response.LoginTokenResponse;
@@ -34,6 +35,12 @@ public class UserController {
     @PostMapping(consumes = "multipart/form-data")
     public ApiResponse<Void> joinProcess(@RequestPart("body") UserJoinRequest joinRequest, @RequestPart("image") MultipartFile file) throws IOException {
         userService.joinProcess(joinRequest, file);
+        return ApiResponse.success();
+    }
+
+    @PostMapping("/expoToken")
+    public ApiResponse<Void> saveExpoToken(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody ExpoTokenRequest request) {
+        userService.saveExpoToken(userDetails, request.expoPushToken());
         return ApiResponse.success();
     }
 

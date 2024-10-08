@@ -80,4 +80,8 @@ public class Crew {
     public void saveBluetoothId(String bluetoothToken) {
         this.bluetoothToken = bluetoothToken;
     }
+
+    public void saveExpoPushToken(String expoPushToken) {
+        this.expoPushToken = expoPushToken;
+    }
 }
