@@ -1,4 +1,3 @@
-import styled from '@emotion/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { dismissAllNotificationsAsync } from 'expo-notifications';
 import React from 'react';
