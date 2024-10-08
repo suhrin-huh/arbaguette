@@ -42,7 +42,7 @@ public class SubstituteService {
             throw new BadRequestException("이미 지난 날짜는 요청할 수 없습니다.");
         }
 
-        if (substituteRepository.existsBySchedule(schedule)) {
+        if (substituteRepository.existsByScheduleAndPermitIsFalse(schedule)) {
             throw new DuplicateException("이미 대타 신청이 완료되었습니다.");
         }
 
