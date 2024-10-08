@@ -1,5 +1,6 @@
 const keys = {
   all: ['arbaguette'] as const,
+  notification: () => [keys.all, 'notification'],
   boss: () => [...keys.all, 'boss'],
   company: () => [...keys.boss(), 'company'],
   daySchedule: (date: string, companyId: CompanyId) => [...keys.company(), 'schedule', date, companyId],

@@ -1,4 +1,5 @@
 import styled from '@emotion/native';
+import type { Notification } from 'expo-notifications';
 import React from 'react';
 import { Text, View } from 'react-native';
 
@@ -29,20 +30,25 @@ const NotiContent = styled(Text)(({ theme }) => ({
   fontWeight: '400',
 }));
 
-const NotificationItem = ({ notiData }: { notiData: any }) => {
-  const createdAt = new Date(notiData.createdAt);
+interface NotificationItemProps {
+  notification: Notification;
+}
+
+const NotificationItem = ({ notification }: NotificationItemProps) => {
+  const createdAt = new Date(notification.date);
   const formattedDate = createdAt.toLocaleDateString('ko-KR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
   });
+
   return (
     <NotiContainer>
       <NotiHeader>
-        <NotiTitle>{notiData.title}</NotiTitle>
+        <NotiTitle>{notification.request.content.title}</NotiTitle>
         <NotiDate>{formattedDate}</NotiDate>
       </NotiHeader>
-      <NotiContent>{notiData.content}</NotiContent>
+      <NotiContent>{notification.request.content.body}</NotiContent>
     </NotiContainer>
   );
 };

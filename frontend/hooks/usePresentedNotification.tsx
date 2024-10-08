@@ -1,21 +1,15 @@
-import type * as Notifications from 'expo-notifications';
+import { useQuery } from '@tanstack/react-query';
 import { getPresentedNotificationsAsync } from 'expo-notifications';
-import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+
+import keys from '@/reactQuery/keys';
 
 const usePresentedNotification = () => {
-  const [notification, setNotification] = useState<Notifications.Notification[]>([]);
-
-  const fetchPresentedNotifications = useCallback(async () => {
-    const notifications = await getPresentedNotificationsAsync();
-    setNotification(notifications);
-  }, []);
-
-  useFocusEffect(() => {
-    (async () => fetchPresentedNotifications())();
+  const { data } = useQuery({
+    queryKey: [keys.all, 'notification'],
+    queryFn: getPresentedNotificationsAsync,
   });
 
-  return notification;
+  return data || [];
 };
 
 export default usePresentedNotification;
