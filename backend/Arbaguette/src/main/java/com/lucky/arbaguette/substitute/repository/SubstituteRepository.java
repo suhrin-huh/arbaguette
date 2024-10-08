@@ -17,7 +17,7 @@ public interface SubstituteRepository extends JpaRepository<Substitute, Integer>
 
     List<Substitute> findByCompanyIdAndPermitIsFalse(int companyId);
 
-    Optional<Substitute> findBySchedule_ScheduleId(int scheduleId);
+    Optional<Substitute> findBySchedule_ScheduleIdAndPermitIsFalse(int scheduleId);
 
     @Lock(LockModeType.OPTIMISTIC)
     @Query("select s from Substitute s where s.schedule.scheduleId = :scheduleId and s.permit = false and s.crew is null")

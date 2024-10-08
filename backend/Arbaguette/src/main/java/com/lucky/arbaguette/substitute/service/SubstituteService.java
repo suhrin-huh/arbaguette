@@ -68,7 +68,7 @@ public class SubstituteService {
     }
 
     public SubstituteAgreeResponse agreeSubstitute(CustomUserDetails userDetails, SubstituteRequest request) {
-        Substitute substitute = substituteRepository.findBySchedule_ScheduleId(request.scheduleId())
+        Substitute substitute = substituteRepository.findBySchedule_ScheduleIdAndPermitIsFalse(request.scheduleId())
                 .orElseThrow(() -> new NotFoundException("해당하는 대타 내역을 찾을 수 없습니다."));
         companyRepository.findByCompanyIdAndBoss_Email(substitute.getCompanyId(), userDetails.getUsername())
                 .orElseThrow(() -> new UnAuthorizedException("요청하신 사업장의 사장님만 접근 가능합니다."));
