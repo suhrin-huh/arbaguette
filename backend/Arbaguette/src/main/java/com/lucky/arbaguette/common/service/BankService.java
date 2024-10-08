@@ -12,10 +12,6 @@ import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -173,7 +174,7 @@ public class BankService {
         String receiver = "";
         if (customUserDetails.isBoss()) {
             Boss boss = bossRepository.findByEmail(email)
-                    .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new UnAuthorizedException("해당 회원을 찾을 수 없습니다."));
             if (!bCryptPasswordEncoder.matches(request.password(), boss.getAccountPassword())) {
                 throw new BadRequestException("계좌 비밀번호가 틀렸습니다.");
             }
@@ -186,7 +187,7 @@ public class BankService {
         }
         if (customUserDetails.isCrew()) {
             Crew crew = crewRepository.findByEmail(email)
-                    .orElseThrow(() -> new NotFoundException("해당 회원을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new UnAuthorizedException("해당 회원을 찾을 수 없습니다."));
             if (!bCryptPasswordEncoder.matches(request.password(), crew.getAccountPassword())) {
                 throw new BadRequestException("계좌 비밀번호가 틀렸습니다.");
             }
