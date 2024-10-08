@@ -1,7 +1,16 @@
 import * as Notifications from 'expo-notifications';
+import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 
 import { registerForPushNotificationsAsync } from '@/configs/notification';
+
+function redirect(notification: Notifications.Notification) {
+  const { url } = notification.request.content.data;
+  console.log(url);
+  if (url) {
+    router.push(url);
+  }
+}
 
 const usePushNotification = () => {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -19,7 +28,8 @@ const usePushNotification = () => {
     });
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
+      console.log('addNotificationResponseReceivedListener', response.notification.request.content);
+      redirect(response.notification);
     });
 
     return () => {
