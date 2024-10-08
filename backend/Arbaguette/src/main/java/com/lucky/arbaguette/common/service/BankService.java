@@ -34,6 +34,7 @@ public class BankService {
     private final CrewRepository crewRepository;
     private final WebClient webClient;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final NotificationService notificationService;
 
 
     @Value("${finopenapi.url}")
@@ -171,19 +172,19 @@ public class BankService {
         String userKey = "";
         String account = "";
         String sender = "";
+        String senderToken = "";
         String receiver = "";
+        String receiverToken = "";
         if (customUserDetails.isBoss()) {
             Boss boss = bossRepository.findByEmail(email)
                     .orElseThrow(() -> new UnAuthorizedException("해당 회원을 찾을 수 없습니다."));
             if (!bCryptPasswordEncoder.matches(request.password(), boss.getAccountPassword())) {
                 throw new BadRequestException("계좌 비밀번호가 틀렸습니다.");
             }
+            senderToken = boss.getExpoPushToken();
             account = boss.getAccount();
             userKey = boss.getUserKey();
             sender = boss.getName();
-            receiver = crewRepository.findByAccount(request.account())
-                    .orElseThrow(() -> new NotFoundException("해당 계좌의 회원을 찾을 수 없습니다."))
-                    .getName();
         }
         if (customUserDetails.isCrew()) {
             Crew crew = crewRepository.findByEmail(email)
@@ -191,12 +192,20 @@ public class BankService {
             if (!bCryptPasswordEncoder.matches(request.password(), crew.getAccountPassword())) {
                 throw new BadRequestException("계좌 비밀번호가 틀렸습니다.");
             }
+            senderToken = crew.getExpoPushToken();
             account = crew.getAccount();
             userKey = crew.getUserKey();
             sender = crew.getName();
-            receiver = bossRepository.findByAccount(request.account())
-                    .orElseThrow(() -> new NotFoundException("해당 계좌의 회원을 찾을 수 없습니다."))
-                    .getName();
+        }
+
+        if (crewRepository.existsByAccount(account)) {
+            Crew crew = crewRepository.findByAccount(request.account()).get();
+            receiver = crew.getName();
+            receiverToken = crew.getExpoPushToken();
+        } else {
+            Boss boss = bossRepository.findByAccount(request.account()).get();
+            receiver = boss.getName();
+            receiverToken = boss.getExpoPushToken();
         }
 
         //"updateDemandDepositAccountTransfer" 시작
@@ -233,6 +242,20 @@ public class BankService {
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
+
+        notificationService.sendNotification(
+                receiverToken,
+                request.money() + "원 입금",
+                sender + " -> 내 통장",
+                "arbaguette://crew/authorized/banking/transaction"
+
+        );
+        notificationService.sendNotification(
+                senderToken,
+                request.money() + "원 출금",
+                "내 통장 -> " + receiver,
+                "arbaguette://crew/authorized/banking/transaction"
+        );
 
     }
 
@@ -279,6 +302,20 @@ public class BankService {
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
+
+        notificationService.sendNotification(
+                crew.getExpoPushToken(),
+                request.money() + "원 입금",
+                boss.getName() + " -> 내 통장 (급여)",
+                "arbaguette://crew/authorized/banking/transaction"
+
+        );
+        notificationService.sendNotification(
+                boss.getExpoPushToken(),
+                request.money() + "원 출금",
+                "내 통장 -> " + crew.getName() + " (급여)",
+                "arbaguette://crew/authorized/banking/transaction"
+        );
 
     }
 
