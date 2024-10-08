@@ -352,5 +352,12 @@ public class BankService {
                 .bodyToMono(Map.class)
                 .block();
 
+        notificationService.sendNotification(
+                boss.getExpoPushToken(),
+                money + "원 출금",
+                "빵뿌리기",
+                "arbaguette://boss/banking/transaction"
+        );
+
     }
 }
