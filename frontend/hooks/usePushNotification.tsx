@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { dismissNotificationAsync } from 'expo-notifications';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 
@@ -30,8 +31,8 @@ const usePushNotification = () => {
       setNotification(notification);
     });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log('addNotificationResponseReceivedListener', response.notification.request.content);
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response) => {
+      await dismissNotificationAsync(response.notification.request.identifier);
       redirect(response.notification);
     });
 
