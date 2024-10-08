@@ -2,8 +2,8 @@ import { Stack } from 'expo-router';
 
 const NotificationLayout = () => {
   return (
-    <Stack screenOptions={{ headerShown: false }} initialRouteName="index">
-      <Stack.Screen name="index" />
+    <Stack screenOptions={{ headerTitleAlign: 'center', headerShadowVisible: false }} initialRouteName="index">
+      <Stack.Screen name="index" options={{ title: '알림' }} />
     </Stack>
   );
 };
