@@ -1,6 +1,4 @@
-import styled from '@emotion/native';
 import { useQueryClient } from '@tanstack/react-query';
-import * as Linking from 'expo-linking';
 import { dismissAllNotificationsAsync } from 'expo-notifications';
 import React from 'react';
 import { View } from 'react-native';
@@ -15,9 +13,6 @@ import Theme from '@/styles/Theme';
 const NotificationScreen = () => {
   const queryClient = useQueryClient();
   const notifications = usePresentedNotification();
-
-  const schemeUrl = Linking.createURL('/');
-  console.log('App Scheme URL:', schemeUrl);
 
   const handleDismissAllNotifications = async () => {
     await dismissAllNotificationsAsync();
