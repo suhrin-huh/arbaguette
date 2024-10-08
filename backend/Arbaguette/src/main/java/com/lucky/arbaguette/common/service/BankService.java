@@ -173,8 +173,11 @@ public class BankService {
         String account = "";
         String sender = "";
         String senderToken = "";
+        String senderUrl = "";
         String receiver = "";
         String receiverToken = "";
+        String receiverUrl = "";
+
         if (customUserDetails.isBoss()) {
             Boss boss = bossRepository.findByEmail(email)
                     .orElseThrow(() -> new UnAuthorizedException("해당 회원을 찾을 수 없습니다."));
@@ -182,6 +185,7 @@ public class BankService {
                 throw new BadRequestException("계좌 비밀번호가 틀렸습니다.");
             }
             senderToken = boss.getExpoPushToken();
+            senderUrl = "arbaguette://boss/banking/transaction";
             account = boss.getAccount();
             userKey = boss.getUserKey();
             sender = boss.getName();
@@ -193,6 +197,7 @@ public class BankService {
                 throw new BadRequestException("계좌 비밀번호가 틀렸습니다.");
             }
             senderToken = crew.getExpoPushToken();
+            senderUrl = "arbaguette://crew/authorized/banking/transaction";
             account = crew.getAccount();
             userKey = crew.getUserKey();
             sender = crew.getName();
@@ -202,10 +207,12 @@ public class BankService {
             Crew crew = crewRepository.findByAccount(request.account()).get();
             receiver = crew.getName();
             receiverToken = crew.getExpoPushToken();
+            receiverUrl = "arbaguette://crew/authorized/banking/transaction";
         } else {
             Boss boss = bossRepository.findByAccount(request.account()).get();
             receiver = boss.getName();
             receiverToken = boss.getExpoPushToken();
+            receiverUrl = "arbaguette://boss/banking/transaction";
         }
 
         //"updateDemandDepositAccountTransfer" 시작
@@ -243,18 +250,20 @@ public class BankService {
                 .bodyToMono(Map.class)
                 .block();
 
+
+        //알림전송
         notificationService.sendNotification(
                 receiverToken,
                 request.money() + "원 입금",
                 sender + " -> 내 통장",
-                "arbaguette://crew/authorized/banking/transaction"
+                receiverUrl
 
         );
         notificationService.sendNotification(
                 senderToken,
                 request.money() + "원 출금",
                 "내 통장 -> " + receiver,
-                "arbaguette://crew/authorized/banking/transaction"
+                senderUrl
         );
 
     }
@@ -314,7 +323,7 @@ public class BankService {
                 boss.getExpoPushToken(),
                 request.money() + "원 출금",
                 "내 통장 -> " + crew.getName() + " (급여)",
-                "arbaguette://crew/authorized/banking/transaction"
+                "arbaguette://boss/banking/transaction"
         );
 
     }
