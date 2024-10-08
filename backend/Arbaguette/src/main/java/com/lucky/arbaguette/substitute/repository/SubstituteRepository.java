@@ -13,7 +13,7 @@ public interface SubstituteRepository extends JpaRepository<Substitute, Integer>
 
     Optional<Substitute> findByScheduleAndPermitIsFalse(Schedule schedule);
 
-    boolean existsBySchedule(Schedule schedule);
+    boolean existsByScheduleAndPermitIsFalse(Schedule schedule);
 
     List<Substitute> findByCompanyIdAndPermitIsFalse(int companyId);
 
