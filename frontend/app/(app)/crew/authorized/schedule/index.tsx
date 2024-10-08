@@ -1,10 +1,11 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import type { DateData, TimelineEventProps } from 'react-native-calendars';
-import { Calendar, Timeline } from 'react-native-calendars';
+import type { DateData } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import type { MarkedDates } from 'react-native-calendars/src/types';
 
+import TimeTable from '@/components/common/TimeTable';
 import { useMonthlySchedule } from '@/reactQuery/querys';
 import Theme from '@/styles/Theme';
 import format from '@/util/format';
@@ -14,9 +15,29 @@ const CrewScheduleScreen = () => {
   const { crewId } = useRootStore();
   const today = new Date();
   const [calendar, setCalendar] = useState<DateData>();
-  const [selectedDate, setSelectedDate] = useState(today);
-  const selectedDateString = format.dateToString(selectedDate);
-  const schedule = useMonthlySchedule(calendar?.month || today.getMonth() + 1);
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
+  const selectedDateString = useMemo(() => format.dateToString(selectedDate), [selectedDate]);
+  const schedule = useMonthlySchedule(calendar?.month || today.getMonth() + 1) as DailySchedule[] | undefined;
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule[]>([]);
+
+  interface Schedule {
+    crewId: number;
+    name: string;
+    scheduleId: number;
+    substituteRequest: boolean;
+    hopeCrewId: number | null;
+    hopeCrewName: string | null;
+    startTime: string;
+    endTime: string;
+    profileImage: string;
+    status?: 'mine' | 'request';
+  }
+
+  interface DailySchedule {
+    date: number;
+    dailySchedules: Schedule[];
+  }
+  // 캘린더에 일정에 따른 dot 표시하기
   const markedDates: MarkedDates =
     schedule?.reduce(
       (acc, { date, dailySchedules }) => ({
@@ -24,7 +45,7 @@ const CrewScheduleScreen = () => {
         [`${calendar?.year}-${String(calendar?.month).padStart(2, '0')}-${String(date).padStart(2, '0')}`]: {
           marked: dailySchedules.some((schedule) => schedule.crewId === crewId),
           dots: dailySchedules.map((schedule) => {
-            if (schedule.SubstituteRequest) {
+            if (schedule.substituteRequest) {
               return { key: 'substitute', color: Theme.color.SECONDARY };
             }
             if (schedule.crewId === crewId) {
@@ -38,48 +59,39 @@ const CrewScheduleScreen = () => {
     ) || {};
   if (markedDates[selectedDateString]) markedDates[selectedDateString]['selected'] = true;
 
-  const timeLineEvents: TimelineEventProps[] = schedule
-    ? schedule[selectedDate.getDate() - 1].dailySchedules.map((time) => ({
-        title: time.name,
-        start: `${selectedDateString} ${time.startTime}`,
-        end: `${selectedDateString} ${time.endTime}`,
-        id: String(time.scheduleId),
-        summary: String(time.crewId),
-        color: time.SubstituteRequest
-          ? Theme.color.SECONDARY
-          : time.crewId === crewId
-            ? Theme.color.PRIMARY
-            : Theme.color.GRAY['2'],
-      }))
-    : [];
-
-  const handleMonthChange = (date: DateData) => {
+  const handleMonthChange = useCallback((date: DateData) => {
     setCalendar(date);
     setSelectedDate(new Date(`${date.year}-${date.month}-01`));
-  };
+  }, []);
 
   const handleDayPress = (date: DateData) => {
-    setSelectedDate(new Date(date.dateString));
+    const nextDate = new Date(date.dateString);
+    const nextSchedule = schedule ? schedule[nextDate.getDate() - 1].dailySchedules : [];
+    setSelectedDate(nextDate);
+    setSelectedSchedule(nextSchedule);
   };
 
-  const handleEventPress = (event: TimelineEventProps) => {
-    if (new Date(event.start) < today) return;
+  const handleEventPress = (scheduleId: number) => {
+    const time = selectedSchedule.filter((item) => item.scheduleId === scheduleId)[0];
+    console.log(scheduleId, time.substituteRequest);
+    const start = `${selectedDateString} ${time.startTime}`;
+    const end = `${selectedDateString} ${time.endTime}`;
 
-    const isRequested = schedule
-      ? schedule.some((day) =>
-          day.dailySchedules.some((schedule) => Number(event.id) === schedule.scheduleId && schedule.SubstituteRequest),
-        )
-      : false;
-    const isMyEvent = Number(event.summary) === Number(crewId);
+    if (new Date(start) < today) return;
+    const isMyEvent = time.crewId === crewId;
+    const isRequested = time.substituteRequest;
 
-    const serializedEvent = JSON.stringify(event);
-
+    /// 시작날짜, 끝날짜, scheduleid가 필요하다
     if (isMyEvent && !isRequested) {
-      router.navigate({ pathname: '/crew/authorized/schedule/request', params: { event: serializedEvent } });
+      console.log('내 일정을 대타 신청합니다!');
+      router.navigate({ pathname: '/crew/authorized/schedule/request', params: { start, end, id: scheduleId } });
     } else if (!isMyEvent && isRequested) {
-      router.navigate({ pathname: '/crew/authorized/schedule/apply', params: { event: serializedEvent } });
+      console.log('대타 하고싶어요!');
+      router.navigate({ pathname: '/crew/authorized/schedule/apply', params: { start, end, id: scheduleId } });
     }
   };
+
+  console.log(schedule);
 
   return (
     <View style={{ flex: 1 }}>
@@ -91,13 +103,8 @@ const CrewScheduleScreen = () => {
         markedDates={markedDates}
         markingType="multi-dot"
       />
-      <Timeline
-        onEventPress={handleEventPress}
-        events={timeLineEvents}
-        date={selectedDateString}
-        showNowIndicator
-        scrollToNow
-      />
+
+      <TimeTable schedule={selectedSchedule} handleEventPress={handleEventPress} />
     </View>
   );
 };
