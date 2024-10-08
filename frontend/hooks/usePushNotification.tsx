@@ -3,6 +3,8 @@ import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 
 import { registerForPushNotificationsAsync } from '@/configs/notification';
+import ReactQueryClient from '@/configs/queryClient';
+import keys from '@/reactQuery/keys';
 
 function redirect(notification: Notifications.Notification) {
   const { url } = JSON.parse(notification.request.content.data.body);
@@ -23,7 +25,8 @@ const usePushNotification = () => {
       .then((token) => setExpoPushToken(token ?? ''))
       .catch((error: any) => setExpoPushToken(`${error}`));
 
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+    notificationListener.current = Notifications.addNotificationReceivedListener(async (notification) => {
+      await ReactQueryClient.instance.invalidateQueries({ queryKey: keys.all });
       setNotification(notification);
     });
 
