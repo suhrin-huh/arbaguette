@@ -24,10 +24,15 @@ const createAuthSlice: StateCreator<RootState, [], [], AuthSlice> = (set) => ({
   },
   logout: () => set({ ...INITIAL_STATE }),
   updateTokens: (accessToken: string, refreshToken: string) => {
+    const { crewId, crewStatus, role } = jwtDecode<AccessTokenPayload>(accessToken);
+    console.log('crewStatus', crewStatus);
     set((state) => ({
       ...state,
       accessToken,
       refreshToken,
+      crewId,
+      crewStatus,
+      role,
     }));
   },
 });

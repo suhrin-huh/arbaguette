@@ -31,4 +31,12 @@ export default {
   reIssue: async (refreshToken: RefreshToken) => {
     return axios.post<ReissueResponse>('/api/user/reissue', { refreshToken });
   },
+  /**
+   * Expo 알림 토큰 저장
+   * @param expoPushToken Expo 알림 토큰
+   * @param accessToken 엑세스 토큰
+   */
+  storeExpoToken: async (expoPushToken: string, accessToken: string) => {
+    return axios.put('/api/user/expotoken', { expoPushToken }, { headers: { Authorization: `Bearer ${accessToken}` } });
+  },
 };

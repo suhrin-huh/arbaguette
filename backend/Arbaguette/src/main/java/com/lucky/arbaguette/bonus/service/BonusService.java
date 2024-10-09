@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -35,6 +36,7 @@ public class BonusService {
     private final NotificationService notificationService;
     private final CompanyRepository companyRepository;
 
+    @Transactional
     public void spreadBonus(CustomUserDetails customUserDetails, int money, int companyId) {
         Boss boss = bossRepository.findByEmail(customUserDetails.getUsername())
                 .orElseThrow(() -> new NotFoundException("사장님을 찾을 수 없습니다."));

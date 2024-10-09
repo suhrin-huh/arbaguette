@@ -46,13 +46,13 @@ const Screen = ({ children, type, viewOption, statusbarOption }: ScreenProps) =>
         {...statusbarOption}
       />
       <ScreenComponent
-        {...viewOption}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           rowGap: 10,
           paddingVertical: Theme.layout.PADDING.VERTICAL,
           paddingHorizontal: Theme.layout.PADDING.HORIZONTAL,
-        }}>
+        }}
+        {...viewOption}>
         {children}
       </ScreenComponent>
     </ScreenContainer>

@@ -3,12 +3,13 @@ import 'react-native-reanimated';
 import Styled from '@emotion/native';
 import { ThemeProvider } from '@emotion/react';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import ReactQueryClient from '@/configs/queryClient';
 import { NotificationProvider } from '@/context/NotificationContext';
 import usePretendardFonts from '@/hooks/usePretendardFonts';
 import Theme from '@/styles/Theme';
@@ -29,7 +30,7 @@ const RootLayout = Styled.View(({ theme }) => ({
   alignSelf: 'stretch',
 }));
 
-const queryClient = new QueryClient();
+const queryClient = ReactQueryClient.instance;
 
 export default function Root() {
   const [loaded, error] = usePretendardFonts();

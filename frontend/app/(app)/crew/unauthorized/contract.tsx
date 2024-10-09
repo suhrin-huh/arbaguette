@@ -62,7 +62,7 @@ const SignatureScreen = () => {
   if (!contract) return null;
 
   return (
-    <Screen type="view">
+    <Screen type="scroll">
       <Content>
         <Title>근로조건을 확인하고</Title>
         <Title>서명해주세요.</Title>
