@@ -8,6 +8,7 @@ import { createCompanyInfoSlice } from '@/zustand/boss/companyInfoSlice';
 import { createRegistCrewSlice } from '@/zustand/boss/registCrewSlice';
 
 import { createSelectedCompanySlice } from './boss/selectedCompanySlice';
+import { spreadBreadSlice } from './boss/spreadBreadSlice';
 
 const useRootStore = create<RootState>()(
   persist(
@@ -17,6 +18,7 @@ const useRootStore = create<RootState>()(
       ...createSelectedCompanySlice(...a),
       ...createCertifiedPaperSlice(...a),
       ...createRegistCrewSlice(...a),
+      ...spreadBreadSlice(...a),
     }),
     {
       name: 'z',
