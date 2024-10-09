@@ -1,15 +1,15 @@
 import styled from '@emotion/native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 
 import NoneCard from '@/components/boss/management/NoneScheduleCard';
 import AttendanceStatusCard from '@/components/common/AttendanceStatusCard';
+import CardContainer from '@/components/common/CardContainer';
 import DateStatusCard from '@/components/common/DateStatusCard';
-import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
-import TitleDropdown from '@/components/common/Header/TitleDropdown';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
-import ContainerView from '@/components/common/ScreenContainer';
+import Screen from '@/components/common/Screen';
+import withPressable from '@/components/hoc/withPressable';
 import { useDailySchedule, useExpectedExpenses } from '@/reactQuery/querys';
 import useRootStore from '@/zustand';
 
@@ -29,14 +29,14 @@ function todayFormatter() {
 
 const MainScreen = () => {
   const { id, name, address } = useLocalSearchParams<{ id: string; name: string; address: string }>();
-  const { setSelectedCompany } = useRootStore();
+  const { setSelectedCompany, logout } = useRootStore();
   const daySchedule = useDailySchedule(todayFormatter(), Number(id));
   // const daySchedule = useDailySchedule('2024-10-10', Number(id));
   const crewScheduleInfos = daySchedule?.crewScheduleInfos;
   const expectedExpenses = useExpectedExpenses(Number(id));
   const { originSalary, tax, allowance } = expectedExpenses || {};
 
-  console.log(crewScheduleInfos);
+  const LogoutButton = withPressable(CardContainer);
 
   useEffect(() => {
     setSelectedCompany({
@@ -47,27 +47,23 @@ const MainScreen = () => {
   }, [id, name, address]);
 
   return (
-    <InnerContainer
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        justifyContent: 'flex-start',
-        paddingBottom: 60,
-      }}>
-      <ContainerView>
-        <DateStatusCard dayScheduleData={daySchedule} />
-        {crewScheduleInfos && crewScheduleInfos.length > 0 ? (
-          <AttendanceStatusCard dayScheduleData={crewScheduleInfos} />
-        ) : (
-          <NoneCard title="금일 출근 예정 직원이 없습니다." fontSize={16} />
-        )}
-        <SalaryChartCard
-          title="이번달 예상 지출"
-          originSalary={originSalary || 0}
-          tax={tax || 0}
-          allowance={allowance || 0}
-        />
-      </ContainerView>
-    </InnerContainer>
+    <Screen type="scroll">
+      <DateStatusCard dayScheduleData={daySchedule} />
+      {crewScheduleInfos && crewScheduleInfos.length > 0 ? (
+        <AttendanceStatusCard dayScheduleData={crewScheduleInfos} />
+      ) : (
+        <NoneCard title="금일 출근 예정 직원이 없습니다." fontSize={16} />
+      )}
+      <SalaryChartCard
+        title="이번달 예상 지출"
+        originSalary={originSalary || 0}
+        tax={tax || 0}
+        allowance={allowance || 0}
+      />
+      <LogoutButton onPress={() => logout()}>
+        <Text>로그아웃</Text>
+      </LogoutButton>
+    </Screen>
   );
 };
 
