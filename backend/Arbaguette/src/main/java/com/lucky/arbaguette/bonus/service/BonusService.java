@@ -50,12 +50,14 @@ public class BonusService {
 
         bonusRedisRepository.save(bonus.getBonusId(), money / 100);
 
-        for (Crew crew : crewRepository.findByCompany(companyRepository.findByCompanyIdAndBoss(companyId, boss).get())) {
+        for (Crew crew : crewRepository.findByCompany(
+                companyRepository.findByCompanyIdAndBoss(companyId, boss).get())) {
             notificationService.sendNotification(
                     crew.getExpoPushToken(),
                     "빵뿌리기 시작",
                     "빵뿌리기가 시작되었습니다! 최대한 빨리 클릭하여 빵을 먹어봐요!",
-                    "arbaguette://crew/authorized/banking/transaction" //빵줍기 url 변경해야함 !!!!!!
+                    "arbaguette://crew/authorized/banking/event?bonusId=" + bonus.getBonusId()
+//                    "arbaguette://crew/authorized/banking/transaction" //빵줍기 url 변경해야함 !!!!!!
             );
         }
     }
