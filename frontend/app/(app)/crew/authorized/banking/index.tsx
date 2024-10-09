@@ -30,7 +30,7 @@ const CrewBankingScreen = () => {
           </View>
           <Image source={PayrollImage} style={{ resizeMode: 'contain', width: 90, height: 90, marginLeft: 'auto' }} />
         </ActionButton>
-        <ActionButton>
+        <ActionButton onPress={() => router.push('../../../seperation')}>
           <View>
             <Text size="sub" weight="bold">
               {'친구에게\n빵뿌리기'}

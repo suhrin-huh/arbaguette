@@ -1,11 +1,10 @@
 import Styled from '@emotion/native';
-import { useFocusEffect, useNavigation } from 'expo-router';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { Image } from 'react-native';
 
 import FireworkImage from '@/assets/images/firework.png';
 import ExpectedSalaryCard from '@/components/boss/ExpectedSalaryCard';
 import BankingCard from '@/components/common/BankingCard';
-import Text from '@/components/common/Text';
 
 const BossBankingScreen = () => {
   const { getParent } = useNavigation();
@@ -19,12 +18,17 @@ const BossBankingScreen = () => {
   return (
     <ScreenContainer>
       <BankingCard />
-      <ActionButton>
-        <Text size="title" weight="bold">
-          직원에게 빵뿌리기
-        </Text>
-        <Image source={FireworkImage} style={{ resizeMode: 'contain', width: 120, height: 120, marginLeft: 'auto' }} />
-      </ActionButton>
+      <ActionButtonContainer>
+        <ActionButton onPress={() => router.navigate({ pathname: '../../../seperation/', params: { type: 'first' } })}>
+          <ActionButtonText>선착순{'\n'}빵뿌리기</ActionButtonText>
+          <Image source={FireworkImage} style={{ resizeMode: 'contain', width: 60, height: 60, marginLeft: 'auto' }} />
+        </ActionButton>
+        <ActionButton
+          onPress={() => router.navigate({ pathname: '../../../seperation/near', params: { type: 'near' } })}>
+          <ActionButtonText>주변에{'\n'}빵뿌리기</ActionButtonText>
+          <Image source={FireworkImage} style={{ resizeMode: 'contain', width: 60, height: 60, marginLeft: 'auto' }} />
+        </ActionButton>
+      </ActionButtonContainer>
       <ExpectedSalaryCard />
     </ScreenContainer>
   );
@@ -43,12 +47,23 @@ const ScreenContainer = Styled.View(({ theme }) => ({
   paddingVertical: theme.layout.PADDING.VERTICAL,
 }));
 
-const ActionButton = Styled.TouchableOpacity(({ theme }) => ({
+const ActionButtonContainer = Styled.View(({ theme }) => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   height: 150,
   width: '100%',
+  backgroundColor: theme.color.WHITE,
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+}));
+
+const ActionButton = Styled.TouchableOpacity(({ theme }) => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  height: 150,
+  width: '48%',
   backgroundColor: theme.color.WHITE,
   paddingHorizontal: 20,
   paddingVertical: 10,
@@ -58,4 +73,10 @@ const ActionButton = Styled.TouchableOpacity(({ theme }) => ({
   shadowOpacity: 0.6,
   shadowRadius: 6,
   elevation: 5,
+}));
+
+const ActionButtonText = Styled.Text(({ theme }) => ({
+  textAlign: 'left',
+  fontSize: 16,
+  fontWeight: 'bold',
 }));
