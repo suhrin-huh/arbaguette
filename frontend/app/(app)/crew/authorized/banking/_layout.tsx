@@ -11,6 +11,7 @@ const BankingLayout = () => {
       <Stack.Screen name="payStub" />
       <Stack.Screen name="transaction" />
       <Stack.Screen name="remittance" />
+      <Stack.Screen name="event" />
     </Stack>
   );
 };

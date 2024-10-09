@@ -286,6 +286,7 @@ interface ReissueResponseData {
   accessToken: AccessToken;
   refreshToken: RefreshToken;
 }
+
 interface Transaction {
   transactionUniqueNo: string;
   transactionDate: string;
@@ -308,7 +309,6 @@ interface GetAccountBalanceResponseData {
   account: BankAccount;
   money: string;
 }
-
 
 interface ThrowBreadResponseData {
   money: Money;
@@ -347,9 +347,6 @@ type GetAccountBalanceResponse = ArbaguetteResponse<GetAccountBalanceResponseDat
 type RemittanceResponse = ArbaguetteResponse<void>;
 type GetExpectedExpensesResponse = ArbaguetteResponse<GetExpectedExpensesResponseData>;
 type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseData>;
-<<<<<<< frontend/types/arbaguette.d.ts
 type ThrowBreadResponse = ArbaguetteResponse<ThrowBreadResponseData>;
-=======
 type TakeSubstituteResponse = ArbaguetteResponse<void>;
 type CheckAccountUserResponse = ArbaguetteResponse<CheckAccountUserResponseData>;
->>>>>>> frontend/types/arbaguette.d.ts
