@@ -161,9 +161,12 @@ public class ContractService {
                             }
                             .contract-date {
                                     text-align: center;
-                                    font-size: 30px; /* 크게 설정 */
+                                    font-size: 30px;
                                     font-weight: bold;
-                                    margin-top: 100px;
+                                    position: fixed;
+                                    left: 50%%;
+                                    bottom: 20px;
+                                    transform: translateX(-50%%)
                                 }
                         </style>
                     </head>
