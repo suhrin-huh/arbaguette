@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-import arbaguette from '@/services/arbaguette';
 import useRootStore from '@/zustand';
 
 const instance = axios.create({
@@ -30,7 +29,7 @@ instance.interceptors.response.use(
     if (error.response.status === 401 && error.response.data.code === 418) {
       try {
         const { refreshToken } = useRootStore.getState();
-        const { data } = await arbaguette.reIssue(refreshToken);
+        const { data } = await instance.post<ReissueResponse>('/api/user/reissue', { refreshToken });
         const { accessToken, refreshToken: newRefreshToken } = data.data;
         useRootStore.getState().updateTokens(accessToken, newRefreshToken);
         return instance.request(error.config);

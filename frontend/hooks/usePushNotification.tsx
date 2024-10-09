@@ -27,7 +27,6 @@ const usePushNotification = () => {
       .catch((error: any) => setExpoPushToken(`${error}`));
 
     notificationListener.current = Notifications.addNotificationReceivedListener(async (notification) => {
-      console.log(notification.request.content.data.url);
       await ReactQueryClient.instance.invalidateQueries({ queryKey: keys.all });
       setNotification(notification);
     });
