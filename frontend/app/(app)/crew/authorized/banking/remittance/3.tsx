@@ -1,13 +1,11 @@
 import Styled from '@emotion/native';
 import { useMutation } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 
 import NumPad from '@/components/common/modal/PasswordModal/NumPad';
 import Progress from '@/components/common/modal/PasswordModal/Progress';
 import Text from '@/components/common/Text';
-import { useCheckAccountPassword } from '@/reactQuery/querys';
 import arbaguette from '@/services/arbaguette';
 
 interface RemittanceInfo {
@@ -16,29 +14,30 @@ interface RemittanceInfo {
 const GetPasswordInfo = () => {
   const { accountNo, amount } = useLocalSearchParams<RemittanceInfo>();
   const [password, setPassword] = useState('');
-  const [resText, setResText] = useState('');
-  // const { mutate: remittance } = useMutation({
-  //   mutationFn: arbaguette.remittance,
-  //   onSuccess: async (response) => {
-  //     console.log(response);
-  //   },
-  //   onError: async (error: AxiosError) => {
-  //     setPassword('');
-  //     console.log(error);
-  //   },
-  // });
+  const [errorText, setErrorText] = useState<string[]>([]);
+  const { mutate: remittance } = useMutation({
+    mutationFn: arbaguette.remittance,
+    onSuccess: async () => {
+      router.push('/crew/authorized/banking/remittance/success');
+    },
+    onError: async (error) => {
+      console.log(error);
+      setPassword('');
+      setErrorText(['비밀번호가 옳지 않습니다.', '다시 입력해주세요.']);
+    },
+  });
 
   const handlePassword = (value: number) => {
     const updatedPassword = password + String(value);
     setPassword(updatedPassword);
     if (updatedPassword.length === 4) {
       const requestData = {
-        accountNo,
-        amount,
-        password,
+        account: accountNo,
+        money: amount,
+        password: updatedPassword,
       };
-      // RemittanceInfo(requestData);
-      router.push('/crew/authorized/banking/remittance/success');
+      console.log(requestData);
+      remittance(requestData);
     }
   };
 
@@ -49,16 +48,17 @@ const GetPasswordInfo = () => {
   return (
     <Container>
       <ContentBox>
-        {resText ? (
-          <Text size="title" weight="bold">
-            {resText}
-          </Text>
+        {errorText.length ? (
+          errorText.map((text, idx) => (
+            <Text size="title" weight="bold" key={idx}>
+              {text}
+            </Text>
+          ))
         ) : (
           <Text size="title" weight="bold">
             비밀번호를 입력하세요.
           </Text>
         )}
-        <Text>{password}</Text>
         <Progress progress={password.length} />
       </ContentBox>
       <NumPad onPress={handlePassword} deletePassword={handlePasswordDelete} />
