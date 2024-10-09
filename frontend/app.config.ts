@@ -16,7 +16,7 @@ module.exports = {
       supportsTablet: true,
     },
     android: {
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON || './google-services.json',
+      googleServicesFile: './google-services.json',
       adaptiveIcon: {
         foregroundImage: './assets/images/adaptive-icon.png',
       },
