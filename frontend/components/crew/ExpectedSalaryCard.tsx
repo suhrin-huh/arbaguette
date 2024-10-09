@@ -55,6 +55,7 @@ const SalaryBox = Styled.TouchableOpacity(({ theme }) => ({
   justifyContent: 'center',
   gap: 10,
   width: '100%',
+  height: 200,
   backgroundColor: 'white',
   paddingBottom: 20,
   borderRadius: theme.layout.BORDER.SECONDARY,
