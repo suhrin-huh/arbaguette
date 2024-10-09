@@ -1,12 +1,11 @@
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { StatusBar } from 'react-native';
-import type { DateData, TimelineEventProps } from 'react-native-calendars';
-import { Calendar, Timeline } from 'react-native-calendars';
+import React, { useState } from 'react';
+import type { DateData } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import type { MarkedDates } from 'react-native-calendars/src/types';
 
-import CenterHeaderbar from '@/components/common/Header/CenterHeaderBar';
 import ContainerView from '@/components/common/ScreenContainer';
+import TimeTable from '@/components/common/TimeTable';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import { useMonthlySchedule } from '@/reactQuery/querys';
@@ -14,14 +13,35 @@ import Theme from '@/styles/Theme';
 import format from '@/util/format';
 import useRootStore from '@/zustand';
 
+interface Schedule {
+  crewId: number;
+  name: string;
+  scheduleId: number;
+  substituteRequest: boolean;
+  hopeCrewId: number | null;
+  hopeCrewName: string | null;
+  startTime: string;
+  endTime: string;
+  profileImage: string;
+  status?: 'mine' | 'request';
+}
+
+interface DailySchedule {
+  date: number;
+  dailySchedules: Schedule[];
+}
+
 const BossScheduleScreen = () => {
+  const { logout } = useRootStore();
+  // logout();
   const { selectedCompanyId } = useRootStore();
   const today = new Date();
-  const [calendar, setCalendar] = useState<DateData>();
-  const [selectedDate, setSelectedDate] = useState(today);
+  const [calendar, setCalendar] = useState<DateData>(format.DateToDateData(today));
+  const [selectedDate, setSelectedDate] = useState<Date>(today);
   const selectedDateString = format.dateToString(selectedDate);
-  const schedule = useMonthlySchedule(calendar?.month || today.getMonth() + 1, selectedCompanyId);
-
+  const schedule = useMonthlySchedule(calendar.month, selectedCompanyId) as DailySchedule[];
+  const selectedSchedule =
+    schedule && schedule[selectedDate.getDate() - 1] ? schedule[selectedDate.getDate() - 1].dailySchedules : [];
   const markedDates: MarkedDates =
     schedule?.reduce(
       (acc, { date, dailySchedules }) => ({
@@ -44,58 +64,26 @@ const BossScheduleScreen = () => {
 
   if (markedDates[selectedDateString]) markedDates[selectedDateString]['selected'] = true;
 
-  const timeLineEvents: TimelineEventProps[] = schedule
-    ? schedule[selectedDate.getDate() - 1].dailySchedules.map((time) => ({
-        title: time.name,
-        start: `${selectedDateString} ${time.startTime}`,
-        end: `${selectedDateString} ${time.endTime}`,
-        id: String(time.scheduleId),
-        summary: String(time.crewId),
-        color: time.hopeCrewId && time.hopeCrewName ? Theme.color.SECONDARY : Theme.color.PRIMARY,
-      }))
-    : [];
-
   const handleMonthChange = (date: DateData) => {
     setCalendar(date);
-    setSelectedDate(new Date(`${date.year}-${date.month}-01`));
+    setSelectedDate(new Date(`${date.year}-${date.month}-${String(date.day).padStart(2, '0')}`));
   };
 
   const handleDayPress = (date: DateData) => {
-    setSelectedDate(new Date(date.dateString));
+    const nextDate = new Date(date.dateString);
+    setSelectedDate(nextDate);
   };
 
-  const handleEventPress = (event: TimelineEventProps) => {
-    if (new Date(event.start) < today) return;
-
-    const isRequested = schedule
-      ? schedule.some((day) =>
-          day.dailySchedules.some(
-            (schedule) => Number(event.id) === schedule.scheduleId && schedule.hopeCrewId && schedule.hopeCrewName,
-          ),
-        )
-      : false;
-
-    const serializedEvent = JSON.stringify(event);
-
+  // 사장님은 scheduleid만 보내주면 된다!
+  const handleEventPress = (scheduleId: number) => {
+    const time = selectedSchedule.filter((item) => item.scheduleId === scheduleId)[0];
+    const start = `${selectedDateString} ${time.startTime}`;
+    const end = `${selectedDateString} ${time.endTime}`;
+    const isRequested = time.substituteRequest && time.hopeCrewId && time.hopeCrewName;
     if (isRequested) {
-      router.navigate({ pathname: '/(app)/boss/main/schedule/apply', params: { event: serializedEvent } });
+      router.navigate({ pathname: '/(app)/boss/main/schedule/apply', params: { start, end, id: scheduleId } });
     }
   };
-
-  useEffect(() => {
-    if (schedule) {
-      schedule.forEach((dayObject) => {
-        console.log(dayObject.date);
-        console.log(dayObject.dailySchedules);
-      });
-    }
-  }, [schedule]);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     refetch(); // 페이지가 포커스될 때마다 refetch 호출
-  //   }, [refetch]),
-  // );
 
   return (
     <ContainerView style={{ paddingVertical: Layout.PADDING.VERTICAL, backgroundColor: Colors.WHITE }}>
@@ -107,13 +95,7 @@ const BossScheduleScreen = () => {
         markedDates={markedDates}
         markingType="multi-dot"
       />
-      <Timeline
-        onEventPress={handleEventPress}
-        events={timeLineEvents}
-        date={selectedDateString}
-        showNowIndicator
-        scrollToNow
-      />
+      {calendar && schedule && <TimeTable schedule={selectedSchedule} handleEventPress={handleEventPress} />}
     </ContainerView>
   );
 };
