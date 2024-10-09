@@ -18,7 +18,7 @@ const GetPasswordInfo = () => {
   const { mutate: remittance } = useMutation({
     mutationFn: arbaguette.remittance,
     onSuccess: async () => {
-      router.push('/crew/authorized/banking/remittance/success');
+      router.push('/(app)/boss/main/banking/success');
     },
     onError: async (error) => {
       console.log(error);

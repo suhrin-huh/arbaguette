@@ -23,6 +23,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   async (response) => {
+    console.log('성공');
     return response;
   },
   async (error) => {
@@ -37,7 +38,9 @@ instance.interceptors.response.use(
         console.log('reIssue failed');
       }
     }
-    console.log('error', error.config.url);
+    // console.log('error', error.config.url);
+    console.log('error', error.response.data);
+
     return Promise.reject(error);
   },
 );

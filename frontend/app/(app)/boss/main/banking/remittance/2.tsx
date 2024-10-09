@@ -1,90 +1,82 @@
+// 두번째 페이지 : 송금하는 사람의 정보가 맞는지 체크!
 import Styled from '@emotion/native';
-import { useMutation } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
-import { useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
 
-import NumPad from '@/components/common/modal/PasswordModal/NumPad';
-import Progress from '@/components/common/modal/PasswordModal/Progress';
+import Button from '@/components/common/Button';
 import Text from '@/components/common/Text';
-import { useCheckAccountPassword } from '@/reactQuery/querys';
-import arbaguette from '@/services/arbaguette';
+import Theme from '@/styles/Theme';
 
-interface RemittanceInfo {
-  accountNo: string;
-  amount: string;
+interface RemittanceInfoProps {
+  [key: string]: string;
 }
-const GetPasswordInfo = ({ accountNo, amount }: RemittanceInfo) => {
-  const [password, setPassword] = useState('');
-  const [resText, setResText] = useState('');
-  const { isCorrect } = useCheckAccountPassword(password);
-  const { mutate: remittance } = useMutation({
-    mutationFn: arbaguette.remittance,
-    onSuccess: async (response) => {
-      console.log(response);
-    },
-    onError: async (error: AxiosError) => {
-      setPassword('');
-      console.log(error);
-    },
-  });
 
-  const handlePassword = (value: number) => {
-    const nextPassword = password + String(value); // 업데이트된 패스워드 값
-    setPassword(nextPassword); // 상태 업데이트
+const RemittanceInfo = () => {
+  const { accountNo, amount, userName } = useLocalSearchParams<RemittanceInfoProps>();
+  const formatToAccountNo = (number: string): string => number.replace(/(\d{6})(\d{2})(\d+)/, '$1-$2-$3');
+  const formattedNumber = (number: string): string => `${parseInt(number, 10).toLocaleString('ko-KR')} 원`;
 
-    console.log(isCorrect);
-
-    if (nextPassword.length === 4) {
-      if (!isCorrect) {
-        setTimeout(() => {
-          setPassword('');
-          setResText(`비밀번호를 다시 입력해주세요`);
-          console.log('실패');
-        }, 300);
-        return;
-      }
-      remittance({ account: accountNo, money: parseInt(amount, 10), password });
-    }
+  const handleCancle = () => {
+    router.push('/(app)/boss/main/banking');
   };
+
+  const handleRemittance = () => {
+    router.push({ pathname: '/(app)/boss/main/banking/remittance/3', params: { accountNo, amount } });
+  };
+
   return (
     <Container>
-      <ContentBox>
-        {resText ? (
+      <RemittanceInfoBox>
+        <Text size="base" color="gray">
+          {formatToAccountNo(accountNo)}
+        </Text>
+        <Text size="title">
           <Text size="title" weight="bold">
-            {resText}
-          </Text>
-        ) : (
-          <Text size="title" weight="bold">
-            비밀번호를 입력하세요.
-          </Text>
-        )}
-        <Text>{password}</Text>
-        <Progress progress={password.length} />
-      </ContentBox>
-      <NumPad onPress={handlePassword} />
+            {userName}
+          </Text>{' '}
+          님에게
+        </Text>
+        <Text size="title" weight="bold" color="primary">
+          {formattedNumber(amount)}
+        </Text>
+        <Text size="title">송금하시겠습니까?</Text>
+      </RemittanceInfoBox>
+      <ButtonGroup>
+        <Button
+          size={100}
+          buttonStyle={{ backgroundColor: Theme.color.GRAY['3'], borderRadius: Theme.layout.BORDER.SECONDARY }}
+          onPress={handleCancle}>
+          취소
+        </Button>
+        <Button size={250} onPress={handleRemittance}>
+          보내기
+        </Button>
+      </ButtonGroup>
     </Container>
   );
 };
 
 const Container = Styled.View(({ theme }) => ({
   flex: 1,
-  position: 'relative',
   flexDirection: 'column',
   justifyContent: 'space-between',
   backgroundColor: 'white',
-  // paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  // paddingVertical: theme.layout.PADDING.VERTICAL,
-}));
-
-const ContentBox = Styled.View(({ theme }) => ({
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 30,
-  // backgroundColor: theme.color.PRIMARY,
   paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
   paddingVertical: theme.layout.PADDING.VERTICAL,
 }));
 
-export default GetPasswordInfo;
+const RemittanceInfoBox = Styled.View(() => ({
+  flex: 1,
+  height: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 10,
+}));
+
+const ButtonGroup = Styled.View(() => ({
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginHorizontal: 0,
+  gap: 10,
+}));
+
+export default RemittanceInfo;

@@ -8,11 +8,11 @@ export default {
     return axios.get<GetAccountBalanceResponse>('/api/bank/account');
   },
   /**
-   * 계좌 비밀번호 일치 여부 확인하기
-   * @param password 비밀번호
+   * 송금 대상 정보 조회
+   * @param account 계좌번호
    */
-  checkAccountPassword: async (password: Password) => {
-    return axios.get<checkAccountPasswordResponse>(`/api/user/checkPassword?accountPassword=${password}`);
+  checkAccountUser: async (account: BankAccount) => {
+    return axios.get<CheckAccountUserResponse>(`/api/bank/remittance`, { params: { account } });
   },
   /**
    * 송금하기

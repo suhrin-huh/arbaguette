@@ -6,14 +6,15 @@ import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-nativ
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
 import Text from '@/components/common/Text';
-import { useAccountBalance } from '@/reactQuery/querys';
+import { useAccountBalance, useCheckAccountUser } from '@/reactQuery/querys';
 
 const GetRemittanceInfo = () => {
   const { accountBalance } = useAccountBalance();
   const [accountNo, setAccountNo] = useState<string>();
   const [amount, setAmount] = useState<string>();
   const [isValid, setIsValid] = useState(true);
-  const balance = accountBalance.money;
+  const balance = accountBalance?.money;
+  const { userName } = useCheckAccountUser(accountNo ? accountNo : '');
 
   const handleAccountNo = (e: NativeSyntheticEvent<TextInputChangeEventData>): void => {
     setAccountNo(e.nativeEvent.text);
@@ -23,16 +24,17 @@ const GetRemittanceInfo = () => {
     const text = e.nativeEvent.text;
     const numericValue = text.replace(/[^0-9]/g, '');
     let amountNumber = parseInt(numericValue, 10);
+    const balanceNumber = balance ? parseInt(balance, 10) : 0;
 
     if (isNaN(amountNumber)) {
       amountNumber = 0;
     }
 
-    if (amountNumber > balance) {
-      setAmount(balance.toString());
+    if (amountNumber > balanceNumber) {
+      setAmount(balance?.toString());
       setIsValid(false);
     } else {
-      setAmount(numericValue);
+      setAmount(text);
       setIsValid(true);
     }
   };
@@ -46,7 +48,7 @@ const GetRemittanceInfo = () => {
   };
 
   const goToNext = (): void => {
-    router.push({ pathname: '/boss/main/banking/remittance/2', params: { accountNo, amount } });
+    router.push({ pathname: '/(app)/boss/main/banking/remittance/2', params: { accountNo, amount, userName } });
   };
 
   return (
@@ -80,7 +82,7 @@ const GetRemittanceInfo = () => {
           />
         </InputWrapper>
       </ContentWrapper>
-      <Button type="primary" onPress={goToNext}>
+      <Button type="primary" onPress={goToNext} disabled={!accountNo || !amount || !userName}>
         다음
       </Button>
     </Container>

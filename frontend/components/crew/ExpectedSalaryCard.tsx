@@ -12,19 +12,11 @@ import SalaryToggleCard from '../common/SalaryToggleCard';
 const ExpectedSalaryCard = () => {
   const animation = useRef<LottieView>(null);
   const [isSalaryVisible, setIsSalaryVisible] = useState(false);
-  const { estimatedSalary, isLoading } = useMonthlyEstimatedSalary();
+  const { estimatedSalary } = useMonthlyEstimatedSalary();
 
   const handlePress = () => {
     setIsSalaryVisible((prev) => !prev);
   };
-
-  if (isLoading) {
-    return (
-      <SalaryBox onPress={handlePress}>
-        <Text>예상 월급을 계산중입니다.</Text>
-      </SalaryBox>
-    );
-  }
 
   if (isSalaryVisible && estimatedSalary) {
     return <SalaryToggleCard salary={estimatedSalary} onPress={handlePress} />;
@@ -55,6 +47,7 @@ const SalaryBox = Styled.TouchableOpacity(({ theme }) => ({
   justifyContent: 'center',
   gap: 10,
   width: '100%',
+  height: 200,
   backgroundColor: 'white',
   paddingBottom: 20,
   borderRadius: theme.layout.BORDER.SECONDARY,
