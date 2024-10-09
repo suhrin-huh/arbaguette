@@ -69,4 +69,14 @@ interface RegistCrewSlice {
   setRegistWorkingDayInfoId: (workingDayInfoId: number) => void;
 }
 
-type RootState = CertifiedPaperSlice & CompanyInfoSlice & AuthSlice & RegistCrewSlice & SelectedCompanySlice;
+type RootState = CertifiedPaperSlice &
+  CompanyInfoSlice &
+  AuthSlice &
+  RegistCrewSlice &
+  SelectedCompanySlice &
+  SpreadBreadSlice;
+
+interface SpreadBreadSlice {
+  spreadBread: Money;
+  setSpreadBread: (val: Money) => void;
+}

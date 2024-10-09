@@ -98,4 +98,12 @@ export default {
   sendSalaryReceipt: async (sendSalaryData: SendSalaryReceiptResponseData) => {
     return axios.post<SendSalaryReceiptResponse>('/api/boss/receipt', sendSalaryData);
   },
+  /**
+   * 선착순으로 빵을 뿌리는 메서드
+   * @param money 뿌릴 빵의 양
+   * @param companyId 사업장 ID
+   */
+  throwBread: async ({ money, companyId }: { money: Money; companyId: CompanyId }) => {
+    return axios.post<ThrowBreadResponse>('/api/bonus', { money, companyId });
+  },
 };

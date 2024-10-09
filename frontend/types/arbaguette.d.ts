@@ -309,6 +309,11 @@ interface GetAccountBalanceResponseData {
   money: string;
 }
 
+interface ThrowBreadResponseData {
+  money: Money;
+  companyId: CompanyId;
+}
+
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type ReissueResponse = ArbaguetteResponse<ReissueResponseData>;
@@ -338,3 +343,4 @@ type GetAccountBalanceResponse = ArbaguetteResponse<GetAccountBalanceResponseDat
 type RemittanceResponse = ArbaguetteResponse<void>;
 type GetExpectedExpensesResponse = ArbaguetteResponse<GetExpectedExpensesResponseData>;
 type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseData>;
+type ThrowBreadResponse = ArbaguetteResponse<ThrowBreadResponseData>;
