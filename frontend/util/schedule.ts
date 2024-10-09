@@ -29,7 +29,7 @@ interface ScheduleResponse {
 }
 
 const getModifiedSchedule = (schedule: ScheduleRequest[]) => {
-  const { crewId, role, selectedCompanyId } = useRootStore.getState();
+  const { crewId, role } = useRootStore.getState();
   // role에 따라 다른 데이터 처리
   const processSchedules = (schedules: ScheduleRequest[]): ScheduleResponse[] => {
     if (role === 'CREW') {
@@ -60,7 +60,7 @@ const getModifiedSchedule = (schedule: ScheduleRequest[]) => {
         };
       }
       // 대타 요청이 들어왔으며, 다른 사람이 아직 신청하기 전이라면 대타 신청 가능!
-      if (schedule.substituteRequest && !schedule.hopeCrewId) {
+      if (schedule.substituteRequest && !schedule.hopeCrewId && !schedule.hopeCrewName) {
         return {
           ...schedule,
           status: 'request',
