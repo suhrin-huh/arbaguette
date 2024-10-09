@@ -1,12 +1,10 @@
 import styled from '@emotion/native';
 import { useRouter } from 'expo-router';
-import { useEffect } from 'react';
-import { ScrollView, StatusBar } from 'react-native';
+import { ScrollView } from 'react-native';
 
 import CrewCard from '@/components/boss/management/CrewCard';
 import NoneCard from '@/components/boss/management/NoneScheduleCard';
 import Button from '@/components/common/Button';
-import LeftHeaderbar from '@/components/common/Header/LeftHeaderBar';
 import ContainerView from '@/components/common/ScreenContainer';
 import Colors from '@/constants/Colors';
 import { useCrewMemberList } from '@/reactQuery/querys';
@@ -71,17 +69,12 @@ const BossManagementScreen = () => {
     router.push('/boss/main/management/register');
   };
 
-  useEffect(() => {
-    // router.replace('/boss/main/management');
-    // console.log(crewList);
-  }, []);
-
   return (
     <InnerContainer
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         justifyContent: 'flex-start',
-        paddingBottom: 60,
+        paddingBottom: 120,
       }}>
       <ContainerView>
         <MonthButtonArea>
