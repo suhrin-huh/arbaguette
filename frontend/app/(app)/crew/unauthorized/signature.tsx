@@ -113,7 +113,7 @@ const SignContractBox = () => {
         <InfoHeader>
           <InfoTitle>서명을 입력해주세요.</InfoTitle>
           <InfoTitle>서명이 완료되면</InfoTitle>
-          <InfoTitle>직원이 계약서를 전달받아요.</InfoTitle>
+          <InfoTitle>근로계약이 체결되요.</InfoTitle>
         </InfoHeader>
         <SignContainer>
           <Signature
