@@ -1,11 +1,9 @@
 package com.lucky.arbaguette.substitute.service;
 
+import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
-import com.lucky.arbaguette.common.exception.BadRequestException;
-import com.lucky.arbaguette.common.exception.DuplicateException;
-import com.lucky.arbaguette.common.exception.ForbiddenException;
-import com.lucky.arbaguette.common.exception.NotFoundException;
-import com.lucky.arbaguette.common.exception.UnAuthorizedException;
+import com.lucky.arbaguette.common.exception.*;
+import com.lucky.arbaguette.common.service.NotificationService;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
@@ -17,10 +15,11 @@ import com.lucky.arbaguette.substitute.dto.response.SubstituteAgreeResponse;
 import com.lucky.arbaguette.substitute.dto.response.SubstituteSaveResponse;
 import com.lucky.arbaguette.substitute.dto.response.SubstitutesResponse;
 import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Transactional
@@ -31,6 +30,8 @@ public class SubstituteService {
     private final CrewRepository crewRepository;
     private final ScheduleRepository scheduleRepository;
     private final CompanyRepository companyRepository;
+    private final NotificationService notificationService;
+    private final BossRepository bossRepository;
 
     public SubstituteSaveResponse saveSubstitute(CustomUserDetails userDetails, SubstituteRequest request) {
         Crew crew = crewRepository.findByEmail(userDetails.getUsername())
@@ -51,6 +52,15 @@ public class SubstituteService {
                 .permit(false)
                 .companyId(crew.getCompany().getCompanyId())
                 .build());
+
+        for (Crew reqcrew : crewRepository.findByCompany(crew.getCompany())) {
+            notificationService.sendNotification(
+                    reqcrew.getExpoPushToken(),
+                    "대타 요청",
+                    schedule.getStartTime() + "부터" + schedule.getEndTime() + "까지의 대타를 구하고 있어요 !",
+                    "arbaguette://crew/authorized/schedule"
+            );
+        }
         return SubstituteSaveResponse.of(subStitute);
     }
 
@@ -105,6 +115,13 @@ public class SubstituteService {
                 .orElseThrow(() -> new BadRequestException("이미 마감된 대타입니다."));
 
         substitute.applySubstitute(crew);
+
+        notificationService.sendNotification(
+                crew.getCompany().getBoss().getBluetoothToken(),
+                "대타 승인 요청",
+                substitute.getCrew().getName() + "->" + crew.getName() + " 대타 승인을 대기하고 있어요!",
+                "arbaguette://boss/main/schedule/apply?start=" + schedule.getStartTime() + "&end=" + schedule.getEndTime() + "&id=" + schedule.getScheduleId()
+        );
     }
 
 }
