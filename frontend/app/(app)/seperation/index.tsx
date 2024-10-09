@@ -1,17 +1,16 @@
 import styled from '@emotion/native';
-import { Mutation, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, Easing, Image, Modal, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Alert, Animated, Easing, Image, Modal, TouchableOpacity } from 'react-native';
 
-import Button from '@/components/common/Button';
 import ContainerView from '@/components/common/ScreenContainer';
 import Colors from '@/constants/Colors';
 // import useBleScanner from '@/hooks/useBleScanner';
 import arbaguette from '@/services/arbaguette';
+import useRootStore from '@/zustand';
 
 import gift from '../../../assets/images/gift.png';
-import person from '../../../assets/images/unknown_person.jpg';
 
 const OutLineCircle = styled(Animated.View)(({ theme }) => ({
   width: 500,
@@ -85,39 +84,21 @@ const FirstModal = styled(Modal)`
 `;
 
 const SeperationScreen = () => {
-  // const { bleDevices } = useBleScanner();
-  // console.log(bleDevices);
   const { type } = useLocalSearchParams();
-  console.log(type);
+  const { spreadBread, setSpreadBread } = useRootStore();
   const { mutate: throwBread } = useMutation({
     mutationFn: ({ money, companyId }: { money: Money; companyId: CompanyId }) =>
       arbaguette.throwBread({ money, companyId }),
     onSuccess: () => {
-      console.log('빵 뿌리기 성공');
+      Alert.alert('빵 뿌리기 성공');
     },
     onError: () => {
       console.log('빵 뿌리기 실패');
     },
   });
-  // const aroundUser = [
-  //   { id: 0, name: '오렌지', profileImage: person },
-  //   { id: 1, name: '김딸기', profileImage: person },
-  //   { id: 2, name: '박수박', profileImage: person },
-  //   { id: 3, name: '강사과', profileImage: person },
-  //   { id: 4, name: '손감귤', profileImage: person },
-  //   { id: 5, name: '황참외', profileImage: person },
-  // ];
-  // const aroundUser = bleDevices.map((device) => ({
-  //   id: device.id,
-  //   name: device.name,
-  //   profileImage: person,
-  // }));
-
   const outerOpacity = useRef(new Animated.Value(0.3)).current;
   const middleOpacity = useRef(new Animated.Value(0.6)).current;
   const innerOpacity = useRef(new Animated.Value(0.8)).current;
-
-  const { width: screenWidth, height: screenHeight } = Dimensions.get('window'); // 화면 크기
 
   useEffect(() => {
     const animateCircle = (animatedValue: Animated.Value, initialValue: number, finalValue: number) => {
@@ -153,14 +134,17 @@ const SeperationScreen = () => {
   };
 
   const startAdvertise = () => {
-    throwBread({ money: 1000, companyId: 2 });
+    console.log(spreadBread);
+    throwBread({ money: spreadBread, companyId: 2 });
   };
 
   useEffect(() => {
     setTimeout(() => {
-      router.push({ pathname: '/seperation/firstModal' });
+      router.navigate({ pathname: '/seperation/firstModal' });
     }, 300);
-  }, []);
+
+    return () => setSpreadBread(0);
+  }, [setSpreadBread]);
 
   return (
     <ContainerView style={{ backgroundColor: Colors.PRIMARY }}>
