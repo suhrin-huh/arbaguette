@@ -146,32 +146,33 @@ const useGetBankHistory = () => {
   const bankHistory = queryResult.data?.data.data || null;
   return { bankHistory, ...queryResult };
 };
-
 /**
- * 계좌 비밀번호 일치 여부 확인 쿼리 훅
+ * 송금 대상 정보 조회 쿼리 훅
  */
-const useCheckAccountPassword = (password: string) => {
+const useCheckAccountUser = (account: BankAccount) => {
   const queryResult = useQuery({
-    queryKey: keys.checkAccountPassword(password),
-    queryFn: () => arbaguette.checkAccountPassword(password),
+    queryKey: keys.checkAccountUser(account),
+    queryFn: () => arbaguette.checkAccountUser(account),
+    enabled: account.length === 16,
+  });
+  const userName = queryResult.data?.data.data.userName || null;
+  return { userName, ...queryResult };
+};
+/**
+ * 송금하기 쿼리 훅
+ * @param account 계좌번호
+ * @param money 금액
+ * @param password 비밀번호
+ */
+const useRemittance = (account: BankAccount, money: string, password: Password) => {
+  const queryResult = useQuery({
+    queryKey: keys.remittance(account, money, password),
+    queryFn: () => arbaguette.remittance({ account, money, password }),
     enabled: password.length === 4,
   });
-  const isCorrect = queryResult.status === 'success';
-  return { isCorrect, ...queryResult };
-};
-/**
- * 사장님 이번달 예상지출 조회 쿼리 훅
- */
-const useGetExpectedPayroll = () => {
-  const queryResult = useQuery({
-    queryKey: keys.bankHistory(),
-    queryFn: () => arbaguette.getExpectedPayroll(),
-  });
 
-  const expectedPayroll = queryResult.data?.data || null;
-  return { expectedPayroll, ...queryResult };
+  return { ...queryResult };
 };
-
 /**
  * 월별 스케줄을 가져오는 쿼리 훅
  * @param month 조회할 월
@@ -183,11 +184,10 @@ const useMonthlySchedule = (month: Month, companyId?: CompanyId) => {
     queryFn: () => arbaguette.getMonthlySchedule(month, companyId),
   });
 
-  if (!data) return null;
+  if (!data) return [];
 
   return data.data.data.monthlyScheduleList;
 };
-
 /**
  * 근무 내역을 가져오는 쿼리 훅
  * @param date 조회할 날짜
@@ -220,7 +220,6 @@ const useEmploymentContract = (crewId: CrewId) => {
     queryKey: keys.employmentContract(crewId),
     queryFn: () => arbaguette.getEmploymentContract(crewId),
   });
-
   if (!data) return null;
 
   return data.data.data;
@@ -228,7 +227,7 @@ const useEmploymentContract = (crewId: CrewId) => {
 
 export {
   useAccountBalance,
-  useCheckAccountPassword,
+  useCheckAccountUser,
   useCompanyList,
   useCrewMemberList,
   useCrewMemeberDetail,
@@ -237,11 +236,11 @@ export {
   useEmploymentContract,
   useExpectedExpenses,
   useGetBankHistory,
-  useGetExpectedPayroll,
   useMonthlyAccumulatedSalary,
   useMonthlyEstimatedSalary,
   useMonthlySchedule,
   useNearCommuteInfo,
   usePayStub,
+  useRemittance,
   useWorkHistory,
 };

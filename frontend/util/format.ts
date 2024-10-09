@@ -41,4 +41,23 @@ export default {
 
     return { hours, minutes, seconds };
   },
+  timeToDecimalHours: (time: string) => {
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    return hours + minutes / 60 + seconds / 3600 - 8;
+  },
+  DateToDateData: (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
+    const day = date.getDate();
+    const dateString = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    const timestamp = date.getTime();
+
+    return {
+      dateString,
+      day,
+      month,
+      timestamp,
+      year,
+    };
+  },
 };

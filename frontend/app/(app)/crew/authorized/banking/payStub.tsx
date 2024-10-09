@@ -20,7 +20,7 @@ const PayStub = () => {
           <SalaryDocument payStub={payStub} />
         </View>
       ) : (
-        <NoContent />
+        <NoContent message={['해당 월의 급여명세서가 없습니다.']} />
       )}
     </Container>
   );
