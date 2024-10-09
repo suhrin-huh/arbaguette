@@ -49,6 +49,13 @@ export default {
     return axios.post<PostRequestSubstituteResponse>('/api/substitute', { scheduleId });
   },
   /**
+   * 알바생 대타 수락
+   * @param scheduleId 스케줄 아이디
+   */
+  takeSubstitute: async (scheduleId: ScheduleId) => {
+    return axios.put<TakeSubstituteResponse>('/api/substitute/apply', { scheduleId });
+  },
+  /**
    * 월별 스케줄 조회
    * @param date 조회할 날짜
    */
@@ -70,5 +77,11 @@ export default {
     } as any);
 
     return await axios.post('/api/contract/crew', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+  },
+  /**
+   * 스케줄 생성
+   */
+  makeSchedule: async () => {
+    return axios.post('/api/schedule/crew');
   },
 };

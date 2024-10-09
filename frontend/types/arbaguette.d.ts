@@ -211,7 +211,7 @@ interface DailySchedule {
   crewId: CrewId;
   name: CrewName;
   scheduleId: number;
-  SubstituteRequest: boolean;
+  substituteRequest: boolean;
   startTime: StartTime;
   endTime: EndTime;
   hopeCrewId: CrewId | null;
@@ -309,9 +309,14 @@ interface GetAccountBalanceResponseData {
   money: string;
 }
 
+
 interface ThrowBreadResponseData {
   money: Money;
   companyId: CompanyId;
+}
+
+interface CheckAccountUserResponseData {
+  userName: UserName;
 }
 
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
@@ -336,11 +341,15 @@ type GetMonthlyScheduleResponse = ArbaguetteResponse<GetMonthlyScheduleResponseD
 type GetWorkHistoryResponse = ArbaguetteResponse<GetWorkHistoryResponseData>;
 type PostRequestSubstituteResponse = ArbaguetteResponse<PostRequestSubstituteResponseData>;
 type GetEmploymentContractResponse = ArbaguetteResponse<GetEmploymentContractResponseData>;
-type checkAccountPasswordResponse = ArbaguetteResponse<void>;
 type AgreeSubstituteResponse = ArbaguetteResponse<ScheduleId>;
 type GetBankHistoryResponse = ArbaguetteResponse<GetBankHistoryResponseData>;
 type GetAccountBalanceResponse = ArbaguetteResponse<GetAccountBalanceResponseData>;
 type RemittanceResponse = ArbaguetteResponse<void>;
 type GetExpectedExpensesResponse = ArbaguetteResponse<GetExpectedExpensesResponseData>;
 type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseData>;
+<<<<<<< frontend/types/arbaguette.d.ts
 type ThrowBreadResponse = ArbaguetteResponse<ThrowBreadResponseData>;
+=======
+type TakeSubstituteResponse = ArbaguetteResponse<void>;
+type CheckAccountUserResponse = ArbaguetteResponse<CheckAccountUserResponseData>;
+>>>>>>> frontend/types/arbaguette.d.ts

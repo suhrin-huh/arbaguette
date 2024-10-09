@@ -6,6 +6,7 @@ import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-nativ
 
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
+import { useNotification } from '@/context/NotificationContext';
 import arbaguette from '@/services/arbaguette';
 import useRootStore from '@/zustand';
 
@@ -43,9 +44,11 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { expoPushToken } = useNotification();
   const { mutate: login } = useMutation({
     mutationFn: arbaguette.login,
     onSuccess: async (response) => {
+      await arbaguette.storeExpoToken(expoPushToken, response.data.data.accessToken);
       storeAuth(response.data.data);
     },
     onError: async (error: AxiosError) => {

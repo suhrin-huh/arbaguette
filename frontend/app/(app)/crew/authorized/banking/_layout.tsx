@@ -1,7 +1,4 @@
-import { router, Stack } from 'expo-router';
-
-import BellButton from '@/components/crew/BellButton';
-import Theme from '@/styles/Theme';
+import { Stack } from 'expo-router';
 
 const BankingLayout = () => {
   return (

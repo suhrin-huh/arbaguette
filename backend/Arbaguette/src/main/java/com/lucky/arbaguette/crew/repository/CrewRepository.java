@@ -26,4 +26,9 @@ public interface CrewRepository extends JpaRepository<Crew, Integer> {
     Optional<Crew> findByAccount(String account);
 
     boolean existsByAccount(String account);
+
+    Optional<Crew> findByBluetoothToken(String bluetoothToken);
+
+    boolean existsByExpoPushToken(String expoPushToken);
+
 }

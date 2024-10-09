@@ -1,5 +1,5 @@
 import Styled from '@emotion/native';
-import { router } from 'expo-router';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { Image } from 'react-native';
 
 import FireworkImage from '@/assets/images/firework.png';
@@ -7,6 +7,14 @@ import ExpectedSalaryCard from '@/components/boss/ExpectedSalaryCard';
 import BankingCard from '@/components/common/BankingCard';
 
 const BossBankingScreen = () => {
+  const { getParent } = useNavigation();
+
+  useFocusEffect(() => {
+    getParent()?.setOptions({
+      title: '빵Pay',
+    });
+  });
+
   return (
     <ScreenContainer>
       <BankingCard />

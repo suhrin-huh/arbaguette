@@ -29,6 +29,7 @@ public class ClickConsumer {
     private final String TOPIC_NAME = "clickTopic";
     private final ClickRepository clickRepository;
     private final WebClient webClient;
+    private final NotificationService notificationService;
 
     @Transactional
     @KafkaListener(topics = TOPIC_NAME, groupId = "group_1")
@@ -44,6 +45,7 @@ public class ClickConsumer {
                     .orElseGet(() -> clickRepository.save(
                             Click.builder()
                                     .bonusId(kafkaMsg.bonusId())
+                                    .expoPushToken(kafkaMsg.expoPushToken())
                                     .accountNo(kafkaMsg.accountNo())
                                     .userKey(kafkaMsg.userKey())
                                     .build()
@@ -86,6 +88,13 @@ public class ClickConsumer {
                             .block();
 
                     log.info(clicked.getAccountNo()+"송금완료");
+
+                    notificationService.sendNotification(
+                            clicked.getExpoPushToken(),
+                            clicked.getCnt()*100 + "원 입급",
+                            "빵뿌리기 이벤트 입금",
+                            "arbaguette://crew/authorized/banking/transaction"
+                    );
 
 
                     Thread.sleep(1000);

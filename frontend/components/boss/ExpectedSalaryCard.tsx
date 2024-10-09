@@ -5,32 +5,24 @@ import { View } from 'react-native';
 
 import MonthlyEarnedIcon from '@/assets/lottie/monthly_earned.json';
 import Text from '@/components/common/Text';
-import { useGetExpectedPayroll } from '@/reactQuery/querys';
+import { useExpectedExpenses } from '@/reactQuery/querys';
+import useRootStore from '@/zustand';
 
 import SalaryToggleCard from '../common/SalaryToggleCard';
 
 const ExpectedSalaryCard = () => {
+  const { selectedCompanyId } = useRootStore();
   const animation = useRef<LottieView>(null);
   const [isSalaryVisible, setIsSalaryVisible] = useState(false);
-  const { expectedPayroll, isLoading } = useGetExpectedPayroll();
-  const { originSalary, tax, allowance } = useGetExpectedPayroll();
-
+  const expectedExpenses = useExpectedExpenses(selectedCompanyId);
   const handlePress = () => {
     setIsSalaryVisible((prev) => !prev);
   };
 
-  const totalAmount = originSalary + allowance - tax;
-
-  if (isLoading) {
-    return (
-      <SalaryBox onPress={handlePress}>
-        <Text>예상 급여를 계산중입니다.</Text>
-      </SalaryBox>
-    );
-  }
-
-  if (isSalaryVisible && expectedPayroll) {
-    return <SalaryToggleCard salary={totalAmount} />;
+  if (isSalaryVisible && expectedExpenses) {
+    const { originSalary, tax, allowance } = expectedExpenses;
+    const totalAmount = originSalary + allowance - tax;
+    return <SalaryToggleCard salary={totalAmount} onPress={handlePress} />;
   }
 
   return (
@@ -58,6 +50,7 @@ const SalaryBox = Styled.TouchableOpacity(({ theme }) => ({
   justifyContent: 'center',
   gap: 10,
   width: '100%',
+  height: 200,
   backgroundColor: 'white',
   paddingBottom: 20,
   borderRadius: theme.layout.BORDER.SECONDARY,

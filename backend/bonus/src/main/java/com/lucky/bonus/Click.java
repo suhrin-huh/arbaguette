@@ -21,6 +21,8 @@ public class Click {
 
     private int bonusId;
 
+    private String expoPushToken;
+
     private String accountNo;
 
     private String userKey;
@@ -28,8 +30,9 @@ public class Click {
     private int cnt = 0;
 
     @Builder
-    private Click(int bonusId, String accountNo, String userKey){
+    private Click(int bonusId, String expoPushToken, String accountNo, String userKey){
         this.bonusId = bonusId;
+        this.expoPushToken = expoPushToken;
         this.accountNo = accountNo;
         this.userKey = userKey;
     }

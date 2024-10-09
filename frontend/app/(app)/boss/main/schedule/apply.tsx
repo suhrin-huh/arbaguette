@@ -1,13 +1,14 @@
 import Styled from '@emotion/native';
+import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Alert, Text } from 'react-native';
-import type { TimelineEventProps } from 'react-native-calendars';
+import { useState } from 'react';
+import { Alert } from 'react-native';
 
 import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
 import BottomSheetModal from '@/components/common/modal/BottomSheetModal';
+import keys from '@/reactQuery/keys';
 import arbaguette from '@/services/arbaguette';
 import format from '@/util/format';
 
@@ -32,14 +33,16 @@ const ContentText = Styled.Text(({ theme }) => ({
 }));
 
 const BossScheduleApplyScreen = () => {
-  const { event } = useLocalSearchParams<{ event: string }>();
-  const { end, start, id } = JSON.parse(event) as TimelineEventProps;
+  const { start, end, id } = useLocalSearchParams();
+  const { dismiss } = useBottomSheetModal();
+  const queryClient = useQueryClient();
   const [isApplied, setIsApplied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const { mutate: agreeSubstitute } = useMutation({
     mutationFn: arbaguette.agreeSubstitute,
     onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: keys.common(), refetchType: 'all' });
       setIsApplied(true);
       setIsLoading(false);
     },
@@ -55,7 +58,7 @@ const BossScheduleApplyScreen = () => {
 
   const completeHandler = () => {
     setIsApplied(false);
-    router.navigate('/boss/main/schedule');
+    dismiss();
   };
 
   return (
@@ -69,9 +72,9 @@ const BossScheduleApplyScreen = () => {
           ) : (
             <>
               <Content>
-                <ContentText>{format.dateToKrString(new Date(start))}</ContentText>
+                <ContentText>{format.dateToKrString(new Date(start as string))}</ContentText>
                 <ContentText>부터</ContentText>
-                <ContentText>{format.dateToKrString(new Date(end))}</ContentText>
+                <ContentText>{format.dateToKrString(new Date(end as string))}</ContentText>
                 <ContentText>까지 대타를 승인하시겠습니까?</ContentText>
               </Content>
               <Button onPress={applyHandler}>대타 승인</Button>

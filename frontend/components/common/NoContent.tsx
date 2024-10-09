@@ -2,15 +2,18 @@ import Styled from '@emotion/native';
 
 import Text from '@/components/common/Text';
 
-const NoContent = () => {
+interface Message {
+  message: string[];
+}
+
+const NoContent = ({ message }: Message) => {
   return (
     <NoContentBox>
-      <Text size="sub" weight="bold">
-        해당 월의 급여명세서가
-      </Text>
-      <Text size="sub" weight="bold">
-        존재하지 않습니다.
-      </Text>
+      {message.map((item, idx) => (
+        <Text size="sub" weight="bold" key={idx}>
+          {item}
+        </Text>
+      ))}
     </NoContentBox>
   );
 };

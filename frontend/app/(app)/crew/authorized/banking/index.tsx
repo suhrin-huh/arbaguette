@@ -1,5 +1,5 @@
 import Styled from '@emotion/native';
-import { router } from 'expo-router';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
 import { Image, View } from 'react-native';
 
 import FireworkImage from '@/assets/images/firework.png';
@@ -10,6 +10,14 @@ import Text from '@/components/common/Text';
 import ExpectedSalaryCard from '@/components/crew/ExpectedSalaryCard';
 
 const CrewBankingScreen = () => {
+  const { getParent } = useNavigation();
+
+  useFocusEffect(() => {
+    getParent()?.setOptions({
+      title: '빵Pay',
+    });
+  });
+
   return (
     <Screen type="scroll" viewOption={{ style: { backgroundColor: 'white' } }}>
       <BankingCard />

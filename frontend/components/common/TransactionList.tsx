@@ -69,7 +69,7 @@ const TransactionList = () => {
       </View>
     );
   }
-  return <NoContent message="입출금 내역이 없습니다." />;
+  return <NoContent message={['입출금 내역이 없습니다.']} />;
 };
 
 const Container = Styled.FlatList(() => ({

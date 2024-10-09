@@ -1,48 +1,67 @@
 import styled from '@emotion/native';
+import { useQueryClient } from '@tanstack/react-query';
+import type { Notification } from 'expo-notifications';
+import { dismissNotificationAsync } from 'expo-notifications';
+import { router } from 'expo-router';
 import React from 'react';
-import { Text, View } from 'react-native';
 
-const NotiContainer = styled(View)(({ theme }) => ({
+import keys from '@/reactQuery/keys';
+
+const NotiContainer = styled.Pressable(({ theme }) => ({
   gap: 4,
 }));
 
-const NotiHeader = styled(View)(({ theme }) => ({
+const NotiHeader = styled.View(({ theme }) => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
 }));
 
-const NotiTitle = styled(Text)(({ theme }) => ({
+const NotiTitle = styled.Text(({ theme }) => ({
   color: theme.color.GRAY[3],
   fontSize: 16,
   fontWeight: '500',
 }));
 
-const NotiDate = styled(Text)(({ theme }) => ({
+const NotiDate = styled.Text(({ theme }) => ({
   color: theme.color.GRAY[3],
   fontSize: 14,
   fontWeight: '400',
 }));
 
-const NotiContent = styled(Text)(({ theme }) => ({
+const NotiContent = styled.Text(({ theme }) => ({
   fontSize: 16,
   fontWeight: '400',
 }));
 
-const NotificationItem = ({ notiData }: { notiData: any }) => {
-  const createdAt = new Date(notiData.createdAt);
+interface NotificationItemProps {
+  notification: Notification;
+}
+
+const NotificationItem = ({ notification }: NotificationItemProps) => {
+  const queryClient = useQueryClient();
+  const createdAt = new Date(notification.date);
   const formattedDate = createdAt.toLocaleDateString('ko-KR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
   });
+
+  const handleLink = async () => {
+    await dismissNotificationAsync(notification.request.identifier);
+    await queryClient.invalidateQueries({ queryKey: keys.notification() });
+    const { url } = notification.request.content.data;
+    if (!url) return;
+    router.push(url);
+  };
+
   return (
-    <NotiContainer>
+    <NotiContainer onPress={handleLink}>
       <NotiHeader>
-        <NotiTitle>{notiData.title}</NotiTitle>
+        <NotiTitle>{notification.request.content.title}</NotiTitle>
         <NotiDate>{formattedDate}</NotiDate>
       </NotiHeader>
-      <NotiContent>{notiData.content}</NotiContent>
+      <NotiContent>{notification.request.content.body}</NotiContent>
     </NotiContainer>
   );
 };

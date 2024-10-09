@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "275247255719",
+    "project_id": "arbaguette-55602",
+    "storage_bucket": "arbaguette-55602.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275247255719:android:ad0a47a55d7e721e2b4b82",
+        "android_client_info": {
+          "package_name": "com.ssafy.c101.arbaguette"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-qHYNpAr858Mj7a4MMOrCKg0LDz3nLtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

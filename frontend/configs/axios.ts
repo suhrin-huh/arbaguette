@@ -23,21 +23,24 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   async (response) => {
+    console.log('성공');
     return response;
   },
   async (error) => {
     if (error.response.status === 401 && error.response.data.code === 418) {
       try {
         const { refreshToken } = useRootStore.getState();
-        const response = await instance.post('/api/user/reissue', { refreshToken });
-        const { accessToken, newRefreshToken } = response.data;
+        const { data } = await instance.post<ReissueResponse>('/api/user/reissue', { refreshToken });
+        const { accessToken, refreshToken: newRefreshToken } = data.data;
         useRootStore.getState().updateTokens(accessToken, newRefreshToken);
         return instance.request(error.config);
       } catch {
         console.log('reIssue failed');
       }
     }
-    console.log('error', error.config.url);
+    // console.log('error', error.config.url);
+    console.log('error', error.response.data);
+
     return Promise.reject(error);
   },
 );

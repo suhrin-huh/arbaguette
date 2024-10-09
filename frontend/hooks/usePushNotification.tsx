@@ -1,7 +1,19 @@
 import * as Notifications from 'expo-notifications';
+import { dismissNotificationAsync } from 'expo-notifications';
+import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 
 import { registerForPushNotificationsAsync } from '@/configs/notification';
+import ReactQueryClient from '@/configs/queryClient';
+import keys from '@/reactQuery/keys';
+
+function redirect(notification: Notifications.Notification) {
+  const { url } = notification.request.content.data;
+  console.log(url);
+  if (url) {
+    router.push(url);
+  }
+}
 
 const usePushNotification = () => {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -14,12 +26,14 @@ const usePushNotification = () => {
       .then((token) => setExpoPushToken(token ?? ''))
       .catch((error: any) => setExpoPushToken(`${error}`));
 
-    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+    notificationListener.current = Notifications.addNotificationReceivedListener(async (notification) => {
+      await ReactQueryClient.instance.invalidateQueries({ queryKey: keys.all });
       setNotification(notification);
     });
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response) => {
+      await dismissNotificationAsync(response.notification.request.identifier);
+      redirect(response.notification);
     });
 
     return () => {

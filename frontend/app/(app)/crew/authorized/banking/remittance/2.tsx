@@ -11,7 +11,7 @@ interface RemittanceInfoProps {
 }
 
 const RemittanceInfo = () => {
-  const { accountNo, amount, name } = useLocalSearchParams<RemittanceInfoProps>();
+  const { accountNo, amount, userName } = useLocalSearchParams<RemittanceInfoProps>();
   const formatToAccountNo = (number: string): string => number.replace(/(\d{6})(\d{2})(\d+)/, '$1-$2-$3');
   const formattedNumber = (number: string): string => `${parseInt(number, 10).toLocaleString('ko-KR')} 원`;
 
@@ -29,15 +29,16 @@ const RemittanceInfo = () => {
         <Text size="base" color="gray">
           {formatToAccountNo(accountNo)}
         </Text>
-        <Text size="title" weight="bold">
-          {name} 님에게
+        <Text size="title">
+          <Text size="title" weight="bold">
+            {userName}
+          </Text>{' '}
+          님에게
         </Text>
-        <Text size="title" weight="bold">
+        <Text size="title" weight="bold" color="primary">
           {formattedNumber(amount)}
         </Text>
-        <Text size="title" color="gray">
-          송금하시겠습니까?
-        </Text>
+        <Text size="title">송금하시겠습니까?</Text>
       </RemittanceInfoBox>
       <ButtonGroup>
         <Button

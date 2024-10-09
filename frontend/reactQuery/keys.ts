@@ -1,5 +1,6 @@
 const keys = {
   all: ['arbaguette'] as const,
+  notification: () => [keys.all, 'notification'],
   boss: () => [...keys.all, 'boss'],
   company: () => [...keys.boss(), 'company'],
   daySchedule: (date: string, companyId: CompanyId) => [...keys.company(), 'schedule', date, companyId],
@@ -22,7 +23,15 @@ const keys = {
   bank: () => [...keys.common(), 'bank'],
   balance: () => [...keys.bank(), 'balance'],
   expectedExpenses: (companyId: CompanyId) => [...keys.common(), 'expectedExpenses', companyId],
-  checkAccountPassword: (password: Password) => [...keys.bank(), 'password', password],
+  takeSubstitute: (scheduleId: ScheduleId) => [...keys.common(), 'takeSubstitute', scheduleId],
+  checkAccountUser: (account: BankAccount) => [...keys.bank(), 'checkAccountUser', account],
+  remittance: (account: BankAccount, money: string, password: Password) => [
+    ...keys.bank(),
+    'remittance',
+    account,
+    money,
+    password,
+  ],
 };
 
 export default keys;
