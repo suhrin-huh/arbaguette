@@ -1,9 +1,8 @@
 import Styled from '@emotion/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import type { ImageSourcePropType } from 'react-native';
 
 export interface ProfileImageProps {
-  source?: ImageSourcePropType;
+  source: string;
   status?: WorkStatus | null;
 }
 
@@ -26,7 +25,7 @@ const Image = Styled.Image(({ theme }) => ({
 const ProfileImage = ({ source, status = null }: ProfileImageProps) => {
   return (
     <ProfileImageContainer status={status}>
-      {source ? <Image source={source} /> : <Ionicons name="person-sharp" size={40} color="black" />}
+      {source ? <Image source={{ uri: source }} /> : <Ionicons name="person-sharp" size={40} color="black" />}
     </ProfileImageContainer>
   );
 };
