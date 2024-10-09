@@ -34,8 +34,8 @@ public class BankController {
 
     @GetMapping("/remittance")
     public ApiResponse<SendDetailResponse> sendMoney(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                     @RequestParam String request) {
-        return ApiResponse.success(bankService.getSendDetails(request));
+                                                     @RequestParam String account) {
+        return ApiResponse.success(bankService.getSendDetails(account));
     }
 
     @PostMapping("/remittance")
