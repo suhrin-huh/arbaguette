@@ -1,8 +1,5 @@
 import Styled from '@emotion/native';
-import { useMemo } from 'react';
-import type { PressableProps, ScrollViewProps } from 'react-native';
-import { Pressable } from 'react-native';
-import { Background } from 'victory-native';
+import type { PressableProps } from 'react-native';
 
 import NullImage from '@/assets/images/unknown_person.jpg';
 import getModifiedSchedule from '@/util/schedule';
@@ -27,19 +24,6 @@ interface ScheduleRequest {
   status?: 'mine' | 'request' | 'none';
 }
 
-// interface ScheduleResponse {
-//   crewId: number;
-//   name: string;
-//   scheduleId: number;
-//   substituteRequest: boolean;
-//   hopeCrewId: number | null;
-//   hopeCrewName: string | null;
-//   startTime: number;
-//   endTime: number;
-//   profileImage: string;
-//   status?: 'mine' | 'request' | 'none';
-// }
-
 interface ScheduleProps {
   schedule: ScheduleRequest[];
   handleEventPress: (scheduleId: number) => void;
@@ -47,7 +31,6 @@ interface ScheduleProps {
 
 const TimeTable = ({ schedule, handleEventPress }: ScheduleProps) => {
   const updatedSchedules = getModifiedSchedule(schedule);
-  console.log(updatedSchedules);
   const size = updatedSchedules.length;
 
   if (!size) {
@@ -76,21 +59,21 @@ const TimeTable = ({ schedule, handleEventPress }: ScheduleProps) => {
       </ProfileColumn>
       <TimeTableWrapper horizontal>
         <LineContainer size={size}>
-          {[...Array(24)].map((_, index) => (
+          {[...Array(16)].map((_, index) => (
             <Line key={`line${index}`} />
           ))}
         </LineContainer>
         <TimeLabelsRow>
-          {[...Array(24)].map((_, index) => (
-            <TimeLabel key={`time${index}`}>{index}</TimeLabel>
+          {[...Array(16)].map((_, index) => (
+            <TimeLabel key={`time${index}`}>{index + 8}</TimeLabel>
           ))}
         </TimeLabelsRow>
         {updatedSchedules.map((schedule, index) => (
           <ScheduleBlock
             key={schedule.scheduleId}
             marginTop={LABEL + (PROFILE + BOTTOM + 10) * index + PROFILE / 2}
-            marginLeft={`${(schedule.startTime / 24) * 100}%`}
-            width={`${((schedule.endTime - schedule.startTime) / 24) * 100}%`}
+            marginLeft={`${(schedule.startTime / 16) * 100}%`}
+            width={`${((schedule.endTime - schedule.startTime) / 16) * 100}%`}
             status={schedule.status}
             onPress={() => handleEventPress(schedule.scheduleId)}
             disabled={schedule.status === 'none'}
