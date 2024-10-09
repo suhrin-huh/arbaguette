@@ -8,7 +8,7 @@ import ReactQueryClient from '@/configs/queryClient';
 import keys from '@/reactQuery/keys';
 
 function redirect(notification: Notifications.Notification) {
-  const { url } = JSON.parse(notification.request.content.data.body);
+  const { url } = notification.request.content.data;
   console.log(url);
   if (url) {
     router.push(url);
@@ -27,6 +27,7 @@ const usePushNotification = () => {
       .catch((error: any) => setExpoPushToken(`${error}`));
 
     notificationListener.current = Notifications.addNotificationReceivedListener(async (notification) => {
+      console.log(notification.request.content.data.url);
       await ReactQueryClient.instance.invalidateQueries({ queryKey: keys.all });
       setNotification(notification);
     });

@@ -50,7 +50,7 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
   const handleLink = async () => {
     await dismissNotificationAsync(notification.request.identifier);
     await queryClient.invalidateQueries({ queryKey: keys.notification() });
-    const { url } = JSON.parse(notification.request.content.data.body);
+    const { url } = notification.request.content.data;
     if (!url) return;
     router.push(url);
   };
