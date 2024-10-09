@@ -365,7 +365,7 @@ public class BankService {
                 boss.getExpoPushToken(),
                 money + "원 출금",
                 "빵뿌리기",
-                "arbaguette://boss/banking/transaction"
+                "myapp://boss/banking/transaction"
         );
 
     }

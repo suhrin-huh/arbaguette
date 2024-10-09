@@ -2,7 +2,6 @@ package com.lucky.arbaguette.common.controller;
 
 import com.lucky.arbaguette.common.ApiResponse;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
-import com.lucky.arbaguette.common.domain.dto.request.SendDetailRequest;
 import com.lucky.arbaguette.common.domain.dto.request.SendMoneyRequest;
 import com.lucky.arbaguette.common.domain.dto.request.SendSalaryRequest;
 import com.lucky.arbaguette.common.domain.dto.response.AccountResponse;
@@ -35,8 +34,8 @@ public class BankController {
 
     @GetMapping("/remittance")
     public ApiResponse<SendDetailResponse> sendMoney(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                     @RequestBody SendDetailRequest request) {
-        return ApiResponse.success(bankService.getSendDetails(request.account()));
+                                                     @RequestParam String request) {
+        return ApiResponse.success(bankService.getSendDetails(request));
     }
 
     @PostMapping("/remittance")
