@@ -43,7 +43,7 @@ const CrewMainLayout = () => {
         name="main"
         options={{
           title: '홈',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('../../../notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <Foundation name="home" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -53,7 +53,7 @@ const CrewMainLayout = () => {
         name="schedule"
         options={{
           title: '스케줄',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('../../../notification')} />,
           tabBarIcon: ({ size, color, focused }) => (
             <FontAwesome5 name="calendar" size={size} color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']} />
           ),
@@ -64,7 +64,7 @@ const CrewMainLayout = () => {
         options={{
           title: '근무 내역',
           headerTitle: '근무 내역 조회',
-          headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+          headerRight: () => <BellButton onPress={() => router.navigate('../../../notification')} />,
           headerLeft: () => (
             <CalendarButton
               onPress={() =>
@@ -95,6 +95,7 @@ const CrewMainLayout = () => {
               color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']}
             />
           ),
+          headerRight: () => <BellButton onPress={() => router.navigate('../../../notification')} />,
           tabBarStyle: {
             ...TABBAR_STYLE,
             display:

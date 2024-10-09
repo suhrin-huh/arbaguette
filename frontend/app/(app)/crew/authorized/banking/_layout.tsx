@@ -10,7 +10,7 @@ const BankingLayout = () => {
       screenOptions={{
         headerTitleAlign: 'center',
         headerShadowVisible: false,
-        headerRight: () => <BellButton onPress={() => router.navigate('/crew/authorized/management/contract')} />,
+        headerRight: () => <BellButton onPress={() => router.navigate('../../../notification')} />,
       }}>
       <Stack.Screen name="index" options={{ headerTitle: '뱅킹' }} />
       <Stack.Screen name="payStub" options={{ headerTitle: '' }} />
