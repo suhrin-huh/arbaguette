@@ -1,10 +1,14 @@
 import styled from '@emotion/native';
 import { FontAwesome6, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { useMutation } from '@tanstack/react-query';
+import { router } from 'expo-router';
 import React from 'react';
-import { Image, Linking, TouchableOpacity } from 'react-native';
+import { Alert, Image, Linking, TouchableOpacity } from 'react-native';
 
 import unknownPerson from '@/assets/images/unknown_person.jpg';
 import Colors from '@/constants/Colors';
+import keys from '@/reactQuery/keys';
+import arbaguette from '@/services/arbaguette';
 
 import CrewScheduleList from './CrewScheduleList';
 
@@ -54,34 +58,42 @@ interface CrewDetailCardProps {
 }
 
 const CrewDetailCard = ({ crewData }: CrewDetailCardProps) => {
+  const { name, tel, profileImage, workingDays, id, salary } = crewData;
+
   const linkingHandler = (phoneNumber: string, type: 'tel' | 'sms') => {
     Linking.openURL(`${type}:${phoneNumber}`);
   };
 
   const handleSalary = () => {
-    console.log(crewData.id);
-    // id로 해당 알바생 송금페이지로 이동
+    if (salary) {
+      router.push({
+        pathname: './sendSalaryModal',
+        params: { crewId: id, money: String(salary), name },
+      });
+      return;
+    }
+    Alert.alert('오류 발생', '송금할 급여가 없습니다.');
   };
 
   return (
     <InfoContainer>
       <ProfileContainer>
         <Image
-          source={crewData.profileImage ? { uri: crewData.profileImage } : unknownPerson}
+          source={profileImage ? { uri: profileImage } : unknownPerson}
           style={{ width: 70, height: 70, borderRadius: 50 }}
         />
         <ProfileRightContainer>
-          <CrewInfoName>{crewData.name}</CrewInfoName>
+          <CrewInfoName>{name}</CrewInfoName>
           <CrewInfoIconContainer>
             <TouchableOpacity
               onPress={() => {
-                linkingHandler('01012345678', 'tel');
+                linkingHandler(tel, 'tel');
               }}>
               <Ionicons name="call" size={24} color={Colors.GRAY[3]} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                linkingHandler('01012345678', 'sms');
+                linkingHandler(tel, 'sms');
               }}>
               <MaterialIcons name="message" size={25} color={Colors.GRAY[3]} />
             </TouchableOpacity>
@@ -91,7 +103,7 @@ const CrewDetailCard = ({ crewData }: CrewDetailCardProps) => {
           </CrewInfoIconContainer>
         </ProfileRightContainer>
       </ProfileContainer>
-      <CrewScheduleList workingDays={crewData.workingDays} />
+      <CrewScheduleList workingDays={workingDays} />
     </InfoContainer>
   );
 };
