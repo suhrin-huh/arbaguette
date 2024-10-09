@@ -5,6 +5,7 @@ import { Image } from 'react-native';
 import FireworkImage from '@/assets/images/firework.png';
 import ExpectedSalaryCard from '@/components/boss/ExpectedSalaryCard';
 import BankingCard from '@/components/common/BankingCard';
+import Screen from '@/components/common/Screen';
 
 const BossBankingScreen = () => {
   const { getParent } = useNavigation();
@@ -16,7 +17,7 @@ const BossBankingScreen = () => {
   });
 
   return (
-    <ScreenContainer>
+    <Screen type="scroll">
       <BankingCard />
       <ActionButtonContainer>
         <ActionButton onPress={() => router.navigate({ pathname: '../../../seperation/', params: { type: 'first' } })}>
@@ -30,22 +31,11 @@ const BossBankingScreen = () => {
         </ActionButton>
       </ActionButtonContainer>
       <ExpectedSalaryCard />
-    </ScreenContainer>
+    </Screen>
   );
 };
 
 export default BossBankingScreen;
-
-const ScreenContainer = Styled.View(({ theme }) => ({
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'white',
-  gap: 30,
-  paddingHorizontal: theme.layout.PADDING.HORIZONTAL,
-  paddingVertical: theme.layout.PADDING.VERTICAL,
-}));
 
 const ActionButtonContainer = Styled.View(({ theme }) => ({
   flexDirection: 'row',
