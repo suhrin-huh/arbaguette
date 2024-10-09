@@ -17,20 +17,25 @@ public class NotificationService {
 
 
     public void sendNotification(String expoPushToken, String title, String message, String url) {
-        if (expoPushToken == null || expoPushToken.isEmpty()) {
-            throw new IllegalArgumentException("expoPushToken is null or empty");
-        }
 
-        webClient.post()
-                .bodyValue(Map.of(
-                        "to", expoPushToken,
-                        "title", title,
-                        "body", message,
-                        "data", Map.of("url", url)
-                ))
-                .retrieve()
-                .bodyToMono(String.class)
-                .subscribe(response -> System.out.println("Push Notification Sent! Response: " + response),
-                        error -> System.out.println("Push Notification Error: " + error.getMessage()));
+        try {
+            if (expoPushToken == null || expoPushToken.isEmpty()) {
+                throw new IllegalArgumentException("expoPushToken is null or empty");
+            }
+
+            webClient.post()
+                    .bodyValue(Map.of(
+                            "to", expoPushToken,
+                            "title", title,
+                            "body", message,
+                            "data", Map.of("url", url)
+                    ))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .subscribe(response -> System.out.println("Push Notification Sent! Response: " + response),
+                            error -> System.out.println("Push Notification Error: " + error.getMessage()));
+        } catch (Exception e) {
+
+        }
     }
 }
