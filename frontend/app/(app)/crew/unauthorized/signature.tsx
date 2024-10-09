@@ -66,6 +66,7 @@ const SignContractBox = () => {
   const { mutate: sign } = useMutation({
     mutationFn: arbaguette.signCrewSignature,
     onSuccess: async () => {
+      await arbaguette.makeSchedule();
       const { data } = await arbaguette.reIssue(refreshToken);
       const { accessToken, refreshToken: newRefreshToken } = data.data;
       updateTokens(accessToken, newRefreshToken);

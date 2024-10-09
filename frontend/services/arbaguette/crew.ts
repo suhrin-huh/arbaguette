@@ -71,4 +71,10 @@ export default {
 
     return await axios.post('/api/contract/crew', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
   },
+  /**
+   * 스케줄 생성
+   */
+  makeSchedule: async () => {
+    return axios.post('/api/schedule/crew');
+  },
 };
