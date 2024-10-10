@@ -3,6 +3,7 @@ module.exports = {
     name: 'arbagett',
     slug: 'arbagett',
     version: '1.0.0',
+    owner: 'arbaguette',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'arbaguette',
