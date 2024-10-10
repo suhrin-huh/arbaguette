@@ -113,7 +113,7 @@ const CrewCard = ({ id, name, salary, day, pressHandler, profileImage, period, e
             <NameTitleContainer>
               <CrewNameTitle>{name}</CrewNameTitle>
               <ContractRemainText>
-                {endDate.slice(2, 4)}년 {parseInt(endDate.slice(5, 7), 10)}월까지
+                {endDate && endDate.slice(2, 4)}년 {endDate && parseInt(endDate.slice(5, 7), 10)}월까지
               </ContractRemainText>
             </NameTitleContainer>
           </ProfileContainer>
