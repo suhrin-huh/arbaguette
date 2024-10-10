@@ -209,8 +209,24 @@ const useEmploymentContract = (crewId: CrewId) => {
   return data.data.data;
 };
 
+/**
+ * 계좌 비밀번호 일치 확인 쿼리 훅
+ * @param password
+ */
+const useCheckAccountPassword = (password: Password) => {
+  const { data } = useQuery({
+    queryKey: keys.checkAccountPassword(password),
+    queryFn: () => arbaguette.checkAccountPassword(password),
+    enabled: password.length === 4,
+  });
+  const isValid = data?.data.code === 200;
+
+  return isValid;
+};
+
 export {
   useAccountBalance,
+  useCheckAccountPassword,
   useCheckAccountUser,
   useCompanyList,
   useCrewMemberList,

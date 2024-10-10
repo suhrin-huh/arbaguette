@@ -356,3 +356,4 @@ type ThrowBreadResponse = ArbaguetteResponse<ThrowBreadResponseData>;
 type TakeSubstituteResponse = ArbaguetteResponse<void>;
 type CheckAccountUserResponse = ArbaguetteResponse<CheckAccountUserResponseData>;
 type SendSalaryResponse = ArbaguetteResponse<SendSalaryResonseData>;
+type CheckPasswordResponse = ArbaguetteResponse<void>;
