@@ -12,6 +12,10 @@ import com.lucky.arbaguette.common.exception.NotFoundException;
 import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.crew.domain.Crew;
 import com.lucky.arbaguette.crew.repository.CrewRepository;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -250,7 +249,6 @@ public class BankService {
                 .bodyToMono(Map.class)
                 .block();
 
-
         //알림전송
         notificationService.sendNotification(
                 receiverToken,
@@ -304,6 +302,9 @@ public class BankService {
         accountRequestBody.put("transactionBalance", request.money());
         accountRequestBody.put("withdrawalAccountNo", account);
         accountRequestBody.put("withdrawalTransactionSummary", crew.getName() + " (급여)");
+
+        log.info("crewId : {}", request.crewId());
+        log.info("금액 : {}", request.money());
 
         webClient.post()
                 .uri(financialApiUrl + "/v1/edu/demandDeposit/updateDemandDepositAccountTransfer")
