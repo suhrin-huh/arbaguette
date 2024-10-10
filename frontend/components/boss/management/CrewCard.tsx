@@ -18,6 +18,8 @@ interface CrewCardProps {
   salary?: number;
   profileImage?: string;
   pressHandler?: () => void;
+  period: number;
+  endDate: string;
 }
 
 const StyledCardContainer = styled(CardContainer)(({ theme }) => ({
@@ -98,7 +100,7 @@ const HowWorkTitle = styled.Text(({ theme }) => ({
   color: Colors.GRAY[3],
 }));
 
-const CrewCard = ({ id, name, salary, day, pressHandler, profileImage, ...props }: CrewCardProps) => {
+const CrewCard = ({ id, name, salary, day, pressHandler, profileImage, period, endDate }: CrewCardProps) => {
   return (
     <Pressable onPress={pressHandler}>
       <StyledCardContainer>
@@ -110,14 +112,16 @@ const CrewCard = ({ id, name, salary, day, pressHandler, profileImage, ...props 
             />
             <NameTitleContainer>
               <CrewNameTitle>{name}</CrewNameTitle>
-              <ContractRemainText>24년 12월까지</ContractRemainText>
+              <ContractRemainText>
+                {endDate.slice(2, 4)}년 {parseInt(endDate.slice(5, 7), 10)}월까지
+              </ContractRemainText>
             </NameTitleContainer>
           </ProfileContainer>
           <MiddleContainer>
             <DayContainer>{day && day.map((day) => <DayCircle day={day} key={day} />)}</DayContainer>
             <HowWorkContainer>
               <HowWorkTitle>근무</HowWorkTitle>
-              <HowWorkMonth>2</HowWorkMonth>
+              <HowWorkMonth>{period}</HowWorkMonth>
               <HowWorkTitle>달째</HowWorkTitle>
             </HowWorkContainer>
           </MiddleContainer>
