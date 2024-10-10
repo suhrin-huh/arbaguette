@@ -1,6 +1,5 @@
 package com.lucky.arbaguette.common.util;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -31,7 +30,7 @@ public class DateFormatUtil {
     }
 
     public static LocalDateTime getEndOfMonth(LocalDateTime date) {
-        return date.withDayOfMonth(LocalDate.now().lengthOfMonth())
+        return date.withDayOfMonth(date.toLocalDate().lengthOfMonth()) // 주어진 date의 월의 마지막 날을 가져옴
                 .with(LocalTime.MAX); // 월의 마지막 날 23:59:59
     }
 }
