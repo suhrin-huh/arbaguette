@@ -32,6 +32,7 @@ const keys = {
     money,
     password,
   ],
+  sendSalary: (crewId: CrewId, money: string) => [...keys.bank(), 'sendSalasy', crewId, money],
 };
 
 export default keys;

@@ -85,7 +85,14 @@ export default {
   getExpectedExpenses: async (companyId: CompanyId) => {
     return axios.get<GetExpectedExpensesResponse>(`/api/boss/expected?companyId=${companyId}`);
   },
-
+  /**
+   * 알바생 급여 개별 송금
+   * @param crewId 직원 아이디
+   * @param money 금액
+   */
+  sendSalary: async (crewId: CrewId, money: string) => {
+    return axios.post<SendSalaryResponse>(`/api/bank/remittance/salary`, { crewId, money });
+  },
   /**
    * 급여 명세서 전송
    * @param crewId 알바생 아이디

@@ -54,7 +54,7 @@ const TimeCard = ({ startTime, endTime, companyName }: TimeCardProps) => {
     <CardContainer style={{ gap: 10 }}>
       <CardHeader>
         <Image source={SchoolImage} />
-        <Text>후라이드 참 잘하는 집</Text>
+        <Text>{companyName}</Text>
       </CardHeader>
       <CardText>
         {isOnDuty ? '퇴근까지' : '출근까지'}&nbsp;

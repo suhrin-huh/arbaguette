@@ -350,3 +350,4 @@ type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseDat
 type ThrowBreadResponse = ArbaguetteResponse<ThrowBreadResponseData>;
 type TakeSubstituteResponse = ArbaguetteResponse<void>;
 type CheckAccountUserResponse = ArbaguetteResponse<CheckAccountUserResponseData>;
+type SendSalaryResponse = ArbaguetteResponse<void>;

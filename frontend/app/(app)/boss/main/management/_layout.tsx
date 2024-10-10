@@ -6,6 +6,7 @@ const ManagementLayout = () => {
       <Stack.Screen name="index" />
       <Stack.Screen name="detail/[id]" options={{ presentation: 'card' }} />
       <Stack.Screen name="detail/sendModal" options={{ presentation: 'transparentModal' }} />
+      <Stack.Screen name="detail/sendSalaryModal" options={{ presentation: 'transparentModal' }} />
       <Stack.Screen name="register" options={{ presentation: 'transparentModal' }} />
     </Stack>
   );

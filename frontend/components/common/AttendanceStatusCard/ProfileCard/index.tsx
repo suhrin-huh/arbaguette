@@ -11,6 +11,7 @@ export interface ProfileCardProps extends ProfileProps, PhoneProps {
   startTime: Time;
   endTime: Time;
   status: Status;
+  profileImage: ProfileImage;
 }
 
 const ProfileContainer = Styled.View({ flexDirection: 'row' });
@@ -33,10 +34,10 @@ const PhoneContainer = Styled.View({
   justifyContent: 'center',
 });
 
-const ProfileCard = ({ startTime, endTime, status, name, tel, source }: ProfileCardProps) => {
+const ProfileCard = ({ startTime, endTime, status, name, tel, profileImage }: ProfileCardProps) => {
   return (
     <ProfileContainer>
-      <Profile name={name} status={status} source={source} />
+      <Profile name={name} status={status} source={profileImage} />
       <TimeContainer>
         <Text>
           {startTime.split('T')[1].split(':').slice(0, 2).join(':')} -{' '}
