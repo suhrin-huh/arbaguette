@@ -7,13 +7,15 @@ import com.lucky.arbaguette.schedule.domain.Schedule;
 
 public record ScheduleNextResponse(String companyName,
                                    String startTime,
-                                   String endTime) {
+                                   String endTime,
+                                   boolean commuted) {
 
     public static ScheduleNextResponse from(Schedule schedule, Crew crew) {
         return new ScheduleNextResponse(
                 crew.getCompany().getName(),
                 formatDateTime(schedule.getStartTime()),
-                formatDateTime(schedule.getEndTime())
+                formatDateTime(schedule.getEndTime()),
+                schedule.getInTime() != null
         );
     }
 }

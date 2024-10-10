@@ -63,6 +63,7 @@ const BossManagementScreen = () => {
   const pushRouteHandler = (crewId: number) => {
     router.push(`/boss/main/management/detail/${crewId}`);
   };
+  console.log(crewList);
 
   const addCrewHandler = () => {
     setRegistCompanyId(selectedCompanyId);
@@ -92,7 +93,7 @@ const BossManagementScreen = () => {
         {/* 직원 카드 리스트 */}
         <CrewCardArea>
           {crewList.length > 0 ? (
-            crewList.map(({ id, name, salary, weekdays, profileImage }) => (
+            crewList.map(({ id, name, salary, weekdays, profileImage, period, endDate }) => (
               <CrewCard
                 type="crew"
                 id={id}
@@ -102,6 +103,8 @@ const BossManagementScreen = () => {
                 key={id}
                 day={weekdays}
                 pressHandler={() => pushRouteHandler(id)}
+                period={period}
+                endDate={endDate}
               />
             ))
           ) : (

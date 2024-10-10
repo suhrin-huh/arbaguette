@@ -90,7 +90,8 @@ export default {
    * @param crewId 직원 아이디
    * @param money 금액
    */
-  sendSalary: async (crewId: CrewId, money: string) => {
+  sendSalary: async ({ crewId, money }: { crewId: CrewId; money: string }) => {
+    console.log('money', money);
     return axios.post<SendSalaryResponse>(`/api/bank/remittance/salary`, { crewId, money });
   },
   /**

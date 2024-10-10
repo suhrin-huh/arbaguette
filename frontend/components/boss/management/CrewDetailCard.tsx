@@ -59,7 +59,6 @@ interface CrewDetailCardProps {
 
 const CrewDetailCard = ({ crewData }: CrewDetailCardProps) => {
   const { name, tel, profileImage, workingDays, id, salary } = crewData;
-
   const linkingHandler = (phoneNumber: string, type: 'tel' | 'sms') => {
     Linking.openURL(`${type}:${phoneNumber}`);
   };

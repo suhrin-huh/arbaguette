@@ -158,21 +158,6 @@ const useCheckAccountUser = (account: BankAccount) => {
   return { userName, ...queryResult };
 };
 /**
- * 송금하기 쿼리 훅
- * @param account 계좌번호
- * @param money 금액
- * @param password 비밀번호
- */
-const useRemittance = (account: BankAccount, money: string, password: Password) => {
-  const queryResult = useQuery({
-    queryKey: keys.remittance(account, money, password),
-    queryFn: () => arbaguette.remittance({ account, money, password }),
-    enabled: password.length === 4,
-  });
-
-  return { ...queryResult };
-};
-/**
  * 월별 스케줄을 가져오는 쿼리 훅
  * @param month 조회할 월
  * @param companyId 사업장 ID
@@ -240,6 +225,5 @@ export {
   useMonthlySchedule,
   useNearCommuteInfo,
   usePayStub,
-  useRemittance,
   useWorkHistory,
 };
