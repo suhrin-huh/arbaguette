@@ -36,16 +36,17 @@ const GetPasswordInfo = () => {
   const handlePassword = async (value: number) => {
     const updatedPassword = password + String(value);
     setPassword(updatedPassword);
-    if (updatedPassword.length === 4) {
-      const response = arbaguette.checkAccountPassword(updatedPassword);
-      const isValid = (await response).data.code === 200;
-      if (isValid) {
-        sendSalary({ crewId: Number(crewId), money: String(money) });
-        return;
-      } else {
-        setPassword('');
-        setErrorText(['비밀번호가 옳지 않습니다.', '다시 입력해주세요.']);
+    try {
+      if (updatedPassword.length === 4) {
+        const response = arbaguette.checkAccountPassword(updatedPassword);
+        const isValid = (await response).data.code === 200;
+        if (isValid) {
+          sendSalary({ crewId: Number(crewId), money: String(money) });
+        }
       }
+    } catch {
+      setPassword('');
+      setErrorText(['비밀번호가 옳지 않습니다.', '다시 입력해주세요.']);
     }
   };
 
