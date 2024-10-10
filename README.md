@@ -47,12 +47,15 @@
 # 3. 💰 주요 기능
 
 ### 공통
+![Loign](/docs/login.png)
 - 로그인 및 회원가입
 - 푸시 알림
 ### 🙋‍♀️ 사장님
+![Contract](/docs/contract.png)
 - 사업자 등록
     - 카메라 촬영 및 갤러리 선택을 통해 OCR인식
     - NFC 카드에 사업장 정보 등록
+![Contract2](/docs/contract2.PNG)
 - 근로계약서 생성 및 서명
     - 전자 서명을 통한 계약서 서명
     - 근로계약서를 PDF로 생성
