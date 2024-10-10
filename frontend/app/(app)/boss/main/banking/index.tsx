@@ -17,7 +17,7 @@ const BossBankingScreen = () => {
   });
 
   return (
-    <Screen type="scroll">
+    <Screen type="scroll" viewOption={{ style: { backgroundColor: 'white' } }}>
       <BankingCard />
       <ActionButtonContainer>
         <ActionButton onPress={() => router.navigate({ pathname: '../../../seperation/', params: { type: 'first' } })}>
