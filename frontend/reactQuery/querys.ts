@@ -48,7 +48,6 @@ const useCrewMemeberDetail = (crewId: CrewId) => {
     queryKey: keys.crewDetail(crewId),
     queryFn: () => arbaguette.getCrewMemberDetail(crewId),
   });
-
   const crewDetail = data?.data.data;
   return { crewDetail };
 };

@@ -46,44 +46,50 @@ const TimeTable = ({ schedule, handleEventPress }: ScheduleProps) => {
   }
 
   return (
-    <Container>
-      <ProfileColumn>
-        {updatedSchedules.map((item) => (
-          <ProfileImageWrapper key={item.crewId}>
-            <ProfileImage source={item.profileImage ? { uri: item.profileImage } : NullImage} />
-            <Text style={{ fontSize: 8, height: BOTTOM }} color="gray">
-              {item.name.slice(0, 3)}
-            </Text>
-          </ProfileImageWrapper>
-        ))}
-      </ProfileColumn>
-      <TimeTableWrapper horizontal>
-        <LineContainer size={size}>
-          {[...Array(16)].map((_, index) => (
-            <Line key={`line${index}`} />
+    <Screen>
+      <Container>
+        <ProfileColumn>
+          {updatedSchedules.map((item) => (
+            <ProfileImageWrapper key={item.crewId}>
+              <ProfileImage source={item.profileImage ? { uri: item.profileImage } : NullImage} />
+              <Text style={{ fontSize: 8, height: BOTTOM }} color="gray">
+                {item.name.slice(0, 3)}
+              </Text>
+            </ProfileImageWrapper>
           ))}
-        </LineContainer>
-        <TimeLabelsRow>
-          {[...Array(16)].map((_, index) => (
-            <TimeLabel key={`time${index}`}>{index + 8}</TimeLabel>
+        </ProfileColumn>
+        <TimeTableWrapper horizontal>
+          <LineContainer size={size}>
+            {[...Array(16)].map((_, index) => (
+              <Line key={`line${index}`} />
+            ))}
+          </LineContainer>
+          <TimeLabelsRow>
+            {[...Array(16)].map((_, index) => (
+              <TimeLabel key={`time${index}`}>{index + 8}</TimeLabel>
+            ))}
+          </TimeLabelsRow>
+          {updatedSchedules.map((schedule, index) => (
+            <ScheduleBlock
+              key={schedule.scheduleId}
+              marginTop={LABEL + (PROFILE + BOTTOM + 10) * index + PROFILE / 2}
+              marginLeft={`${(schedule.startTime / 16) * 100}%`}
+              width={`${((schedule.endTime - schedule.startTime) / 16) * 100}%`}
+              status={schedule.status}
+              onPress={() => handleEventPress(schedule.scheduleId)}
+              disabled={schedule.status === 'none'}
+            />
           ))}
-        </TimeLabelsRow>
-        {updatedSchedules.map((schedule, index) => (
-          <ScheduleBlock
-            key={schedule.scheduleId}
-            marginTop={LABEL + (PROFILE + BOTTOM + 10) * index + PROFILE / 2}
-            marginLeft={`${(schedule.startTime / 16) * 100}%`}
-            width={`${((schedule.endTime - schedule.startTime) / 16) * 100}%`}
-            status={schedule.status}
-            onPress={() => handleEventPress(schedule.scheduleId)}
-            disabled={schedule.status === 'none'}
-          />
-        ))}
-      </TimeTableWrapper>
-    </Container>
+        </TimeTableWrapper>
+      </Container>
+    </Screen>
   );
 };
 
+const Screen = Styled.ScrollView(() => ({
+  flex: 1,
+  paddingBottom: 80,
+}));
 const Container = Styled.View({
   flexDirection: 'row',
   padding: 10,
