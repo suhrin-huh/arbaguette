@@ -21,7 +21,6 @@ export default CertifiedPaperBox;
 
 const IsPictureContainer = styled.ScrollView(({ theme }) => ({
   flex: 1,
-  justifyContent: 'space-between',
   gap: 40,
 }));
 
