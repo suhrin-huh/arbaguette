@@ -123,8 +123,6 @@ public class SubstituteService {
         Substitute substitute = substituteRepository.findByIdWithOptimisticLocking(schedule.getScheduleId())
                 .orElseThrow(() -> new BadRequestException("이미 마감된 대타입니다."));
 
-        substitute.applySubstitute(crew);
-
         notificationService.sendNotification(
                 crew.getCompany().getBoss().getExpoPushToken(),
                 "대타 승인 요청",
@@ -132,6 +130,10 @@ public class SubstituteService {
                 "arbaguette://boss/main/schedule/apply?start=" + formatDateTime(schedule.getStartTime()) + "&end="
                         + formatDateTime(schedule.getEndTime()) + "&id=" + schedule.getScheduleId()
         );
+
+        substitute.applySubstitute(crew);
+
+
     }
 
 }
