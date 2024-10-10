@@ -161,6 +161,7 @@ interface NearCommuteInfoResponseData {
   companyName: CompanyName;
   startTime: StartTime;
   endTime: EndTime;
+  commuted: boolean;
 }
 
 type OriginSalary = number;

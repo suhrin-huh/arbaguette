@@ -1,8 +1,14 @@
 package com.lucky.arbaguette.substitute.service;
 
+import static com.lucky.arbaguette.common.util.DateFormatUtil.formatDateTime;
+
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
-import com.lucky.arbaguette.common.exception.*;
+import com.lucky.arbaguette.common.exception.BadRequestException;
+import com.lucky.arbaguette.common.exception.DuplicateException;
+import com.lucky.arbaguette.common.exception.ForbiddenException;
+import com.lucky.arbaguette.common.exception.NotFoundException;
+import com.lucky.arbaguette.common.exception.UnAuthorizedException;
 import com.lucky.arbaguette.common.service.NotificationService;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
@@ -15,13 +21,10 @@ import com.lucky.arbaguette.substitute.dto.response.SubstituteAgreeResponse;
 import com.lucky.arbaguette.substitute.dto.response.SubstituteSaveResponse;
 import com.lucky.arbaguette.substitute.dto.response.SubstitutesResponse;
 import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-
-import static com.lucky.arbaguette.common.util.DateFormatUtil.formatDateTime;
 
 @RequiredArgsConstructor
 @Transactional
@@ -129,7 +132,7 @@ public class SubstituteService {
                 crew.getCompany().getBoss().getExpoPushToken(),
                 "대타 승인 요청",
                 substitute.getCrew().getName() + "->" + crew.getName() + " 대타 승인을 대기하고 있어요!",
-                "arbaguette://boss/main/schedule/apply?start=" + formatDateTime(schedule.getStartTime()) + "&end="
+                "arbaguette://boss/main/schedule?type=apply&start=" + formatDateTime(schedule.getStartTime()) + "&end="
                         + formatDateTime(schedule.getEndTime()) + "&id=" + schedule.getScheduleId()
         );
     }

@@ -1,23 +1,14 @@
 import styled from '@emotion/native';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
-import { ScrollView, Text } from 'react-native';
 
 import NoneCard from '@/components/boss/management/NoneScheduleCard';
 import AttendanceStatusCard from '@/components/common/AttendanceStatusCard';
-import CardContainer from '@/components/common/CardContainer';
 import DateStatusCard from '@/components/common/DateStatusCard';
 import SalaryChartCard from '@/components/common/SalaryChartCard/SalaryChartCard';
 import Screen from '@/components/common/Screen';
-import withPressable from '@/components/hoc/withPressable';
 import { useDailySchedule, useExpectedExpenses } from '@/reactQuery/querys';
 import useRootStore from '@/zustand';
-
-const InnerContainer = styled(ScrollView)(({ theme }) => ({
-  flexGrow: 1,
-  overflow: 'visible',
-  paddingVertical: theme.layout.PADDING.VERTICAL,
-}));
 
 function todayFormatter() {
   const date = new Date();
@@ -35,8 +26,6 @@ const MainScreen = () => {
   const crewScheduleInfos = daySchedule?.crewScheduleInfos;
   const expectedExpenses = useExpectedExpenses(Number(id));
   const { originSalary, tax, allowance } = expectedExpenses || {};
-
-  const LogoutButton = withPressable(CardContainer);
 
   useEffect(() => {
     setSelectedCompany({
@@ -60,9 +49,6 @@ const MainScreen = () => {
         tax={tax || 0}
         allowance={allowance || 0}
       />
-      <LogoutButton onPress={() => logout()}>
-        <Text>로그아웃</Text>
-      </LogoutButton>
     </Screen>
   );
 };

@@ -4,10 +4,12 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { router, Tabs, useGlobalSearchParams, useSegments } from 'expo-router';
 import React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
+import { Pressable } from 'react-native';
 
 import BellButton from '@/components/crew/BellButton';
 import CalendarButton from '@/components/crew/CalendarButton';
 import Theme from '@/styles/Theme';
+import useRootStore from '@/zustand';
 
 const TABBAR_STYLE: StyleProp<ViewStyle> = {
   borderTopRightRadius: 20,
@@ -18,6 +20,7 @@ const TABBAR_STYLE: StyleProp<ViewStyle> = {
 };
 
 const CrewMainLayout = () => {
+  const { logout } = useRootStore();
   const segments = useSegments();
   const { year, month } = useGlobalSearchParams<Partial<{ year: string; month: string }>>();
 
@@ -97,7 +100,7 @@ const CrewMainLayout = () => {
               color={focused ? Theme.color.PRIMARY : Theme.color.GRAY['1']}
             />
           ),
-          headerRight: () => <BellButton onPress={() => router.navigate('../../../notification')} />,
+          headerLeft: () => <Pressable style={{ width: 10, height: 10 }} onPress={logout} />,
           tabBarStyle: {
             ...TABBAR_STYLE,
             display:
