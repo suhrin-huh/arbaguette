@@ -8,7 +8,7 @@ interface CertifiedPaperBoxProps {
 
 const CertifiedPaperBox = ({ children, uri }: CertifiedPaperBoxProps) => {
   return (
-    <IsPictureContainer>
+    <IsPictureContainer contentContainerStyle={{ justifyContent: 'center', gap: 40, flex: 1 }}>
       <TakedPictureContainer>
         <TakedPicture source={{ uri }} />
       </TakedPictureContainer>
@@ -19,10 +19,7 @@ const CertifiedPaperBox = ({ children, uri }: CertifiedPaperBoxProps) => {
 
 export default CertifiedPaperBox;
 
-const IsPictureContainer = styled.ScrollView(({ theme }) => ({
-  flex: 1,
-  gap: 40,
-}));
+const IsPictureContainer = styled.ScrollView(({ theme }) => ({}));
 
 const TakedPictureContainer = styled.View(({ theme }) => ({
   borderRadius: 16,
