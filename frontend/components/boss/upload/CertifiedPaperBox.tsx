@@ -19,7 +19,7 @@ const CertifiedPaperBox = ({ children, uri }: CertifiedPaperBoxProps) => {
 
 export default CertifiedPaperBox;
 
-const IsPictureContainer = styled.View(({ theme }) => ({
+const IsPictureContainer = styled.ScrollView(({ theme }) => ({
   flex: 1,
   justifyContent: 'space-between',
   gap: 40,
