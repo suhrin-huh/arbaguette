@@ -1,6 +1,7 @@
 import styled from '@emotion/native';
 import { useMutation } from '@tanstack/react-query';
 import * as FileSystem from 'expo-file-system';
+import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image } from 'react-native';
 import type { SignatureViewRef } from 'react-native-signature-canvas';
@@ -101,17 +102,15 @@ const SignContractBox = ({ pathRoute }: { pathRoute: (to: 'back' | 'next') => vo
       await FileSystem.writeAsStringAsync(filePath, base64Data, {
         encoding: FileSystem.EncodingType.Base64,
       });
-
+      console.log('파일 저장 완료');
       // 파일 정보 가져오기
       const fileInfo = await FileSystem.getInfoAsync(filePath);
       if (!fileInfo.exists) {
         throw new Error('파일 저장 실패');
       }
-
       // 파일 URI 상태 업데이트
       setSignatureURI(fileInfo.uri);
-
-      Alert.alert('성공', '서명이 저장되었습니다.');
+      router.push('/(app)/boss/contract/4');
     } catch (error) {
       console.error(error);
       Alert.alert('오류', '서명을 저장하는 중 오류가 발생했습니다.');
