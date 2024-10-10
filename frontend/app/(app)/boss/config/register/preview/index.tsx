@@ -1,13 +1,25 @@
 import styled from '@emotion/native';
+import { useMutation } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import React from 'react';
+import { Alert } from 'react-native';
 
 import UploadInitialScreen from '@/components/boss/upload/UploadInitialScreen';
 import Button from '@/components/common/Button';
 import LabeledInput from '@/components/common/LabeledInput';
+import arbaguette from '@/services/arbaguette';
 import useRootStore from '@/zustand';
 
 const PreviewScreen = () => {
+  const { mutate: registCompany } = useMutation({
+    mutationFn: arbaguette.registCompany,
+    onSuccess: () => {
+      router.push('./complete');
+    },
+    onError: () => {
+      Alert.alert('오류 발생', '오류가 발생했습니다. 다시 확인해주세요.');
+    },
+  });
   const { companyName, ceoName, address } = useRootStore();
 
   const handleBackPress = () => {
@@ -15,7 +27,8 @@ const PreviewScreen = () => {
   };
 
   const handleNextPress = () => {
-    router.push('./complete');
+    const requestData = { name: companyName, representative: ceoName, address };
+    registCompany(requestData);
   };
 
   return (

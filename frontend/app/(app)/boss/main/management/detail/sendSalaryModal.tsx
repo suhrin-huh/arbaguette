@@ -69,6 +69,7 @@ const SendButton = styled(Button)(({ theme }) => ({
 
 const SendSalaryModal = () => {
   const { crewId, money, name } = useLocalSearchParams();
+  console.log('money', money);
   const [isLoading, setIsLoading] = useState(false);
   const [isSended, setIsSended] = useState(false);
   const { mutate: sendSalary } = useMutation({
@@ -94,7 +95,7 @@ const SendSalaryModal = () => {
   const handleSendSalary = async () => {
     setIsLoading(true);
     setIsSended(false);
-    sendSalary(parseInt(crewId as string, 10), money);
+    sendSalary({ crewId: Number(crewId), money: String(money) });
   };
 
   return (
