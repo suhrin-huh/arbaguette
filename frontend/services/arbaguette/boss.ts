@@ -91,7 +91,7 @@ export default {
    * @param money 금액
    */
   sendSalary: async (crewId: CrewId, money: string) => {
-    return axios.post<SendSalaryResponse>(`/api/boss/remittance?crewId=${crewId}`, { crewId, money });
+    return axios.post<SendSalaryResponse>(`/api/bank/remittance/salary`, { crewId, money });
   },
   /**
    * 급여 명세서 전송
