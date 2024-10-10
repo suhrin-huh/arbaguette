@@ -66,7 +66,7 @@ const CrewDetailCard = ({ crewData }: CrewDetailCardProps) => {
   const handleSalary = () => {
     if (salary) {
       router.push({
-        pathname: './sendSalaryModal',
+        pathname: './salary/1',
         params: { crewId: id, money: String(salary), name },
       });
       return;
