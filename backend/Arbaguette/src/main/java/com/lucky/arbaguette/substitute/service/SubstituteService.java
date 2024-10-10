@@ -1,14 +1,8 @@
 package com.lucky.arbaguette.substitute.service;
 
-import static com.lucky.arbaguette.common.util.DateFormatUtil.formatDateTime;
-
 import com.lucky.arbaguette.boss.repository.BossRepository;
 import com.lucky.arbaguette.common.domain.CustomUserDetails;
-import com.lucky.arbaguette.common.exception.BadRequestException;
-import com.lucky.arbaguette.common.exception.DuplicateException;
-import com.lucky.arbaguette.common.exception.ForbiddenException;
-import com.lucky.arbaguette.common.exception.NotFoundException;
-import com.lucky.arbaguette.common.exception.UnAuthorizedException;
+import com.lucky.arbaguette.common.exception.*;
 import com.lucky.arbaguette.common.service.NotificationService;
 import com.lucky.arbaguette.company.repository.CompanyRepository;
 import com.lucky.arbaguette.crew.domain.Crew;
@@ -21,10 +15,13 @@ import com.lucky.arbaguette.substitute.dto.response.SubstituteAgreeResponse;
 import com.lucky.arbaguette.substitute.dto.response.SubstituteSaveResponse;
 import com.lucky.arbaguette.substitute.dto.response.SubstitutesResponse;
 import com.lucky.arbaguette.substitute.repository.SubstituteRepository;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
+import static com.lucky.arbaguette.common.util.DateFormatUtil.formatDateTime;
 
 @RequiredArgsConstructor
 @Transactional
@@ -101,6 +98,13 @@ public class SubstituteService {
 
         //요청 승인, 스케줄 변경
         substitute.permitSubstitute();
+
+        notificationService.sendNotification(
+                afterCrew.getExpoPushToken(),
+                "대타 승인",
+                prevCrew.getName() + "->" + afterCrew.getName() + " 대타가 승인되었어요!",
+                ""
+        );
 
         return SubstituteAgreeResponse.from(prevCrew, substitute.getCrew());
     }
