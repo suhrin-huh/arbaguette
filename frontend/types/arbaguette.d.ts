@@ -319,6 +319,10 @@ interface CheckAccountUserResponseData {
   userName: UserName;
 }
 
+interface SendSalaryResonseData {
+  crewId: CrewId;
+  money: string;
+}
 type LoginResponse = ArbaguetteResponse<LoginResponseData>;
 type SignUpResponse = ArbaguetteResponse<void>;
 type ReissueResponse = ArbaguetteResponse<ReissueResponseData>;
@@ -350,4 +354,4 @@ type SendSalaryReceiptResponse = ArbaguetteResponse<SendSalaryReceiptResponseDat
 type ThrowBreadResponse = ArbaguetteResponse<ThrowBreadResponseData>;
 type TakeSubstituteResponse = ArbaguetteResponse<void>;
 type CheckAccountUserResponse = ArbaguetteResponse<CheckAccountUserResponseData>;
-type SendSalaryResponse = ArbaguetteResponse<void>;
+type SendSalaryResponse = ArbaguetteResponse<SendSalaryResonseData>;
