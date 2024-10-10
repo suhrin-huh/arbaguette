@@ -4,11 +4,12 @@ import { useMutation } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import React, { useState } from 'react';
-import { Alert, Modal, Text } from 'react-native';
+import { Alert, Modal } from 'react-native';
 
 import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
 import ContainerView from '@/components/common/ScreenContainer';
+import Text from '@/components/common/Text';
 import arbaguette from '@/services/arbaguette';
 
 import sendComplete from '../../../../../../assets/lottie/check.json';
@@ -35,7 +36,7 @@ const SendTitleContainer = styled(ContainerView)(({ theme }) => ({
   paddingTop: 30,
   alignItems: 'center',
   width: '100%',
-  gap: 5,
+  gap: 15,
 }));
 
 const SendTitle = styled(Text)(({ theme }) => ({
@@ -109,29 +110,35 @@ const SendSalaryModal = () => {
         }}>
         <SendBackground>
           {!isSended ? (
-            <SendContainer>
-              <SendTitleContainer>
-                <SendTitle>{name} 님에게</SendTitle>
-                <SendTitle>급여 {money.toLocaleString('ko-KR')} 원을</SendTitle>
-                <SendSubTitle>송금하시겠습니까?</SendSubTitle>
-              </SendTitleContainer>
-              <SendButtonContainer>
-                <SendButton size={100} onPress={() => router.back()} type="outlined">
-                  취소
-                </SendButton>
-                <SendButton size={100} onPress={handleSendSalary}>
-                  전송
-                </SendButton>
-              </SendButtonContainer>
-            </SendContainer>
-          ) : !isLoading ? (
-            <SendButton size={100}>
-              <Loading size={24} color="secondary" />
-            </SendButton>
+            !isLoading ? (
+              <SendContainer>
+                <SendTitleContainer>
+                  <SendTitle>{name} 님에게</SendTitle>
+                  <SendTitle>급여 {money.toLocaleString('ko-KR')} 원을</SendTitle>
+                  <SendSubTitle>송금하시겠습니까?</SendSubTitle>
+                </SendTitleContainer>
+                <SendButtonContainer>
+                  <SendButton size={100} onPress={() => router.back()} type="outlined">
+                    취소
+                  </SendButton>
+                  <SendButton size={100} onPress={handleSendSalary}>
+                    전송
+                  </SendButton>
+                </SendButtonContainer>
+              </SendContainer>
+            ) : (
+              <SendButton size={100}>
+                <Loading size={24} color="secondary" />
+              </SendButton>
+            )
           ) : (
             <SendContainer>
               <SendTitleContainer>
-                <LottieView style={{ width: 150, height: 150, marginBottom: 30 }} source={sendComplete} autoPlay />
+                <LottieView style={{ width: 150, height: 130, marginBottom: 30 }} source={sendComplete} autoPlay />
+                <Text size="base">송금이 완료되었습니다.</Text>
+                <Button size={100} onPress={() => router.back()} buttonStyle={{ height: 30 }}>
+                  <Text color="white">닫기</Text>
+                </Button>
               </SendTitleContainer>
             </SendContainer>
           )}
