@@ -33,7 +33,7 @@ const EventScreen = () => {
       errorRef.current = true;
       await queryClient.invalidateQueries({ queryKey: [keys.all], refetchType: 'all' });
       Alert.alert('이벤트가 종료되었습니다.');
-      router.back();
+      router.replace('/crew/authorized/banking');
     },
   });
 
