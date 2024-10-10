@@ -286,6 +286,7 @@ interface ReissueResponseData {
   accessToken: AccessToken;
   refreshToken: RefreshToken;
 }
+
 interface Transaction {
   transactionUniqueNo: string;
   transactionDate: string;

@@ -84,4 +84,11 @@ export default {
   makeSchedule: async () => {
     return axios.post('/api/schedule/crew');
   },
+  /**
+   * 빵 받기
+   * @param bonusId 보너스 아이디
+   */
+  getBread: async (bonusId: number) => {
+    return axios.post('/api/bonus/crew', { bonusId });
+  },
 };
