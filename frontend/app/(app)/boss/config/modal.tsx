@@ -92,7 +92,7 @@ const NfcModal = () => {
       const { value: processingState } = await stateGenerator.next();
       setState(processingState);
 
-      await timer(2000, async () => {
+      await timer(1000, async () => {
         const { value: finishState } = await stateGenerator.next();
         setState(finishState);
       });
