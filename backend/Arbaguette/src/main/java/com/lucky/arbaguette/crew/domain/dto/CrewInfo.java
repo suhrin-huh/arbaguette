@@ -4,13 +4,16 @@ import com.lucky.arbaguette.contract.domain.Contract;
 import com.lucky.arbaguette.crew.domain.Crew;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+
+import static java.time.LocalDate.now;
 
 public record CrewInfo(int id,
                        String name,
                        String profileImage,
                        int salary,
-                       int period,
+                       long period,
                        LocalDate endDate,
                        List<Integer> weekdays
 ) {
@@ -29,7 +32,9 @@ public record CrewInfo(int id,
                 crew.getName(),
                 crew.getProfileImage(),
                 salary,
-                LocalDate.now().getDayOfMonth() - contract.getStartDate().getDayOfMonth(),
+                ChronoUnit.MONTHS.between(
+                        contract.getStartDate().withDayOfMonth(1),
+                        now().withDayOfMonth(1)),
                 contract.getEndDate(),
                 weekdays);
     }
