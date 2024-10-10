@@ -62,16 +62,14 @@ const InfoTitle = styled.Text(({ theme }) => ({
 }));
 
 const SignContractBox = () => {
-  const { refreshToken, updateTokens } = useRootStore();
   const { mutate: sign } = useMutation({
     mutationFn: arbaguette.signCrewSignature,
     onSuccess: async () => {
       await arbaguette.makeSchedule();
-      const { data } = await arbaguette.reIssue(refreshToken);
-      const { accessToken, refreshToken: newRefreshToken } = data.data;
-      updateTokens(accessToken, newRefreshToken);
-      router.dismissAll();
-      router.replace('/crew/authorized/main');
+      // console.log('시도중');
+      // router.dismissAll();
+      router.push('/crew/unauthorized/success');
+      // console.log('시도 완');
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

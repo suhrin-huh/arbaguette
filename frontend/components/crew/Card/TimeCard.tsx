@@ -31,7 +31,7 @@ const TimeCard = ({ startTime, endTime, companyName }: TimeCardProps) => {
   const end = new Date(endTime);
   const totalSeconds = (end.getTime() - start.getTime()) / 1000;
   const remainTimeInSeconds = Math.floor(
-    (now < end ? end.getTime() - now.getTime() : now.getTime() - start.getTime()) / 1000,
+    (now < end ? (now > start ? end.getTime() - now.getTime() : start.getTime() - now.getTime()) : 0) / 1000,
   );
   const isOnDuty = now >= start && now <= end;
   const [remainingTime, setRemainingTime] = useState(remainTimeInSeconds);
@@ -50,6 +50,10 @@ const TimeCard = ({ startTime, endTime, companyName }: TimeCardProps) => {
 
   const { hours, minutes } = format.getTimeAndMinuteFromSeconds(remainingTime);
 
+  useEffect(() => {
+    setRemainingTime(remainTimeInSeconds);
+  }, [remainTimeInSeconds]);
+
   return (
     <CardContainer style={{ gap: 10 }}>
       <CardHeader>
@@ -59,7 +63,7 @@ const TimeCard = ({ startTime, endTime, companyName }: TimeCardProps) => {
       <CardText>
         {isOnDuty ? '퇴근까지' : '출근까지'}&nbsp;
         <TextStrong>
-          {hours}시간 {minutes}분
+          {!!hours && `${hours}시간`} {minutes}분
         </TextStrong>
         &nbsp;남았어요!
       </CardText>

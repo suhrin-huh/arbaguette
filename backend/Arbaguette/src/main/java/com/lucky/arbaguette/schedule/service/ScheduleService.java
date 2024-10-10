@@ -40,10 +40,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -129,6 +131,8 @@ public class ScheduleService {
         LocalDate now = LocalDate.now();
         LocalDate startDate = contract.getStartDate(); //계약 첫 날
         LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth()); //이번달의 마지막 날
+
+        log.info("스케줄 생성 중...");
 
         saveScheduleInContractPeriod(contract, startDate, endDate);
     }

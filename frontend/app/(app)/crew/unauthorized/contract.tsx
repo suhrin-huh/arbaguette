@@ -147,12 +147,6 @@ const SignatureScreen = () => {
         </Contract>
       </Content>
       <ButtonContainer>
-        <Button
-          buttonStyle={{ flex: 1, height: 48 }}
-          type="outlined"
-          onPress={() => router.navigate({ pathname: '/crew/unauthorized/pdf', params: { url: contract.url } })}>
-          근로계약서
-        </Button>
         <Button buttonStyle={{ flex: 1, height: 48 }} onPress={() => router.navigate('/crew/unauthorized/signature')}>
           서명하기
         </Button>
