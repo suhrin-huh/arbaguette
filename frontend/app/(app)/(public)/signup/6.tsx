@@ -46,6 +46,7 @@ const GetTelScreen = () => {
   const ClearTelInput = (): void => {
     setTel('');
     setIsValid(true);
+    setErrorMessage(null);
   };
 
   const handleSignUp = async () => {
