@@ -132,8 +132,6 @@ public class ScheduleService {
         LocalDate startDate = contract.getStartDate(); //계약 첫 날
         LocalDate endDate = now.withDayOfMonth(now.lengthOfMonth()); //이번달의 마지막 날
 
-        log.info("스케줄 생성 중...");
-
         saveScheduleInContractPeriod(contract, startDate, endDate);
     }
 

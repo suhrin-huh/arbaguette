@@ -62,7 +62,8 @@ public class SubstituteService {
             notificationService.sendNotification(
                     reqcrew.getExpoPushToken(),
                     "대타 요청",
-                    schedule.getStartTime() + "부터" + schedule.getEndTime() + "까지의 대타를 구하고 있어요 !",
+                    formatDateTime(schedule.getStartTime()) + "부터" + formatDateTime(schedule.getEndTime())
+                            + "까지의 대타를 구하고 있어요 !",
                     "arbaguette://crew/authorized/schedule"
             );
         }
@@ -126,16 +127,15 @@ public class SubstituteService {
         Substitute substitute = substituteRepository.findByIdWithOptimisticLocking(schedule.getScheduleId())
                 .orElseThrow(() -> new BadRequestException("이미 마감된 대타입니다."));
 
+        substitute.applySubstitute(crew);
+        
         notificationService.sendNotification(
                 crew.getCompany().getBoss().getExpoPushToken(),
                 "대타 승인 요청",
-                substitute.getCrew().getName() + "->" + crew.getName() + " 대타 승인을 대기하고 있어요!",
+                schedule.getCrew().getName() + "->" + crew.getName() + " 대타 승인을 대기하고 있어요!",
                 "arbaguette://boss/main/schedule?type=apply&start=" + formatDateTime(schedule.getStartTime()) + "&end="
                         + formatDateTime(schedule.getEndTime()) + "&id=" + schedule.getScheduleId()
         );
-
-        substitute.applySubstitute(crew);
-
 
     }
 
