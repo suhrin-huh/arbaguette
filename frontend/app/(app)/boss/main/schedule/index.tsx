@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
-import React, { useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import type { DateData } from 'react-native-calendars';
 import { Calendar } from 'react-native-calendars';
 import type { MarkedDates } from 'react-native-calendars/src/types';
@@ -32,8 +32,12 @@ interface DailySchedule {
 }
 
 const BossScheduleScreen = () => {
-  const { logout } = useRootStore();
-  // logout();
+  const { type, start, end, id } = useLocalSearchParams<{
+    type?: string;
+    start?: string;
+    end?: string;
+    id?: string;
+  }>();
   const { selectedCompanyId } = useRootStore();
   const today = new Date();
   const [calendar, setCalendar] = useState<DateData>(format.DateToDateData(today));
@@ -63,6 +67,12 @@ const BossScheduleScreen = () => {
     ) || {};
 
   if (markedDates[selectedDateString]) markedDates[selectedDateString]['selected'] = true;
+
+  useEffect(() => {
+    if (type !== 'apply') return;
+    router.setParams({});
+    router.navigate({ pathname: '/boss/main/schedule/apply', params: { start, end, id } });
+  }, [end, id, start, type]);
 
   const handleMonthChange = (date: DateData) => {
     setCalendar(date);
