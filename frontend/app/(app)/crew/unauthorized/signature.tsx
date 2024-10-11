@@ -66,20 +66,14 @@ const SignContractBox = () => {
     mutationFn: arbaguette.signCrewSignature,
     onSuccess: async () => {
       await arbaguette.makeSchedule();
-      // console.log('시도중');
-      // router.dismissAll();
       router.push('/crew/unauthorized/success');
-      // console.log('시도 완');
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
         if (error.status === 409) {
-          Alert.alert('오류', '이미 서명된 계약서입니다.');
-          router.dismissAll();
-          router.replace('/crew/authorized/main');
+          router.replace('/crew/unauthorized/success');
         }
       }
-      console.log('error', error);
     },
   });
   const ref = useRef<SignatureViewRef>(null);

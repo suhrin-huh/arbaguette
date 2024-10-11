@@ -25,6 +25,7 @@ const keys = {
   expectedExpenses: (companyId: CompanyId) => [...keys.common(), 'expectedExpenses', companyId],
   takeSubstitute: (scheduleId: ScheduleId) => [...keys.common(), 'takeSubstitute', scheduleId],
   checkAccountUser: (account: BankAccount) => [...keys.bank(), 'checkAccountUser', account],
+  checkAccountPassword: (password: Password) => [...keys.bank(), 'checkAccountPassword', password],
   remittance: (account: BankAccount, money: string, password: Password) => [
     ...keys.bank(),
     'remittance',

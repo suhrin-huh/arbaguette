@@ -42,4 +42,11 @@ export default {
   getEmploymentContract: async (crewId: CrewId) => {
     return axios.get<GetEmploymentContractResponse>('/api/contract', { params: { crewId } });
   },
+  /**
+   * 계좌 비밀번호 일치 여부 확인
+   * @param password 계좌 비밀번호
+   */
+  checkAccountPassword: async (password: Password) => {
+    return axios.get<CheckPasswordResponse>(`/api/user/checkPassword?accountPassword=${password}`);
+  },
 };
