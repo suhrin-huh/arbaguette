@@ -3,8 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import React, { useRef, useState } from 'react';
-import { Alert, Image, Text } from 'react-native';
-
+import { Alert, Image } from 'react-native';
+import Text from '@/components/common/Text';
 import TreasureBox from '@/assets/images/treasure-box.png';
 import CoinAnimation from '@/assets/lottie/coin.json';
 import keys from '@/reactQuery/keys';
@@ -55,7 +55,9 @@ const EventScreen = () => {
   return (
     <Container>
       <Button onPress={handlePress}>
-        <Money>{money}원</Money>
+        <Text size="title" weight="bold">
+          {money}원
+        </Text>
         <ImageBox>
           {animations.map((animation) => (
             <Lottie
@@ -80,7 +82,9 @@ const EventScreen = () => {
           resizeMode="contain"
         />
       </Button>
-      <ButtonText>사장님이 돈을 뿌렸어요!</ButtonText>
+      <Text size="sub" weight="bold" color="white">
+        사장님이 돈을 뿌렸어요!
+      </Text>
     </Container>
   );
 };
@@ -93,23 +97,12 @@ const Container = Styled.View(({ theme }) => ({
   backgroundColor: theme.color.WHITE,
 }));
 
-const Money = Styled.Text(({ theme }) => ({
-  color: theme.color.BLACK,
-  fontSize: 24,
-  fontWeight: 'bold',
-}));
-
 const Button = Styled.TouchableOpacity({
   padding: 15,
   borderRadius: 10,
   marginBottom: 20,
   position: 'relative',
   alignItems: 'center',
-});
-
-const ButtonText = Styled(Text)({
-  color: '#000',
-  fontSize: 18,
 });
 
 const ImageBox = Styled.View({
