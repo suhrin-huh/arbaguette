@@ -24,7 +24,7 @@ const GetTelScreen = () => {
   const phoneRegex = /^010-\d{4}-\d{4}$/;
   const { mutate: signup } = useMutation({
     mutationFn: arbaguette.signup,
-    onSuccess: async (response) => {
+    onSuccess: async () => {
       router.dismissAll();
       router.replace('/(public)/login');
     },
@@ -33,7 +33,6 @@ const GetTelScreen = () => {
       if (error.status === 409) {
         setErrorMessage('중복된 전화번호입니다.');
       } else {
-        console.log(error);
         setErrorMessage('올바른 전화번호를 입력해주세요.');
       }
     },
@@ -51,7 +50,6 @@ const GetTelScreen = () => {
 
   const handleSignUp = async () => {
     if (!phoneRegex.test(tel)) {
-      console.log('틀렸나?');
       setIsValid(false);
       setErrorMessage('올바른 전화번호를 입력해주세요.');
       return;

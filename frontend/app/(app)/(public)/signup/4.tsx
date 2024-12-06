@@ -27,7 +27,6 @@ const GetAccountPasswordScreen = () => {
 
   const goToNext = async (updatePassword: string) => {
     if (updatePassword.length === 4) {
-      console.log(updatePassword);
       router.push({
         pathname: '/(app)/(public)/signup/5',
         params: { role, profileImage, name, email, password, accountPassword: updatePassword },
